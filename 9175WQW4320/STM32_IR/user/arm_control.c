@@ -204,9 +204,9 @@ void Arm_Proc(void)
 	
 	if(PS2_KeyFlag == 1)
 	{
-		ServoAngles.base = PS2_AD[0] * 185 / 4095; 	
+		ServoAngles.base = 185 - (PS2_AD[0] * 185 / 4095); 	
 		ServoAngles.shoulder = PS2_AD[1] * 185 / 4095;
-		ServoAngles.elbow = PS2_AD[2] * 185 / 4095; 	
+		ServoAngles.elbow = 185 - (PS2_AD[2] * 185 / 4095); 	
 		ServoAngles.FanSpeed = (PS2_AD[3] - 2048) * 100 / 2048;
 		Arm_Update();
 	}

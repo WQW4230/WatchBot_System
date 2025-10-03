@@ -17,6 +17,7 @@
 ".\objects\alarm.o"
 ".\objects\ps2_key.o"
 ".\objects\my_spi.o"
+".\objects\stm32_usart_slave.o"
 ".\objects\startup_stm32f10x_md.o"
 ".\objects\stm32f10x_pal.o"
 ".\objects\stm32f10x_pal_adc.o"

@@ -555,6 +555,16 @@
               <FileType>5</FileType>
               <FilePath>.\user\my_spi.h</FilePath>
             </File>
+            <File>
+              <FileName>stm32_usart_slave.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\stm32_usart_slave.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32_usart_slave.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\user\stm32_usart_slave.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

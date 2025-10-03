@@ -92,14 +92,14 @@ void Capture_Config(void)
 	NVIC_InitTypeDef NVIC_InitStruct;
 	NVIC_InitStruct.NVIC_IRQChannel = TIM1_CC_IRQn;
 	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0;
-	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 1;
 	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStruct);
 	
 	//TIM1_UP_IRQn 更新中断
 	NVIC_InitStruct.NVIC_IRQChannel = TIM1_UP_IRQn;
 	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0;
-	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 1;
 	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStruct);
 }
