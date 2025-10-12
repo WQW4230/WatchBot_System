@@ -9,9 +9,12 @@
 RTC_Time Alarm;
 
 static uint8_t Alarm_Cursor = 0;
+
 Alarm_Time Set_AlarmTime = {0, 0, 0};
 
-uint8_t Alarm_Flag = 0;
+uint16_t Alarm_count = 3; //警报声句柄，响几次
+
+uint8_t Alarm_Flag = 0;//闹钟标志位
 
 static uint8_t	Set_Alarm_Flag = 0;//设定时间界面标志位
 static uint8_t Set_RTC_Flag_Flag = 0;//设置时间标志位
@@ -34,7 +37,7 @@ void Alarm_Init(void)
 }
 
 //声音间隔
-void Alarm_Delay(uint16_t Delay_us)
+void Alarm_Delay(uint16_t Delay_ms)
 {
 	static uint8_t Alarm_Delay_Flag = 1;
 	
@@ -43,24 +46,29 @@ void Alarm_Delay(uint16_t Delay_us)
 	
 	if(Alarm_Delay_Flag == 1)
 	{
-		if((Last_Time + Delay_us) <= Current_Time)
+		if(Current_Time + Last_Time >= Delay_ms)
 		{
 			Last_Time = App_Timer_GetTick();
 			GPIO_WriteBit(GPIOB, GPIO_Pin_14, Bit_RESET);
 			Alarm_Delay_Flag = 0;
+			if(Alarm_count != 0)
+			{
+				Alarm_count--;//计数响了几次 
+			}				
 		}
 		
 	}
 	
 	if(Alarm_Delay_Flag == 0)
 	{
-		if((Last_Time + Delay_us) <= Current_Time)
+		if(Current_Time - Last_Time >= Delay_ms)
 		{
 			Last_Time = App_Timer_GetTick();
 			GPIO_WriteBit(GPIOB, GPIO_Pin_14, Bit_SET);
 			Alarm_Delay_Flag = 1;
 		}
 	}
+	
 }
 
 
@@ -266,6 +274,17 @@ void Alarm_Show(void)
 	if(Alarm_Cursor == 2){OLED_ReverseArea(0, 26, 128, 16); };
 	
 	OLED_Update();
+}
+
+//警报声
+void Alarm_count_Proc(uint16_t *count)
+{
+	if((*count) == 0)
+	{
+		GPIO_WriteBit(GPIOB, GPIO_Pin_14, Bit_SET);
+		return;
+	}
+	Alarm_Delay(100);
 }
 
 //进程

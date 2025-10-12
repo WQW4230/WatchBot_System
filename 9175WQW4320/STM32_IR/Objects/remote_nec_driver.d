@@ -32,3 +32,4 @@
 .\objects\remote_nec_driver.o: .\std_periph_driver\inc\stm32f10x_usart.h
 .\objects\remote_nec_driver.o: .\std_periph_driver\inc\stm32f10x_wwdg.h
 .\objects\remote_nec_driver.o: user\App_Timer.h
+.\objects\remote_nec_driver.o: user\Alarm.h

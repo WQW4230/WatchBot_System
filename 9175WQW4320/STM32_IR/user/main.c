@@ -14,6 +14,10 @@
 #include "rtc_driver.h"
 #include "Alarm.h"
 #include "Ps2_key.h"
+#include "usart_frame_handler.h"
+
+//测试头文件
+#include "Active_Buzzer.h"
 
 uint64_t Now = 0;
 uint64_t Last = 0;
@@ -31,24 +35,33 @@ int main(void)
 	Led_BlinkInit();
 	ps2_ADCInit();
 	Arm_Init();
-	Rtc_Init();
-	Alarm_Init();
-  Ps2_KeyInit();
+	Arm_Reset();
+	
+	
+//	for(uint8_t i = 0; i < 6; i++)
+//	{
+//		if(i == 0) USART_ProcessByte(0x88);
+//		if(i == 1) USART_ProcessByte(0x43);
+//		if(i == 2) USART_ProcessByte(0x05);
+//		if(i == 3) USART_ProcessByte(0x63);
+//		if(i == 4) USART_ProcessByte(0x66);
+//		if(i == 4) USART_ProcessByte(0x66);
+//	}
 	
 	while(1)
 	{
 		Last =  App_Timer_GetTick();
 
 		Menu_Proc();	     		//1ms
-		GuessNum_Proc();   		//1ms
+		GuessNum_Proc();   		//最高6ms
 		GuessMine_Proc(); 	  //1ms
 		Contact_Proc();    	  //2ms
 		GreedySnake_Proc(); 	//3ms
 		Arm_Proc(); 					//1ms
 		Alarm_Proc(); 				//2ms
-		Led_Blink_Proc();     //2ms	
-		
-		
+		Led_Blink_Proc();			//最高2ms 最低1ms
+		//Alarm_count_Proc(&Alarm_count);		
+
 		Now = App_Timer_GetTick();
 		if((Now - Last) > Time) 
 		{
@@ -57,8 +70,8 @@ int main(void)
 	}	
 }
 
-//最快需要14ms
-//OLED_Clear();
-//OLED_Printf()
-//OLED_Update();
+//刷新一次最快需要15ms
+//OLED_Clear(); 	调用一次1ms
+//OLED_Printf()	 	调用一次1ms
+//OLED_Update();	调用一次13ms
 

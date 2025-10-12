@@ -31,3 +31,5 @@
 .\objects\ps2_key.o: .\std_periph_driver\inc\stm32f10x_tim.h
 .\objects\ps2_key.o: .\std_periph_driver\inc\stm32f10x_usart.h
 .\objects\ps2_key.o: .\std_periph_driver\inc\stm32f10x_wwdg.h
+.\objects\ps2_key.o: user\App_Timer.h
+.\objects\ps2_key.o: user\Alarm.h

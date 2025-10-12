@@ -341,7 +341,7 @@
               <MiscControls>--no-multibyte-chars</MiscControls>
               <Define>MPU6050</Define>
               <Undefine></Undefine>
-              <IncludePath>.\std_periph_driver\inc;.\user;.\pal;.\pal\modules\eMPL;.\pal\modules\font;.\pal\modules;.\OLED</IncludePath>
+              <IncludePath>.\std_periph_driver\inc;.\user;.\pal;.\pal\modules\eMPL;.\pal\modules\font;.\pal\modules;.\OLED;.\Hardware_Driver</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -546,24 +546,24 @@
               <FilePath>.\user\Ps2_Key.h</FilePath>
             </File>
             <File>
-              <FileName>my_spi.c</FileName>
+              <FileName>usart_frame_handler.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\user\my_spi.c</FilePath>
+              <FilePath>.\user\usart_frame_handler.c</FilePath>
             </File>
             <File>
-              <FileName>my_spi.h</FileName>
+              <FileName>usart_frame_handler.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\user\my_spi.h</FilePath>
+              <FilePath>.\user\usart_frame_handler.h</FilePath>
             </File>
             <File>
-              <FileName>stm32_usart_slave.c</FileName>
+              <FileName>STM32_slave.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\user\stm32_usart_slave.c</FilePath>
+              <FilePath>.\user\STM32_slave.c</FilePath>
             </File>
             <File>
-              <FileName>stm32_usart_slave.h</FileName>
+              <FileName>STM32_slave.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\user\stm32_usart_slave.h</FilePath>
+              <FilePath>.\user\STM32_slave.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1143,7 +1143,19 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>New Group</GroupName>
+          <GroupName>Hardware_Driver</GroupName>
+          <Files>
+            <File>
+              <FileName>Active_Buzzer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware_Driver\Active_Buzzer.c</FilePath>
+            </File>
+            <File>
+              <FileName>Active_Buzzer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware_Driver\Active_Buzzer.h</FilePath>
+            </File>
+          </Files>
         </Group>
       </Groups>
     </Target>

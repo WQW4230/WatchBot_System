@@ -1,6 +1,11 @@
 #include "Ps2_key.h"
+#include "App_Timer.h"
+#include "Alarm.h"
 
-uint8_t PS2_KeyFlag = 1;
+//按键消抖时间
+#define DEBOUNCE_MS 1000
+
+uint8_t PS2_KeyFlag = 0;
 
 void Ps2_KeyInit(void)
 {
@@ -42,21 +47,38 @@ void Ps2_KeyInit(void)
 	
 }
 
+//中断响应函数
 void EXTI15_10_IRQHandler(void)
-{
+{ 
+	uint64_t now_time = App_Timer_GetTick();//当前时间
+	static uint64_t lase_time_Line10;
+	static uint64_t lase_time_Line11;
+	
 	if(EXTI_GetITStatus(EXTI_Line10) == SET)
 	{
 		EXTI_ClearITPendingBit(EXTI_Line10);
-		PS2_KeyFlag = 1;
-		
+		if(now_time - lase_time_Line10 > DEBOUNCE_MS)
+		{
+			lase_time_Line10 = App_Timer_GetTick();
+			PS2_KeyFlag = 1;
+			Alarm_count++;//蜂鸣器句柄，响一次
+		}
 	}
 	
 	if(EXTI_GetITStatus(EXTI_Line11) == SET)
 	{
 		EXTI_ClearITPendingBit(EXTI_Line11);
-		PS2_KeyFlag = 0;
+		if(now_time - lase_time_Line11 > DEBOUNCE_MS)
+		{
+			lase_time_Line11 = App_Timer_GetTick();
+			PS2_KeyFlag = 0;
+			Alarm_count++;//蜂鸣器句柄，响一次
+			
+		}
 	}
 }
+
+
 
 
 

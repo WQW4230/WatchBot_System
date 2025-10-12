@@ -79,7 +79,7 @@ void GuessNum_Show()
 	if(GuessNum_Show_Flag == 0)
 	{
 		OLED_Printf(0, 20, OLED_8X16, "请猜数字:0-1000");
-		OLED_Update();
+		OLED_UpdateArea(0, 20, 128, 16);
 		GuessNum_Show_Flag = 1;
 	}
 }

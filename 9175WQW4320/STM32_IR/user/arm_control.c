@@ -10,10 +10,11 @@
 
 uint8_t Arm_Flag = 0;
 
+//三路舵机一路直流电机的控制句柄
+ServoAngles_t ServoAngles = {0, 0, 0, 0};
 
 static uint8_t Arm_Cursor = 0;
 
-ServoAngles_t ServoAngles = {0, 0, 0, 0}; 
 
 
 //比较寄存器值500—2500为0°-180°
@@ -107,7 +108,7 @@ void Arm_Update(void)
 }
 
 //光标对应的电机
-void Arm_CursorSwitch(Key_Enum key)
+static void Arm_CursorSwitch(Key_Enum key)
 {
 	if(key == Key_A)
 	{
@@ -141,10 +142,12 @@ void Arm_CursorSwitch(Key_Enum key)
 				break;
 		}
 	}
+	//调用将值写入舵机
+	Arm_Update();
 }
 
 //绘制函数
-void Arm_Show_Status(void)
+static void Arm_Show_Status(void)
 {
 	OLED_Clear();
 	OLED_Printf(0, 0, OLED_8X16, "  Base   %f", ServoAngles.base);
@@ -155,53 +158,20 @@ void Arm_Show_Status(void)
 	OLED_Update();
 }
 
+//机械臂复位
+void Arm_Reset(void)
+{
+	ServoAngles.base = 0;
+	ServoAngles.shoulder = 0;
+	ServoAngles.elbow = 0;
+	ServoAngles.FanSpeed = 0;
+	Arm_Update();
+}
+
 //进程函数
 void Arm_Proc(void)
 {
-	if(Arm_Flag == 1)
-	{
-		
-		if(IR_Flag == 1)
-		{
-			IR_Flag = 0;
-			switch(IR_GetKey())
-			{
-				case Key_A:
-				case Key_D:
-					Arm_CursorSwitch(IR_GetKey());
-					break;
-				
-				case Key_W:
-				{
-					if(Arm_Cursor > 0){Arm_Cursor--;}						
-					break;
-				}
-				
-				case Key_S:
-				{
-					if(Arm_Cursor < 3){Arm_Cursor++;}
-					break;
-				}
-				
-				case Key_XingHao:
-				{
-					Arm_Flag = 0;
-					Menu_Flag = 1;
-					OLED_Clear();
-					break;
-				}
-				
-				case Key_JingHao:
-				{
-					
-					break;
-				}
-			}
-			Arm_Update();			
-		}
-		Arm_Show_Status();
-	}
-	
+	//摇杆抢夺控制权
 	if(PS2_KeyFlag == 1)
 	{
 		ServoAngles.base = 185 - (PS2_AD[0] * 185 / 4095); 	
@@ -210,5 +180,46 @@ void Arm_Proc(void)
 		ServoAngles.FanSpeed = (PS2_AD[3] - 2048) * 100 / 2048;
 		Arm_Update();
 	}
+	if(Arm_Flag == 0) return;
+	
+	if(IR_Flag == 1)
+	{
+		IR_Flag = 0;
+		switch(IR_GetKey())
+		{
+			case Key_A:
+			case Key_D:
+				Arm_CursorSwitch(IR_GetKey());
+				break;
+			
+			case Key_W:
+			{
+				if(Arm_Cursor > 0){Arm_Cursor--;}						
+				break;
+			}	
+			case Key_S:
+			{
+				if(Arm_Cursor < 3){Arm_Cursor++;}
+				break;
+			}	
+			case Key_XingHao:
+			{
+				Arm_Flag = 0;
+				Menu_Flag = 1;
+				OLED_Clear();
+				break;
+			}
+				
+			case Key_JingHao:
+			{
+				
+				break;
+			}
+		}
+					
+	}
+		
+	Arm_Show_Status();
+	
 	
 }

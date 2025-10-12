@@ -121,6 +121,7 @@ void Menu_Proc(void)
 						Menu_Flag = 0;
 						GuessMine_Flag = 1;
 						OLED_Clear();
+						Mine_CursorShow();
 						break;
 					case 3:
 						Menu_Flag = 0;

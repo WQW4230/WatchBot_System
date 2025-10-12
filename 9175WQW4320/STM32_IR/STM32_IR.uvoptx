@@ -153,46 +153,81 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>IR_PulseCnt</ItemText>
-        </Ww>
-        <Ww>
-          <count>1</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>IR_PulseSub</ItemText>
-        </Ww>
-        <Ww>
-          <count>2</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>IR_Data</ItemText>
+          <ItemText>Time,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
           <count>0</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ServoAngles.base</ItemText>
+          <ItemText>ESP32_Rx_Flag</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ServoAngles.shoulder</ItemText>
+          <ItemText>USART_Frame.Data_index</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ServoAngles.elbow</ItemText>
+          <ItemText>USART_Frame.ESP_Data[0]</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ServoAngles.FanSpeed</ItemText>
+          <ItemText>USART_Frame.ESP_Data[1]</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>USART_Frame.ESP_Data[2]</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>USART_Frame.ESP_Data[3]</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>USART_Frame.ESP_Data[4]</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>ServoAngles.base</ItemText>
+        </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>ServoAngles.shoulder</ItemText>
+        </Ww>
+        <Ww>
+          <count>9</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>ServoAngles.elbow</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>ServoAngles.FanSpeed,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>11</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>PS2_KeyFlag</ItemText>
+        </Ww>
+        <Ww>
+          <count>12</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Arm_Flag</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>
         <Mm>
           <WinNumber>1</WinNumber>
           <SubType>0</SubType>
-          <ItemText>Flicker</ItemText>
+          <ItemText>USART_Frame.ESP_Data[FRAME_IDX_LEN]</ItemText>
           <AccSizeX>0</AccSizeX>
         </Mm>
       </MemoryWindow1>
@@ -202,7 +237,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>1</periodic>
-        <aLwin>1</aLwin>
+        <aLwin>0</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
@@ -645,8 +680,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\user\my_spi.c</PathWithFileName>
-      <FilenameWithoutPath>my_spi.c</FilenameWithoutPath>
+      <PathWithFileName>.\user\usart_frame_handler.c</PathWithFileName>
+      <FilenameWithoutPath>usart_frame_handler.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -657,8 +692,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\user\my_spi.h</PathWithFileName>
-      <FilenameWithoutPath>my_spi.h</FilenameWithoutPath>
+      <PathWithFileName>.\user\usart_frame_handler.h</PathWithFileName>
+      <FilenameWithoutPath>usart_frame_handler.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -669,8 +704,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\user\stm32_usart_slave.c</PathWithFileName>
-      <FilenameWithoutPath>stm32_usart_slave.c</FilenameWithoutPath>
+      <PathWithFileName>.\user\STM32_slave.c</PathWithFileName>
+      <FilenameWithoutPath>STM32_slave.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -681,8 +716,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\user\stm32_usart_slave.h</PathWithFileName>
-      <FilenameWithoutPath>stm32_usart_slave.h</FilenameWithoutPath>
+      <PathWithFileName>.\user\STM32_slave.h</PathWithFileName>
+      <FilenameWithoutPath>STM32_slave.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -690,7 +725,7 @@
 
   <Group>
     <GroupName>startup</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1990,7 +2025,7 @@
 
   <Group>
     <GroupName>OLED</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -2045,11 +2080,35 @@
   </Group>
 
   <Group>
-    <GroupName>New Group</GroupName>
+    <GroupName>Hardware_Driver</GroupName>
     <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
+    <File>
+      <GroupNumber>8</GroupNumber>
+      <FileNumber>146</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\Hardware_Driver\Active_Buzzer.c</PathWithFileName>
+      <FilenameWithoutPath>Active_Buzzer.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>8</GroupNumber>
+      <FileNumber>147</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\Hardware_Driver\Active_Buzzer.h</PathWithFileName>
+      <FilenameWithoutPath>Active_Buzzer.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
   </Group>
 
 </ProjectOpt>

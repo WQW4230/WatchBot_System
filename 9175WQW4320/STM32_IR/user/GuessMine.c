@@ -29,8 +29,9 @@ static uint16_t Closed_Flag = MINE_FLAG_COUNT;
 //胜利UI
 void Mine_Victory(void)
 {
-//	OLED_Clear();
-//	OLED_Printf(0, 20, OLED_8X16, "很遗憾你赢了");
+	OLED_Clear();
+	OLED_Printf(0, 20, OLED_8X16, "很遗憾你赢了");
+	OLED_UpdateArea(0, 20, 96, 8);
 }
 
 //更新光标映射在棋盘的实际位置
@@ -80,9 +81,6 @@ void GuessMine_Proc(void)
 {
 	if(GuessMine_Flag == 1)
 	{
-		OLED_DrawLine(0, 0, 0, 63);
-		OLED_DrawLine(127, 0, 127, 63);		
-		
 		if(IR_Flag == 1)
 		{
 			IR_Flag = 0;
@@ -208,10 +206,10 @@ void GuessMine_Proc(void)
 					break;
 				}
 			}	
-						
+			OLED_Update();			
 		}	
 
-		OLED_Update();	
+			
 	}
 
 }

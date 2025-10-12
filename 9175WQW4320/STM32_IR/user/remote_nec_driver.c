@@ -1,5 +1,6 @@
 #include "remote_nec_driver.h"
 #include "App_Timer.h"
+#include "Alarm.h"
 
 uint32_t IR_Key;//成功解码的完整数据
 uint8_t IR_Data;//8bit数据位
@@ -173,7 +174,8 @@ void TIM1_CC_IRQHandler(void)
 			IR_Key = IR_Code;
 			IR_Data = (uint8_t)(IR_Key>>8);
 			IR_Sta = 0x02;//进入连发码状态
-			IR_Flag = 1;			
+			IR_Flag = 1;	
+      Alarm_count++;//蜂鸣器响一次			
 		}
 			
 		//进入长按状态

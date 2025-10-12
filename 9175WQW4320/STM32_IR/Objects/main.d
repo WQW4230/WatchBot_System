@@ -48,3 +48,5 @@
 .\objects\main.o: user\rtc_driver.h
 .\objects\main.o: user\Alarm.h
 .\objects\main.o: user\Ps2_key.h
+.\objects\main.o: user\usart_frame_handler.h
+.\objects\main.o: .\Hardware_Driver\Active_Buzzer.h

@@ -25,7 +25,8 @@
 
 extern uint8_t GuessMine_Flag;
 
-void GuessMine_Proc(void);
+void Mine_CursorShow(void);//棋盘边框打印 调用一次即可
+void GuessMine_Proc(void);//非阻塞进程函数
 void MineBoard_Init(void);//布置雷初始化函数
 
 #endif
