@@ -73,8 +73,8 @@ void Arm_SetFanSpeed(int16_t FanSpeed)
 	}
 	if(FanSpeed >= 0)
 	{
-		GPIO_SetBits(GPIOB, GPIO_Pin_12);	//PA4置高电平
-		GPIO_ResetBits(GPIOB, GPIO_Pin_13);	//PA5置低电平，设置方向为正转
+		GPIO_SetBits(GPIOB, GPIO_Pin_12);	//PB12置高电平
+		GPIO_ResetBits(GPIOB, GPIO_Pin_13);	//PB13置低电平，设置方向为正转
 		ServoAngles.FanSpeed = FanSpeed;
 		PWM_SetCompare4(FanSpeed * 10);
 	}
@@ -172,7 +172,7 @@ void Arm_Reset(void)
 void Arm_Proc(void)
 {
 	//摇杆抢夺控制权
-	if(PS2_KeyFlag == 1)
+	if(PS2_KeyFlag == 0)
 	{
 		ServoAngles.base = 185 - (PS2_AD[0] * 185 / 4095); 	
 		ServoAngles.shoulder = PS2_AD[1] * 185 / 4095;

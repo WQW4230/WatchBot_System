@@ -28,7 +28,7 @@ int main(void)
 	OLED_Init();
 	PAL_Init();
 	
-	App_Timer_Init();
+	Rtc_Init();
 	Capture_Config();
 	MineBoard_Init();
 	Contact_Init();
@@ -36,17 +36,7 @@ int main(void)
 	ps2_ADCInit();
 	Arm_Init();
 	Arm_Reset();
-	
-	
-//	for(uint8_t i = 0; i < 6; i++)
-//	{
-//		if(i == 0) USART_ProcessByte(0x88);
-//		if(i == 1) USART_ProcessByte(0x43);
-//		if(i == 2) USART_ProcessByte(0x05);
-//		if(i == 3) USART_ProcessByte(0x63);
-//		if(i == 4) USART_ProcessByte(0x66);
-//		if(i == 4) USART_ProcessByte(0x66);
-//	}
+	App_Timer_Init();
 	
 	while(1)
 	{
@@ -59,8 +49,7 @@ int main(void)
 		GreedySnake_Proc(); 	//3ms
 		Arm_Proc(); 					//1ms
 		Alarm_Proc(); 				//2ms
-		Led_Blink_Proc();			//最高2ms 最低1ms
-		//Alarm_count_Proc(&Alarm_count);		
+		Led_Blink_Proc();			//最高2ms 最低1ms	
 
 		Now = App_Timer_GetTick();
 		if((Now - Last) > Time) 

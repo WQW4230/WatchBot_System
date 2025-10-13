@@ -1,6 +1,6 @@
 Dependencies for Project 'STM32_IR', Target 'default': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
-F (.\user\main.c)(0x68EB61FB)(--c99 --gnu -c --cpu Cortex-M3 -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\std_periph_driver\inc -I .\user -I .\pal -I .\pal\modules\eMPL -I .\pal\modules\font -I .\pal\modules -I .\OLED -I .\Hardware_Driver --no-multibyte-chars-ID:\Office\Keil5\Pack\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -DSTM32F10X_MD -DMPU6050-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
+F (.\user\main.c)(0x68ECE90F)(--c99 --gnu -c --cpu Cortex-M3 -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\std_periph_driver\inc -I .\user -I .\pal -I .\pal\modules\eMPL -I .\pal\modules\font -I .\pal\modules -I .\OLED -I .\Hardware_Driver --no-multibyte-chars-ID:\Office\Keil5\Pack\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -DSTM32F10X_MD -DMPU6050-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
 I (.\std_periph_driver\inc\stm32f10x.h)(0x65D9A79F)
 I (.\std_periph_driver\inc\core_cm3.h)(0x644612F7)
 I (D:\Office\Keil5\Core\ARM\ARMCC\include\stdint.h)(0x6025237E)
@@ -419,7 +419,7 @@ I (.\OLED\OLED.h)(0x6714E2A7)
 I (.\OLED\OLED_Data.h)(0x6714E987)
 I (user\App_Timer.h)(0x68E8B9C0)
 F (.\user\LED_Blink.h)(0x68BE2DC8)()
-F (.\user\arm_control.c)(0x68EB3F5C)(--c99 --gnu -c --cpu Cortex-M3 -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\std_periph_driver\inc -I .\user -I .\pal -I .\pal\modules\eMPL -I .\pal\modules\font -I .\pal\modules -I .\OLED -I .\Hardware_Driver --no-multibyte-chars-ID:\Office\Keil5\Pack\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -DSTM32F10X_MD -DMPU6050-o .\objects\arm_control.o --omf_browse .\objects\arm_control.crf --depend .\objects\arm_control.d)
+F (.\user\arm_control.c)(0x68ED1724)(--c99 --gnu -c --cpu Cortex-M3 -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\std_periph_driver\inc -I .\user -I .\pal -I .\pal\modules\eMPL -I .\pal\modules\font -I .\pal\modules -I .\OLED -I .\Hardware_Driver --no-multibyte-chars-ID:\Office\Keil5\Pack\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -DSTM32F10X_MD -DMPU6050-o .\objects\arm_control.o --omf_browse .\objects\arm_control.crf --depend .\objects\arm_control.d)
 I (.\std_periph_driver\inc\stm32f10x.h)(0x65D9A79F)
 I (.\std_periph_driver\inc\core_cm3.h)(0x644612F7)
 I (D:\Office\Keil5\Core\ARM\ARMCC\include\stdint.h)(0x6025237E)
@@ -450,7 +450,7 @@ I (.\std_periph_driver\inc\stm32f10x_spi.h)(0x644612F7)
 I (.\std_periph_driver\inc\stm32f10x_tim.h)(0x646763F8)
 I (.\std_periph_driver\inc\stm32f10x_usart.h)(0x644612F7)
 I (.\std_periph_driver\inc\stm32f10x_wwdg.h)(0x644612F7)
-I (user\serov_driver.h)(0x68B18885)
+I (user\serov_driver.h)(0x68ECCA92)
 I (user\arm_control.h)(0x68E8C39D)
 I (.\OLED\OLED.h)(0x6714E2A7)
 I (.\OLED\OLED_Data.h)(0x6714E987)
@@ -459,8 +459,8 @@ I (user\ps2_ADC_DMA.h)(0x68B5BD18)
 I (user\menu.h)(0x68B5AF55)
 I (user\Ps2_key.h)(0x68BE5579)
 F (.\user\arm_control.h)(0x68E8C39D)()
-F (.\user\serov_driver.c)(0x68B5D1D8)(--c99 --gnu -c --cpu Cortex-M3 -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\std_periph_driver\inc -I .\user -I .\pal -I .\pal\modules\eMPL -I .\pal\modules\font -I .\pal\modules -I .\OLED -I .\Hardware_Driver --no-multibyte-chars-ID:\Office\Keil5\Pack\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -DSTM32F10X_MD -DMPU6050-o .\objects\serov_driver.o --omf_browse .\objects\serov_driver.crf --depend .\objects\serov_driver.d)
-I (user\serov_driver.h)(0x68B18885)
+F (.\user\serov_driver.c)(0x68ECE7E0)(--c99 --gnu -c --cpu Cortex-M3 -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\std_periph_driver\inc -I .\user -I .\pal -I .\pal\modules\eMPL -I .\pal\modules\font -I .\pal\modules -I .\OLED -I .\Hardware_Driver --no-multibyte-chars-ID:\Office\Keil5\Pack\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -DSTM32F10X_MD -DMPU6050-o .\objects\serov_driver.o --omf_browse .\objects\serov_driver.crf --depend .\objects\serov_driver.d)
+I (user\serov_driver.h)(0x68ECCA92)
 I (.\std_periph_driver\inc\stm32f10x.h)(0x65D9A79F)
 I (.\std_periph_driver\inc\core_cm3.h)(0x644612F7)
 I (D:\Office\Keil5\Core\ARM\ARMCC\include\stdint.h)(0x6025237E)
@@ -491,7 +491,7 @@ I (.\std_periph_driver\inc\stm32f10x_spi.h)(0x644612F7)
 I (.\std_periph_driver\inc\stm32f10x_tim.h)(0x646763F8)
 I (.\std_periph_driver\inc\stm32f10x_usart.h)(0x644612F7)
 I (.\std_periph_driver\inc\stm32f10x_wwdg.h)(0x644612F7)
-F (.\user\serov_driver.h)(0x68B18885)()
+F (.\user\serov_driver.h)(0x68ECCA92)()
 F (.\user\ps2_ADC_DMA.c)(0x68BE4C01)(--c99 --gnu -c --cpu Cortex-M3 -D__MICROLIB -g -O1 --apcs=interwork --split_sections -I .\std_periph_driver\inc -I .\user -I .\pal -I .\pal\modules\eMPL -I .\pal\modules\font -I .\pal\modules -I .\OLED -I .\Hardware_Driver --no-multibyte-chars-ID:\Office\Keil5\Pack\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -DSTM32F10X_MD -DMPU6050-o .\objects\ps2_adc_dma.o --omf_browse .\objects\ps2_adc_dma.crf --depend .\objects\ps2_adc_dma.d)
 I (user\ps2_ADC_DMA.h)(0x68B5BD18)
 I (.\std_periph_driver\inc\stm32f10x.h)(0x65D9A79F)
