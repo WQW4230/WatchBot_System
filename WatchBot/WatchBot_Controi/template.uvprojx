@@ -999,6 +999,16 @@
               <FileType>5</FileType>
               <FilePath>.\Hardware_Driver\PS2_ADC_DMA.h</FilePath>
             </File>
+            <File>
+              <FileName>NEC_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware_Driver\NEC_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>NEC_driver.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware_Driver\NEC_driver.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

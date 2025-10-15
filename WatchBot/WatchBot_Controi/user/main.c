@@ -4,6 +4,9 @@
 #include "App_Timer.h"
 #include "LED_Blink.h"
 #include "motor_driver.h"
+#include "NEC_driver.h"
+
+Key_Enum IR_testData;
 
 int main(void)
 {
@@ -11,7 +14,7 @@ int main(void)
 	
 	App_Timer_Init();
 	motor_Init();
-	
+	NEC_Init();
 	
 	LED_t LED_Conflg;
 	LED_Conflg.GPIOX = GPIOC;
@@ -25,17 +28,24 @@ int main(void)
 	PWM_SetCompare1(100);
 	//PWM_SetCompare2(1000);
 	PWM_SetCompare3(1000);
-	PWM_SetCompare4(1000);
+	PWM_SetCompare4(0);
 	
-	Moto_SetState(MOTOR_FORWARD);
+	Moto_SetState(MOTOR_FORWARD);//正转
+	
 	
 	
 	while(1)
 	{
-		LED_Beep(&LED_Conflg, 1000);
-		App_Timer_Delay_ms(1000);
-		LED_Proc();
-		App_Timer_Delay_ms(1000);
+//		LED_Beep(&LED_Conflg, 1000);
+//		App_Timer_Delay_ms(1000);
+//		LED_Proc();
+//		App_Timer_Delay_ms(1000);
 		
+//		if(IR_NEC.Flag)
+//		{
+//			IR_NEC.Flag = 0;
+//			IR_testData = IR_NEC.Data;
+//		}
+			
 	}
 }
