@@ -25,9 +25,9 @@ int main(void)
 	LED_SetState(&LED_Conflg, LED_ON);
 	LED_SetState(&LED_Conflg, LED_OFF);
 	
-	PWM_SetCompare1(100);
-	//PWM_SetCompare2(1000);
-	PWM_SetCompare3(1000);
+	PWM_SetCompare1(400);
+	PWM_SetCompare2(2000);
+	PWM_SetCompare3(2000);
 	PWM_SetCompare4(0);
 	
 	Moto_SetState(MOTOR_FORWARD);//正转
@@ -36,16 +36,10 @@ int main(void)
 	
 	while(1)
 	{
-//		LED_Beep(&LED_Conflg, 1000);
-//		App_Timer_Delay_ms(1000);
-//		LED_Proc();
-//		App_Timer_Delay_ms(1000);
-		
-//		if(IR_NEC.Flag)
-//		{
-//			IR_NEC.Flag = 0;
-//			IR_testData = IR_NEC.Data;
-//		}
+		LED_Beep(&LED_Conflg, 1000);
+		App_Timer_Delay_ms(1000);
+		LED_Proc();
+		App_Timer_Delay_ms(1000);
 			
 	}
 }
