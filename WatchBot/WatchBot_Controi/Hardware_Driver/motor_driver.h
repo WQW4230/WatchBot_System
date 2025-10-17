@@ -21,8 +21,10 @@ void motor_Init(void);
 // 600顺时针90°  中心1550   2500逆时针90°
 void PWM_SetCompare1(uint16_t Compare);
 
-
+// 550顺时针90°  中心1500   2450逆时针90°
 void PWM_SetCompare2(uint16_t Compare);
+
+// 450顺时针90°  中心1450   2450逆时针90°
 void PWM_SetCompare3(uint16_t Compare);
 
 //控制直流电机 取值0-1000 转速0%-100%

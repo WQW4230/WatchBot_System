@@ -109,6 +109,11 @@ void PWM_SetCompare4(uint16_t Compare)
 	TIM_SetCompare3(TIM3, Compare);
 }
 
+
+/*
+设置电机状态
+state的取值在：@Motor_State_t
+*/
 void Moto_SetState(Motor_State_t state)
 {
 	switch(state)

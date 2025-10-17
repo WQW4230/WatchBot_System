@@ -337,10 +337,10 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--no-multibyte-chars</MiscControls>
               <Define>MPU6050</Define>
               <Undefine></Undefine>
-              <IncludePath>.\std_periph_driver\inc;.\user;.\pal;.\u8g2;.\pal\eMPL;.\Hardware_Driver;.\OLED</IncludePath>
+              <IncludePath>.\std_periph_driver\inc;.\user;.\pal;.\u8g2;.\pal\eMPL;.\Hardware_Driver;.\OLED;.\My_App</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1012,17 +1012,42 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>App</GroupName>
+          <GroupName>My_App</GroupName>
           <Files>
             <File>
               <FileName>arm_control.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\App\arm_control.c</FilePath>
+              <FilePath>.\My_App\arm_control.c</FilePath>
             </File>
             <File>
               <FileName>arm_control.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\App\arm_control.h</FilePath>
+              <FilePath>.\My_App\arm_control.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>OLED</GroupName>
+          <Files>
+            <File>
+              <FileName>OLED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\OLED\OLED.c</FilePath>
+            </File>
+            <File>
+              <FileName>OLED.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\OLED\OLED.h</FilePath>
+            </File>
+            <File>
+              <FileName>OLED_Data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\OLED\OLED_Data.c</FilePath>
+            </File>
+            <File>
+              <FileName>OLED_Data.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\OLED\OLED_Data.h</FilePath>
             </File>
           </Files>
         </Group>
