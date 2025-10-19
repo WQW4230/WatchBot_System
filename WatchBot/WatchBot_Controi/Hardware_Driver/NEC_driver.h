@@ -44,7 +44,7 @@ typedef enum
 	Key_Seven,
 	Key_Eight,
 	Key_Nine,
-	Key_ON,//无效按键
+	Key_ERROR,//无效按键
 	Key_XingHao = 11,
 	Key_JingHao = 12,
 	Key_W = 13,
@@ -56,6 +56,6 @@ typedef enum
 
 
 void NEC_Init(void);//初始化红外遥控所有通道及其中断初始化
-Key_Enum IR_GetKey(IR_NEC_HandleTypedef *IR_NEC);//获取当前按钮值 返回按键映射表的枚举常量
+Key_Enum IR_GetKey(void);//获取当前按钮值 返回按键映射表的枚举常量
 
 #endif

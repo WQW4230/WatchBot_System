@@ -8,6 +8,8 @@ uint8_t PS2_KeyFlag = 0;
 void Ps2_KeyInit(void)
 {
 	//GPIO初始化
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+
 	GPIO_InitTypeDef GPIO_InitStruct;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU;
 	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_10 |GPIO_Pin_11;

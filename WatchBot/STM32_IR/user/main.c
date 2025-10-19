@@ -28,7 +28,7 @@ int main(void)
 	OLED_Init();
 	PAL_Init();
 	
-	//Rtc_Init();
+	Rtc_Init();
 	Capture_Config();
 	MineBoard_Init();
 	Contact_Init();
@@ -37,6 +37,7 @@ int main(void)
 	Arm_Init();
 	Arm_Reset();
 	App_Timer_Init();
+	Ps2_KeyInit();
 	
 	while(1)
 	{

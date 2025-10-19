@@ -19,7 +19,9 @@ MIN对应的是逆时针-90°
 #define	PITCH_ANGLE_MIN 2450
 
 //舵机角度每次变换，越小越平滑
-#define ANGLE_STEP 0.1
+#define ANGLE_STEP 1.2
+//目标的PID系数
+#define ANGLE_PID  0.05
 
 /*
 该宏定义定义马达旋转最大速度的占空比值

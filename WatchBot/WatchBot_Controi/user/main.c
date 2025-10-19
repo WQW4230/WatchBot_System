@@ -1,12 +1,14 @@
 #include "stm32f10x.h"
 #include "stm32f10x_pal.h"
-
+#include "OLED.h"
 #include "App_Timer.h"
+
+
 #include "LED_Blink.h"
 #include "NEC_driver.h"
 #include "arm_control.h"
-#include "OLED.h"
-#include "ps2_ADC_DMA.h"
+
+#include "PS2_Control_arm.h"
 
 Key_Enum IR_testData;
 
@@ -18,7 +20,7 @@ int main(void)
 	
 	NEC_Init();
 	Arm_Init();
-	PS2_ADCInit();
+	JOY_Control_Init();
 	
 	LED_t LED_Conflg;
 	LED_Conflg.GPIOX = GPIOC;
@@ -29,11 +31,8 @@ int main(void)
 	LED_SetState(&LED_Conflg, LED_ON);
 	LED_SetState(&LED_Conflg, LED_OFF);
 	
-//	App_Timer_Delay_ms(4000);
-	Servo_SetAngle(-90, -90, -90);
-//	App_Timer_Delay_ms(4000);
-//	
-//	Arm_MoveTo(90, 90, 90);
+	Arm_MoveTo(90, 90, 0);
+	//Arm_MoveTo(-90, 90, 0);
 	while(1)
 	{
 //		LED_Beep(&LED_Conflg, 1000);
@@ -41,11 +40,13 @@ int main(void)
 //		LED_Proc();
 //		App_Timer_Delay_ms(1000);
 		OLED_Clear();
-		OLED_ShowNum(0, 0,  PS2_AD[0], 5, OLED_8X16);
-		OLED_ShowNum(0, 16, PS2_AD[1], 5, OLED_8X16);
-		OLED_ShowNum(0, 32, PS2_AD[2], 5, OLED_8X16);
-		OLED_ShowNum(0, 48, PS2_AD[3], 5, OLED_8X16);
+		
+		//PS2_Uptada();
+		
+		Arm_Update();
+		
 		OLED_Update();
+		App_Timer_Delay_ms(20);
 		
 	}
 }

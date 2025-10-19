@@ -1024,6 +1024,16 @@
               <FileType>5</FileType>
               <FilePath>.\My_App\arm_control.h</FilePath>
             </File>
+            <File>
+              <FileName>PS2_Control_arm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\PS2_Control_arm.c</FilePath>
+            </File>
+            <File>
+              <FileName>PS2_Control_arm.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\PS2_Control_arm.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

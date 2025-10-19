@@ -1,7 +1,7 @@
 #include "NEC_driver.h"
 
 //NEC协议的全局句柄！！！！！！！！！
-IR_NEC_HandleTypedef IR_NEC;
+static IR_NEC_HandleTypedef IR_NEC;
 
 typedef struct
 {
@@ -11,7 +11,7 @@ typedef struct
 	
 }IR_KeyStruct;
 
-IR_KeyStruct Key_arr[18] = 
+static IR_KeyStruct Key_arr[18] = 
 {
 	{0x98, Key_Zero},
 	{0xA2, Key_One},
@@ -23,7 +23,7 @@ IR_KeyStruct Key_arr[18] =
 	{0xE0, Key_Seven},
 	{0xA8, Key_Eight},
 	{0x90, Key_Nine},
-	{0x00, Key_ON},
+	{0x00, Key_ERROR},
 	{0x68, Key_XingHao},
 	{0xB0, Key_JingHao},
 	{0x18, Key_W},
@@ -34,7 +34,7 @@ IR_KeyStruct Key_arr[18] =
 };
 
 //当前帧错误需要销毁
-void NEC_ClearError(IR_NEC_HandleTypedef *IR_NEC)
+static void NEC_ClearError(IR_NEC_HandleTypedef *IR_NEC)
 {
 	IR_NEC->FullCode    = 0;              //完整数据
 	IR_NEC->PulseCount  = 0;							//数据计数到几位
@@ -45,7 +45,7 @@ void NEC_ClearError(IR_NEC_HandleTypedef *IR_NEC)
 //地址位 数据位校验
 //当完整的接收到一帧以后才会进行校验，如若地址位正反码、数据位正反码、地址位和用户码对不上则直接丢弃这一帧
 //可用的时候将Fla标志位置位
-void NEC_CheckCode(IR_NEC_HandleTypedef *IR_NEC)
+static void NEC_CheckCode(IR_NEC_HandleTypedef *IR_NEC)
 {
 	IR_NEC->Addres =    (uint8_t)(IR_NEC->FullCode>>24);
 	uint8_t AddresInv = (uint8_t)(IR_NEC->FullCode>>16);
@@ -65,7 +65,7 @@ void NEC_CheckCode(IR_NEC_HandleTypedef *IR_NEC)
 }
 
 //计算脉宽，直接调用放入句柄即可
-void IR_CalcPulseWidth(IR_NEC_HandleTypedef *IR_NEC)
+static void IR_CalcPulseWidth(IR_NEC_HandleTypedef *IR_NEC)
 {
 	IR_NEC->KeyUpFlag = 0;
 	IR_NEC->ThisCapture = TIM_GetCapture1(TIM1);
@@ -87,7 +87,7 @@ void IR_CalcPulseWidth(IR_NEC_HandleTypedef *IR_NEC)
 }
 
 //空闲状态时候 等待起始位
-void NEC_State_IDLE(IR_NEC_HandleTypedef *IR_NEC)
+static void NEC_State_IDLE(IR_NEC_HandleTypedef *IR_NEC)
 {	
 	uint16_t PulseCount = IR_NEC->PulseCount;
 	uint16_t PulseWidth = IR_NEC->PulseWidth;
@@ -110,7 +110,7 @@ void NEC_State_IDLE(IR_NEC_HandleTypedef *IR_NEC)
 }
 
 //接收状态时候 等待数据位发送完成
-void NEC_State_Receive(IR_NEC_HandleTypedef *IR_NEC)
+static void NEC_State_Receive(IR_NEC_HandleTypedef *IR_NEC)
 {
 	uint16_t PulseCount = IR_NEC->PulseCount;
 	uint16_t PulseWidth = IR_NEC->PulseWidth;	
@@ -147,7 +147,7 @@ void NEC_State_Receive(IR_NEC_HandleTypedef *IR_NEC)
 }
 
 //进入连发模式
-void NEC_State_Repeat(IR_NEC_HandleTypedef *IR_NEC)
+static void NEC_State_Repeat(IR_NEC_HandleTypedef *IR_NEC)
 {
 	if(IR_NEC->PulseCount == 40) //330ms未抬起则连发
 	{
@@ -163,7 +163,7 @@ void NEC_State_Repeat(IR_NEC_HandleTypedef *IR_NEC)
 
 //
 //起始位 逻辑01分析
-void NEC_CaptureEdge(IR_NEC_HandleTypedef *IR_NEC)
+static void NEC_CaptureEdge(IR_NEC_HandleTypedef *IR_NEC)
 {
 	//计算脉宽
 	IR_CalcPulseWidth(IR_NEC);
@@ -252,15 +252,23 @@ void NEC_Init(void)
 	NVIC_Init(&NVIC_InitStruct);
 }
 
-
-Key_Enum IR_GetKey(IR_NEC_HandleTypedef *IR_NEC)
+//获取当前按钮值 返回按键映射表的枚举常量
+//如果接收到红外信号，并且读取该函数会返回@Key_Enum中的值
+//如果没有收到红外信号，则会返回Key_ERROR
+Key_Enum IR_GetKey(void)
 {
-	for(uint16_t i = 0; i < 18; i++)
+	if(IR_NEC.Flag == 1)
 	{
-		if(IR_NEC->Data == (Key_arr[i].IR_KeyData))
-			return Key_arr[i].KeyEnum;
+		IR_NEC.Flag = 0;
+		for(uint16_t i=0; i<(sizeof(Key_arr) / sizeof(Key_arr[0])); i++)
+		{
+			if(IR_NEC.Data == Key_arr[i].IR_KeyData)
+			{
+				return Key_arr[i].KeyEnum;
+			}
+		}
 	}
-	return Key_ON;
+	return Key_ERROR;
 }
 
 //中断入口

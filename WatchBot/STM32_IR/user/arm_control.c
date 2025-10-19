@@ -172,7 +172,7 @@ void Arm_Reset(void)
 void Arm_Proc(void)
 {
 	//摇杆抢夺控制权
-	if(PS2_KeyFlag == 0)
+	if(PS2_KeyFlag == 1)
 	{
 		ServoAngles.base = 185 - (PS2_AD[0] * 185 / 4095); 	
 		ServoAngles.shoulder = PS2_AD[1] * 185 / 4095;

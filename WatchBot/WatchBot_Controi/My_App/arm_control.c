@@ -42,8 +42,8 @@ void Servo_SetAngle(float Base, float Roll, float Pitch)
 	
 	//记录当前角度
 	Current_Angle.Base_Angle  = Base;
-	Current_Angle.Pitch_Angle = Roll;
-	Current_Angle.Roll_Angle  = Pitch;
+	Current_Angle.Roll_Angle = Roll;
+	Current_Angle.Pitch_Angle  = Pitch;
 }
 
 /*
@@ -59,42 +59,47 @@ void Arm_MoveTo(float Base, float Roll, float Pitch)
 }
 
 /*
-	每次调用Arm_Update会逼近一次目标值
+调用Arm_Update会直接读取当前ADC值并写入舵机寄存器
 	会平滑缓慢向目标值逼近
 	目标值在这个结构体变量里:Target_Angle
 	每次逼近值在				 :ANGLE_STEP
+					PID系数				ANGLE_PID
 */
 void Arm_Update(void)
 {
 	//基座旋转角-如果目标值大于当前值
-	if(Target_Angle.Base_Angle > Current_Angle.Base_Angle)
-	{
-		Current_Angle.Base_Angle += ANGLE_STEP;
-	}
-	else if(Target_Angle.Base_Angle < Current_Angle.Base_Angle)
-	{
-		Current_Angle.Base_Angle -= ANGLE_STEP;
-	}
+//	if(Target_Angle.Base_Angle > Current_Angle.Base_Angle)
+//	{
+//		Current_Angle.Base_Angle += ANGLE_STEP;
+//	}
+//	else if(Target_Angle.Base_Angle < Current_Angle.Base_Angle)
+//	{
+//		Current_Angle.Base_Angle -= ANGLE_STEP;
+//	}
+//	
+//	//大臂翻滚角-如果目标值大于当前值
+//	if(Target_Angle.Roll_Angle > Current_Angle.Roll_Angle)
+//	{
+//		Current_Angle.Roll_Angle += ANGLE_STEP;
+//	}
+//	else if(Target_Angle.Roll_Angle < Current_Angle.Roll_Angle)
+//	{
+//		Current_Angle.Roll_Angle -= ANGLE_STEP;
+//	}
+//	
+//	//腕部俯仰角-如果目标值大于当前值
+//	if(Target_Angle.Pitch_Angle > Current_Angle.Pitch_Angle)
+//	{
+//		Current_Angle.Pitch_Angle += ANGLE_STEP;
+//	}
+//	else if(Target_Angle.Pitch_Angle < Current_Angle.Pitch_Angle)
+//	{
+//		Current_Angle.Pitch_Angle -= ANGLE_STEP;
+//	}
 	
-	//大臂翻滚角-如果目标值大于当前值
-	if(Target_Angle.Roll_Angle > Current_Angle.Roll_Angle)
-	{
-		Current_Angle.Roll_Angle += ANGLE_STEP;
-	}
-	else if(Target_Angle.Roll_Angle < Current_Angle.Roll_Angle)
-	{
-		Current_Angle.Roll_Angle -= ANGLE_STEP;
-	}
-	
-	//腕部俯仰角-如果目标值大于当前值
-	if(Target_Angle.Pitch_Angle > Current_Angle.Pitch_Angle)
-	{
-		Current_Angle.Pitch_Angle += ANGLE_STEP;
-	}
-	else if(Target_Angle.Pitch_Angle < Current_Angle.Pitch_Angle)
-	{
-		Current_Angle.Pitch_Angle -= ANGLE_STEP;
-	}
+	Current_Angle.Base_Angle = (Current_Angle.Base_Angle * (1 - ANGLE_PID)) + (Target_Angle.Base_Angle * ANGLE_PID);
+	Current_Angle.Roll_Angle = (Current_Angle.Roll_Angle * (1 - ANGLE_PID)) + (Target_Angle.Roll_Angle * ANGLE_PID);
+	Current_Angle.Pitch_Angle = (Current_Angle.Pitch_Angle * (1 - ANGLE_PID)) + (Target_Angle.Pitch_Angle * ANGLE_PID);
 	
 	//调整当前角度
 	Servo_SetAngle(Current_Angle.Base_Angle, Current_Angle.Roll_Angle, Current_Angle.Pitch_Angle);
