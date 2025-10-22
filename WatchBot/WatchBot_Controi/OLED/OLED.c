@@ -25,6 +25,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+
+
 /**
   * 数据存储格式：
   * 纵向8点，高位在下，先从左到右，再从上到下
@@ -1472,6 +1474,48 @@ void OLED_DrawArc(int16_t X, int16_t Y, uint8_t Radius, int16_t StartAngle, int1
 		}
 	}
 }
+
+typedef struct {
+    uint8_t page;      // 当前更新页
+    uint8_t busy;      // 是否正在更新（可选）
+} OLED_UpdateState_t;
+
+static OLED_UpdateState_t oled_state = {0, 0};
+
+// 初始化OLED状态（只需在系统启动时调用一次）
+void OLED_UpdateInit(void)
+{
+    oled_state.page = 0;
+    oled_state.busy = 0;
+}
+
+// 非阻塞OLED更新函数，每次调用更新一页
+void OLED_UpdateStep(void)
+{
+    // 更新当前页
+    uint8_t j = oled_state.page;
+
+    OLED_SetCursor(j, 0);
+    OLED_I2C_Start();
+    OLED_I2C_SendByte(0x78);     // OLED地址
+    OLED_I2C_SendByte(0x40);     // 控制字节，写数据
+
+    // 写入一页(128列)
+    for (uint8_t i = 0; i < 128; i++)
+    {
+        OLED_I2C_SendByte(OLED_DisplayBuf[j][i]);
+    }
+    OLED_I2C_Stop();
+
+    // 准备下一页
+    oled_state.page++;
+    if (oled_state.page >= 8)
+    {
+        oled_state.page = 0;      // 回到第一页，持续循环
+    }
+}
+
+
 
 /*********************功能函数*/
 

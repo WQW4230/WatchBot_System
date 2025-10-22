@@ -3,6 +3,7 @@
 
 RTC_Time Rtctime;
 
+//RTC时钟初始化
 void Rtc_Init(void)
 {
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
@@ -12,7 +13,7 @@ void Rtc_Init(void)
 	
 	if(BKP_ReadBackupRegister(BKP_DR1) != 0x01)
 	{
-		RCC_LSEConfig(RCC_LSE_ON);
+		RCC_LSEConfig(RCC_LSE_ON);//外部低速时钟
 		while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) != SET);
 		
 		RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
@@ -24,7 +25,7 @@ void Rtc_Init(void)
 		RTC_SetPrescaler(32768 - 1);
 		RTC_WaitForLastTask();
 		
-		RTC_SetCounter(1761054517);
+		RTC_SetCounter(1756976256);
 		RTC_WaitForLastTask();
 		
 		BKP_WriteBackupRegister(BKP_DR1, 0x01);
@@ -37,6 +38,7 @@ void Rtc_Init(void)
 		
 }
 
+//设置当前时间戳，输入年月日时分秒会转换成对应的时间戳
 void RTC_SetTime(RTC_Time Rtctime)
 {
 	time_t time_Cnt;
@@ -54,6 +56,7 @@ void RTC_SetTime(RTC_Time Rtctime)
 	RTC_WaitForLastTask();
 }
 
+//读当前时间戳并自动转换成年月日时分秒
 void RTC_ReadTime(void)
 {
 	time_t Time_Cnt;

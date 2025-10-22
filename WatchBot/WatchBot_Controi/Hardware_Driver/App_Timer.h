@@ -3,6 +3,8 @@
 
 #include "stm32f10x.h"
 
+extern volatile uint64_t system_tick;
+
 void App_Timer_Init(void);
 
 //系统毫秒时间及其毫秒延迟

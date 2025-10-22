@@ -22,6 +22,7 @@ MIN对应的是逆时针-90°
 #define ANGLE_STEP 1.2
 //目标的PID系数
 #define ANGLE_PID  0.05
+#define ANGLE_BASE_PID 0.03
 
 /*
 该宏定义定义马达旋转最大速度的占空比值
@@ -57,5 +58,8 @@ void Arm_MoveTo(float Base, float Roll, float Pitch);
 
 //更新函数
 void Arm_Update(void);
+
+//测试用demo
+void Arm_deom(void);
 
 #endif

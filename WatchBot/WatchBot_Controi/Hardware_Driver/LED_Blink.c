@@ -1,4 +1,5 @@
 #include "LED_Blink.h"
+#include "App_Timer.h"
 #include "stm32f10x.h"
 
 #define MAX_LED 4
@@ -6,7 +7,7 @@
 static struct
 {
 	LED_t *LED;
-	uint16_t remain_ms;
+	
 }led_list[MAX_LED] = {0};
 
 //LED初始化----需手动分配总线对应的引脚
@@ -21,7 +22,10 @@ void LED_Init(LED_t *LED)
 	GPIO_InitStruct.GPIO_Pin = LED->GPIO_PIN;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(LED->GPIOX, &GPIO_InitStruct);
-	GPIO_WriteBit(LED->GPIOX, GPIO_Pin_13, Bit_RESET);
+	
+	LED->Brigh_time = 0;
+	LED->Dark_time  = 0;
+	LED->Last_time  = 0;
 	
 	//初始化默认关闭
 	LED_SetState(LED, LED_OFF);
@@ -32,13 +36,13 @@ void LED_Init(LED_t *LED)
 		if(led_list[i].LED == 0)
 		{
 			led_list[i].LED = LED;
-			led_list[i].remain_ms = 0;
+			break;
 		}
 	}
 }
 
 //LED状态设置
-void LED_SetState(LED_t *LED, LedState_e state)
+void LED_SetState(LED_t *LED, uint8_t state)
 {
 	switch(LED->Lofic)
 	{
@@ -47,10 +51,12 @@ void LED_SetState(LED_t *LED, LedState_e state)
 			if(state == LED_ON)
 			{
 				GPIO_WriteBit(LED->GPIOX, LED->GPIO_PIN, Bit_SET);
+				LED->LED_State = LED_ON;
 			}
 			else
 			{
 				GPIO_WriteBit(LED->GPIOX, LED->GPIO_PIN, Bit_RESET);
+				LED->LED_State = LED_OFF;
 			}
 			break;
 		
@@ -58,24 +64,39 @@ void LED_SetState(LED_t *LED, LedState_e state)
 			if(state == LED_ON)
 			{
 				GPIO_WriteBit(LED->GPIOX, LED->GPIO_PIN, Bit_RESET);
+				LED->LED_State = LED_ON;
 			}
 			else
 			{
 				GPIO_WriteBit(LED->GPIOX, LED->GPIO_PIN, Bit_SET);
+				LED->LED_State = LED_OFF;
 			}		
 	}
 }
 
-//LED亮多久
-void LED_Beep(LED_t *LED, uint64_t duration)
+//LED模式设置
+void LED_SetMode(LED_t *LED, LedMode_e Mode, uint32_t Brigh_time, uint32_t Dark_time)
 {
-	for(uint8_t i=0; i<MAX_LED; i++)
+	LED_t *t = LED;
+	if(t == 0) return;
+	
+	switch(Mode)
 	{
-		if(led_list[i].LED)
-		{
-			led_list[i].remain_ms += duration;
-			LED_SetState(LED, LED_ON);
-		}
+		case LED_OFF:
+			t->LED_Mode = LED_OFF;
+			LED_SetState(t, LED_OFF);
+			break;	
+		
+		case LED_ON:
+			t->LED_Mode = LED_ON;
+			LED_SetState(t, LED_ON);
+			break;
+		
+		case LED_BLINK:
+			t->LED_Mode = LED_BLINK;
+			t->Brigh_time = Brigh_time;
+			t->Dark_time  = Dark_time ;
+			break;
 	}
 }
 
@@ -84,17 +105,30 @@ void LED_Proc(void)
 {
 	for(uint8_t i=0; i<MAX_LED; i++)
 	{
-		if(led_list[i].LED && led_list[i].remain_ms > 0)
+		LED_t *t = led_list[i].LED;
+		
+		//led句柄不为空且为闪烁模式
+		if(t == 0) continue;
+		if(t->LED_Mode != LED_BLINK) continue;
+		
+		switch(t->LED_State)
 		{
-			if(led_list[i].remain_ms <= 1000)
-			{
-				LED_SetState(led_list[i].LED, LED_OFF);
-				led_list[i].remain_ms = 0;
-			}
-			else
-			{
-				led_list[i].remain_ms -= 1000;
-			}
+			case LED_OFF:
+				if(system_tick >= t->Last_time + t->Dark_time)
+				{
+					t->Last_time = system_tick;
+					LED_SetState(t, LED_ON);
+				}
+				break;
+			
+			case LED_ON:
+				if(system_tick >= t->Last_time + t->Brigh_time)
+				{
+					t->Last_time = system_tick;
+					LED_SetState(t, LED_OFF);
+				}
+				break;
+		
 		}
 	}
 }

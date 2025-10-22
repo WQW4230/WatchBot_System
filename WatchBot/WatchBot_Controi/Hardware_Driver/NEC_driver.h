@@ -34,28 +34,30 @@ typedef struct
 
 typedef enum
 {
-	Key_Zero = 0,
-	Key_One = 1,
-	Key_Two,
-	Key_three,
-	Key_Four, 
-	Key_Five, 
-	Key_Six,
-	Key_Seven,
-	Key_Eight,
-	Key_Nine,
-	Key_ERROR,//无效按键
+	Key_Zero 		=  0,
+	Key_One 		=  1,
+	Key_Two			=  2,
+	Key_three		=  3,
+	Key_Four		=  4, 
+	Key_Five		=  5, 
+	Key_Six			=  6,
+	Key_Seven		=  7,
+	Key_Eight		=  8,
+	Key_Nine    =  9,
+	Key_ERROR 	= 10,//无效按键
 	Key_XingHao = 11,
 	Key_JingHao = 12,
-	Key_W = 13,
-	Key_S = 14,
-	Key_A = 15,
-	Key_D = 16,
-	Key_OK = 17,	
+	Key_W 			= 13,
+	Key_S 			= 14,
+	Key_A 			= 15,
+	Key_D 			= 16,
+	Key_OK 			= 17,	
 }Key_Enum;
 
+extern uint8_t NEC_RxFlag;//接收到一帧完整红外信号时置位表示当前数据可用
 
 void NEC_Init(void);//初始化红外遥控所有通道及其中断初始化
+
 Key_Enum IR_GetKey(void);//获取当前按钮值 返回按键映射表的枚举常量
 
 #endif

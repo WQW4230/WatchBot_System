@@ -158,11 +158,10 @@ void SysTick_Handler(void)
 {
 }*/
 
-extern void PAL_Systick_IRQHandler(void);
 
 void SysTick_Handler(void)
 {
-	PAL_Systick_IRQHandler();
+	
 }
 
 /**

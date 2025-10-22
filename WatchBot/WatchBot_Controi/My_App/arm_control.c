@@ -1,5 +1,9 @@
 #include "arm_control.h"
 #include "motor_driver.h"
+#include "Scheduler.h"
+
+#include "OLED.h" //测试用
+
 
 static Arm_Angle_t Current_Angle; //当前角度
 static Arm_Angle_t Target_Angle;  //目标角度
@@ -97,9 +101,13 @@ void Arm_Update(void)
 //		Current_Angle.Pitch_Angle -= ANGLE_STEP;
 //	}
 	
-	Current_Angle.Base_Angle = (Current_Angle.Base_Angle * (1 - ANGLE_PID)) + (Target_Angle.Base_Angle * ANGLE_PID);
+	Current_Angle.Base_Angle = (Current_Angle.Base_Angle * (1 - ANGLE_BASE_PID)) + (Target_Angle.Base_Angle * ANGLE_BASE_PID);
 	Current_Angle.Roll_Angle = (Current_Angle.Roll_Angle * (1 - ANGLE_PID)) + (Target_Angle.Roll_Angle * ANGLE_PID);
 	Current_Angle.Pitch_Angle = (Current_Angle.Pitch_Angle * (1 - ANGLE_PID)) + (Target_Angle.Pitch_Angle * ANGLE_PID);
+	
+	OLED_ShowFloatNum(0, 0, Current_Angle.Base_Angle, 3, 5, OLED_6X8);
+	OLED_ShowFloatNum(0, 8, Current_Angle.Roll_Angle, 3, 5, OLED_6X8);
+	OLED_ShowFloatNum(0, 16, Current_Angle.Pitch_Angle, 3, 5, OLED_6X8);
 	
 	//调整当前角度
 	Servo_SetAngle(Current_Angle.Base_Angle, Current_Angle.Roll_Angle, Current_Angle.Pitch_Angle);
@@ -109,4 +117,112 @@ void Arm_Update(void)
 void Arm_Init(void)
 {
 	 motor_Init();
+}
+
+/*
+	测试用demo
+*/
+void Arm_deom(void)
+{
+	Arm_Init();
+	
+	uint32_t Last;
+	
+	Servo_SetAngle(90, -90, -90);
+	App_Timer_Delay_ms(1500);
+	Arm_MoveTo(-90, 90, -90);
+	Last =  App_Timer_GetTick();
+	while(1)
+	{
+		OLED_Clear();
+		Arm_Update();
+		OLED_Update();
+		if(App_Timer_GetTick() > Last + 3000)
+		{
+			Last =  App_Timer_GetTick();
+			break;
+		}
+	}
+	
+	Arm_MoveTo(90, -90, 90);
+	Last =  App_Timer_GetTick();
+	while(1)
+	{
+		OLED_Clear();
+		Arm_Update();
+		OLED_Update();
+		if(App_Timer_GetTick() > Last + 3000)
+		{
+			Last =  App_Timer_GetTick();
+			break;
+		}
+	}
+	Arm_MoveTo(90, 90, -90);
+	Last =  App_Timer_GetTick();
+	while(1)
+	{
+		OLED_Clear();
+		Arm_Update();
+		OLED_Update();
+		if(App_Timer_GetTick() > Last + 3000)
+		{
+			Last =  App_Timer_GetTick();
+			break;
+		}
+	}
+	
+	Arm_MoveTo(-90, 90, -90);
+	Last =  App_Timer_GetTick();
+	while(1)
+	{
+		OLED_Clear();
+		Arm_Update();
+		OLED_Update();
+		if(App_Timer_GetTick() > Last + 3000)
+		{
+			Last =  App_Timer_GetTick();
+			break;
+		}
+	}
+	Arm_MoveTo(-90, -90, 90);
+	Last =  App_Timer_GetTick();
+	while(1)
+	{
+		OLED_Clear();
+		Arm_Update();
+		OLED_Update();
+		if(App_Timer_GetTick() > Last + 3000)
+		{
+			Last =  App_Timer_GetTick();
+			break;
+		}
+	}
+	
+	Arm_MoveTo(0, 0, 0);
+	Last =  App_Timer_GetTick();
+	while(1)
+	{
+		OLED_Clear();
+		Arm_Update();
+		OLED_Update();
+		if(App_Timer_GetTick() > Last + 3000)
+		{
+			Last =  App_Timer_GetTick();
+			break;
+		}
+	}
+	
+	Arm_MoveTo(0, 90, 90);
+	Last =  App_Timer_GetTick();
+	while(1)
+	{
+		OLED_Clear();
+		Arm_Update();
+		OLED_Update();
+		if(App_Timer_GetTick() > Last + 3000)
+		{
+			Last =  App_Timer_GetTick();
+			break;
+		}
+	}
 }

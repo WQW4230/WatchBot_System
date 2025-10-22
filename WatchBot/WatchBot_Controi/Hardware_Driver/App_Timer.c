@@ -1,6 +1,7 @@
 #include "App_Timer.h"
 
 static volatile uint64_t currentTick = 0;
+volatile uint64_t system_tick = 0; //系统时间
 
 void App_Timer_Init(void)
 {
@@ -44,6 +45,7 @@ void TIM3_IRQHandler(void)
 	{
 		TIM_ClearFlag(TIM3, TIM_FLAG_Update);
 		currentTick++;
+		system_tick++;
 	}
 }
 

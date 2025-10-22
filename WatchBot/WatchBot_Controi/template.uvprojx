@@ -402,307 +402,217 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>startup</GroupName>
+          <GroupName>My_App</GroupName>
           <Files>
             <File>
-              <FileName>startup_stm32f10x_md.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\startup\startup_stm32f10x_md.s</FilePath>
+              <FileName>Scheduler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\Scheduler.c</FilePath>
+            </File>
+            <File>
+              <FileName>Scheduler.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\Scheduler.h</FilePath>
+            </File>
+            <File>
+              <FileName>PS2_Control_arm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\PS2_Control_arm.c</FilePath>
+            </File>
+            <File>
+              <FileName>PS2_Control_arm.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\PS2_Control_arm.h</FilePath>
+            </File>
+            <File>
+              <FileName>Contact.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\Contact.c</FilePath>
+            </File>
+            <File>
+              <FileName>Contact.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\Contact.h</FilePath>
+            </File>
+            <File>
+              <FileName>GreedySnake.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\GreedySnake.c</FilePath>
+            </File>
+            <File>
+              <FileName>GreedySnake.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\GreedySnake.h</FilePath>
+            </File>
+            <File>
+              <FileName>GuessMine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\GuessMine.c</FilePath>
+            </File>
+            <File>
+              <FileName>GuessMine.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\GuessMine.h</FilePath>
+            </File>
+            <File>
+              <FileName>GuessNum.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\GuessNum.c</FilePath>
+            </File>
+            <File>
+              <FileName>GuessNum.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\GuessNum.h</FilePath>
+            </File>
+            <File>
+              <FileName>menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>menu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\menu.h</FilePath>
+            </File>
+            <File>
+              <FileName>LED_Frequency.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\LED_Frequency.c</FilePath>
+            </File>
+            <File>
+              <FileName>LED_Frequency.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\LED_Frequency.h</FilePath>
+            </File>
+            <File>
+              <FileName>arm_control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\arm_control.c</FilePath>
+            </File>
+            <File>
+              <FileName>arm_control.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\arm_control.h</FilePath>
+            </File>
+            <File>
+              <FileName>Alarm_Clock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\Alarm_Clock.c</FilePath>
+            </File>
+            <File>
+              <FileName>Alarm_Clock.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\Alarm_Clock.h</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>pal</GroupName>
+          <GroupName>Hardware_Driver</GroupName>
           <Files>
             <File>
-              <FileName>stm32f10x_pal.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal.c</FileName>
+              <FileName>Active_Buzzer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal.c</FilePath>
+              <FilePath>.\Hardware_Driver\Active_Buzzer.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_adc.h</FileName>
+              <FileName>Active_Buzzer.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_adc.h</FilePath>
+              <FilePath>.\Hardware_Driver\Active_Buzzer.h</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_adc.c</FileName>
+              <FileName>LED_Blink.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_adc.c</FilePath>
+              <FilePath>.\Hardware_Driver\LED_Blink.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_exti.h</FileName>
+              <FileName>LED_Blink.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_exti.h</FilePath>
+              <FilePath>.\Hardware_Driver\LED_Blink.h</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_exti.c</FileName>
+              <FileName>App_Timer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_exti.c</FilePath>
+              <FilePath>.\Hardware_Driver\App_Timer.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_uart.h</FileName>
+              <FileName>App_Timer.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_uart.h</FilePath>
+              <FilePath>.\Hardware_Driver\App_Timer.h</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_uart.c</FileName>
+              <FileName>motor_driver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_uart.c</FilePath>
+              <FilePath>.\Hardware_Driver\motor_driver.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_i2c.h</FileName>
+              <FileName>motor_driver.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_i2c.h</FilePath>
+              <FilePath>.\Hardware_Driver\motor_driver.h</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_i2c.c</FileName>
+              <FileName>PS2_ADC_DMA.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_i2c.c</FilePath>
+              <FilePath>.\Hardware_Driver\PS2_ADC_DMA.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_spi.h</FileName>
+              <FileName>PS2_ADC_DMA.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_spi.h</FilePath>
+              <FilePath>.\Hardware_Driver\PS2_ADC_DMA.h</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_spi.c</FileName>
+              <FileName>NEC_driver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_spi.c</FilePath>
+              <FilePath>.\Hardware_Driver\NEC_driver.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_can.h</FileName>
+              <FileName>NEC_driver.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_can.h</FilePath>
+              <FilePath>.\Hardware_Driver\NEC_driver.h</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_can.c</FileName>
+              <FileName>usart_frame_handler.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_can.c</FilePath>
+              <FilePath>.\Hardware_Driver\usart_frame_handler.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_device_uid.h</FileName>
+              <FileName>usart_frame_handler.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_device_uid.h</FilePath>
+              <FilePath>.\Hardware_Driver\usart_frame_handler.h</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_device_uid.c</FileName>
+              <FileName>rtc_driver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_device_uid.c</FilePath>
+              <FilePath>.\Hardware_Driver\rtc_driver.c</FilePath>
             </File>
             <File>
-              <FileName>pal_crc.h</FileName>
+              <FileName>rtc_driver.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\pal\pal_crc.h</FilePath>
-            </File>
-            <File>
-              <FileName>pal_crc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\pal_crc.c</FilePath>
-            </File>
-            <File>
-              <FileName>pal_object_queue.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\pal_object_queue.h</FilePath>
-            </File>
-            <File>
-              <FileName>pal_object_queue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\pal_object_queue.c</FilePath>
-            </File>
-            <File>
-              <FileName>pal_byte_queue.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\pal_byte_queue.h</FilePath>
-            </File>
-            <File>
-              <FileName>pal_byte_queue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\pal_byte_queue.c</FilePath>
-            </File>
-            <File>
-              <FileName>pal_message_codec.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\pal_message_codec.h</FilePath>
-            </File>
-            <File>
-              <FileName>pal_message_codec.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\pal_message_codec.c</FilePath>
+              <FilePath>.\Hardware_Driver\rtc_driver.h</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>pal_modules</GroupName>
+          <GroupName>OLED</GroupName>
           <Files>
             <File>
-              <FileName>stm32f10x_pal_button.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_button.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_button.c</FileName>
+              <FileName>OLED.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_button.c</FilePath>
+              <FilePath>.\OLED\OLED.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_oled.h</FileName>
+              <FileName>OLED.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_oled.h</FilePath>
+              <FilePath>.\OLED\OLED.h</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_oled.c</FileName>
+              <FileName>OLED_Data.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_oled.c</FilePath>
+              <FilePath>.\OLED\OLED_Data.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_pal_oled_font.h</FileName>
+              <FileName>OLED_Data.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_oled_font.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_oled_font.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_oled_font.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_ec11.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_ec11.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_ec11.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_ec11.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_mpu6050.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_mpu6050.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_mpu6050.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_mpu6050.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_hcsr04.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_hcsr04.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_hcsr04.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_hcsr04.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_ir_nec.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_ir_nec.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_ir_nec.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_ir_nec.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_drv8833_dual_dc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_drv8833_dual_dc.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_drv8833_dual_dc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_drv8833_dual_dc.c</FilePath>
-            </File>
-            <File>
-              <FileName>pal_pid.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\pal_pid.h</FilePath>
-            </File>
-            <File>
-              <FileName>pal_pid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\pal_pid.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_w25q64.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_w25q64.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_w25q64.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_w25q64.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_ec600.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\stm32f10x_pal_ec600.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_pal_ec600.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\stm32f10x_pal_ec600.c</FilePath>
-            </File>
-            <File>
-              <FileName>pal_first_order_lowpass_filter.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\pal_first_order_lowpass_filter.h</FilePath>
-            </File>
-            <File>
-              <FileName>pal_first_order_lowpass_filter.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\pal_first_order_lowpass_filter.c</FilePath>
-            </File>
-            <File>
-              <FileName>pal_iir_filter.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\pal_iir_filter.h</FilePath>
-            </File>
-            <File>
-              <FileName>pal_iir_filter.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\pal_iir_filter.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>eMPL</GroupName>
-          <Files>
-            <File>
-              <FileName>dmpKey.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\eMPL\dmpKey.h</FilePath>
-            </File>
-            <File>
-              <FileName>dmpmap.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\eMPL\dmpmap.h</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\eMPL\inv_mpu.h</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\eMPL\inv_mpu.c</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu_dmp_motion_driver.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pal\eMPL\inv_mpu_dmp_motion_driver.h</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\pal\eMPL\inv_mpu_dmp_motion_driver.c</FilePath>
+              <FilePath>.\OLED\OLED_Data.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -947,117 +857,12 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Hardware_Driver</GroupName>
+          <GroupName>startup</GroupName>
           <Files>
             <File>
-              <FileName>Active_Buzzer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware_Driver\Active_Buzzer.c</FilePath>
-            </File>
-            <File>
-              <FileName>Active_Buzzer.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware_Driver\Active_Buzzer.h</FilePath>
-            </File>
-            <File>
-              <FileName>LED_Blink.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware_Driver\LED_Blink.c</FilePath>
-            </File>
-            <File>
-              <FileName>LED_Blink.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware_Driver\LED_Blink.h</FilePath>
-            </File>
-            <File>
-              <FileName>App_Timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware_Driver\App_Timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>App_Timer.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware_Driver\App_Timer.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware_Driver\motor_driver.c</FilePath>
-            </File>
-            <File>
-              <FileName>motor_driver.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware_Driver\motor_driver.h</FilePath>
-            </File>
-            <File>
-              <FileName>PS2_ADC_DMA.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware_Driver\PS2_ADC_DMA.c</FilePath>
-            </File>
-            <File>
-              <FileName>PS2_ADC_DMA.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware_Driver\PS2_ADC_DMA.h</FilePath>
-            </File>
-            <File>
-              <FileName>NEC_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware_Driver\NEC_driver.c</FilePath>
-            </File>
-            <File>
-              <FileName>NEC_driver.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware_Driver\NEC_driver.h</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>My_App</GroupName>
-          <Files>
-            <File>
-              <FileName>arm_control.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\My_App\arm_control.c</FilePath>
-            </File>
-            <File>
-              <FileName>arm_control.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\My_App\arm_control.h</FilePath>
-            </File>
-            <File>
-              <FileName>PS2_Control_arm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\My_App\PS2_Control_arm.c</FilePath>
-            </File>
-            <File>
-              <FileName>PS2_Control_arm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\My_App\PS2_Control_arm.h</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>OLED</GroupName>
-          <Files>
-            <File>
-              <FileName>OLED.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\OLED\OLED.c</FilePath>
-            </File>
-            <File>
-              <FileName>OLED.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\OLED\OLED.h</FilePath>
-            </File>
-            <File>
-              <FileName>OLED_Data.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\OLED\OLED_Data.c</FilePath>
-            </File>
-            <File>
-              <FileName>OLED_Data.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\OLED\OLED_Data.h</FilePath>
+              <FileName>startup_stm32f10x_md.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\startup\startup_stm32f10x_md.s</FilePath>
             </File>
           </Files>
         </Group>

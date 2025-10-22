@@ -22,9 +22,16 @@
 
 /*初始化函数*/
 void OLED_Init(void);
+void OLED_StartUpdate(void);
+
+//非阻塞更新初始化
+void OLED_UpdateInit(void);
 
 /*更新函数*/
 void OLED_Update(void);
+void OLED_UpdateStep(void); //非阻塞更新
+
+void OLED_UpdeteAreaStep(int16_t X, int16_t Y, uint8_t Width, uint8_t Height);//非阻塞更新部分屏幕
 void OLED_UpdateArea(int16_t X, int16_t Y, uint8_t Width, uint8_t Height);
 
 /*显存控制函数*/

@@ -26,7 +26,6 @@ uint64_t Time = 0;
 int main(void)
 {
 	OLED_Init();
-	PAL_Init();
 	
 	Rtc_Init();
 	Capture_Config();
