@@ -37,7 +37,7 @@ int Scheduler_AddTask(void(*Func)(void), uint32_t frequency, uint16_t priority,u
 void vTask_Delay(uint32_t Delay_ms);
 
 //任务删除
-void vTask_Delete(task_cotrol_block_t *task);
+void vTask_Delete(void(*Func)(void));
 
 //调度器
 void Scheduler_Run(void);

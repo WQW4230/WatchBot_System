@@ -17,6 +17,8 @@ uint64_t Time = 0;
 
 int main(void)
 {
+	
+	
 	Scheduler_Init();
 	OLED_Init();
 	
@@ -26,6 +28,7 @@ int main(void)
 	Led_BlinkInit();
 	Alarm_Init();
 	NEC_Init();
+	//Arm_deom();
 		
 	Scheduler_Run();
 	

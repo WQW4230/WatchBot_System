@@ -35,12 +35,12 @@ int Scheduler_AddTask(void(*Func)(void), uint32_t frequency, uint16_t priority, 
 	{
 		if(task[i].Task_Fun == NULL)
 		{
-			task[task_count].Task_Fun  = Func;
-			task[task_count].frequency = frequency; 					//执行频率
-			task[task_count].max_time  = max_ms;							//最大执行时间
-			task[task_count].last_time = App_Timer_GetTick(); //获取当前系统时间
-			task[task_count].priority  = priority;						//优先级
-			task[task_count].state     = TASK_STATE_READY;     //任务就绪
+			task[i].Task_Fun  = Func;
+			task[i].frequency = frequency; 					//执行频率
+			task[i].max_time  = max_ms;							//最大执行时间
+			task[i].last_time = App_Timer_GetTick(); //获取当前系统时间
+			task[i].priority  = priority;						//优先级
+			task[i].state     = TASK_STATE_READY;     //任务就绪
 			task_count++; //任务数量++
 			return 1; //任务添加成功，返回1
 		}
@@ -115,15 +115,22 @@ void vTask_Delay(uint32_t Delay_ms)
 	销毁任务
 	参数task：需要销毁任务函数的指针
 */
-void vTask_Delete(task_cotrol_block_t *task)
+void vTask_Delete(void(*Func)(void))
 {
 	for(uint16_t i=0; i<task_count; i++)
 	{
-		if(task[i].Task_Fun == task->Task_Fun)
+		//任务块数组寻找需要删除任务
+		if(task[i].Task_Fun == Func)
 		{
-			task->Task_Fun = NULL;
-			task->sleep_time = 0;
-			task->tick_counter = 0;
+			task[i].Task_Fun = NULL;
+			task[i].sleep_time = 0;
+			task[i].last_time = 0;
+			task[i].priority = 0;
+			task[i].state = TASK_STATE_SUSPEND;
+			task[i].frequency = 0;
+			task[i].tick_counter = 0;
+			task[i].max_time = 0;
+			
 			task_count--;
 		}
 	}
