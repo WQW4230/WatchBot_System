@@ -13,7 +13,7 @@ typedef struct RTC_Time
 	uint8_t sec;
 }RTC_Time;
 
-//时间错操作句柄,读写
+//时间戳操作句柄,读写
 extern RTC_Time Rtctime;
 //初始化
 void Rtc_Init(void);

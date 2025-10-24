@@ -415,6 +415,16 @@
               <FilePath>.\My_App\Scheduler.h</FilePath>
             </File>
             <File>
+              <FileName>menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>menu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\menu.h</FilePath>
+            </File>
+            <File>
               <FileName>PS2_Control_arm.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\My_App\PS2_Control_arm.c</FilePath>
@@ -423,6 +433,26 @@
               <FileName>PS2_Control_arm.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\My_App\PS2_Control_arm.h</FilePath>
+            </File>
+            <File>
+              <FileName>arm_control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\arm_control.c</FilePath>
+            </File>
+            <File>
+              <FileName>arm_control.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\arm_control.h</FilePath>
+            </File>
+            <File>
+              <FileName>LED_Frequency.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\LED_Frequency.c</FilePath>
+            </File>
+            <File>
+              <FileName>LED_Frequency.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\LED_Frequency.h</FilePath>
             </File>
             <File>
               <FileName>Contact.c</FileName>
@@ -463,36 +493,6 @@
               <FileName>GuessNum.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\My_App\GuessNum.h</FilePath>
-            </File>
-            <File>
-              <FileName>menu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\My_App\menu.c</FilePath>
-            </File>
-            <File>
-              <FileName>menu.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\My_App\menu.h</FilePath>
-            </File>
-            <File>
-              <FileName>LED_Frequency.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\My_App\LED_Frequency.c</FilePath>
-            </File>
-            <File>
-              <FileName>LED_Frequency.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\My_App\LED_Frequency.h</FilePath>
-            </File>
-            <File>
-              <FileName>arm_control.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\My_App\arm_control.c</FilePath>
-            </File>
-            <File>
-              <FileName>arm_control.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\My_App\arm_control.h</FilePath>
             </File>
             <File>
               <FileName>Alarm_Clock.c</FileName>

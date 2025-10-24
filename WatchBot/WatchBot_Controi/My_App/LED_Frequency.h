@@ -3,14 +3,14 @@
 
 #include "stm32f10x.h" 
 
-typedef struct
+typedef enum
 {
-	uint8_t current;							//当前指向的索引
-	uint8_t up;										//向上翻索引号
-	uint8_t down;									//向下翻索引号
-	uint8_t enter;								//确认索引号
-	void (*current_operation)(void);  //任务函数
-} KeyOperation_t;
+	//RGB灯颜色
+	WHITE = 0, //白色
+	BLUE,	 //蓝色
+	RED,	 //红色
+
+}LedColour_e;
 
 typedef struct
 {
@@ -27,14 +27,13 @@ typedef struct
 	//ESP32摄像头照明灯
 	uint16_t cam_LedBrigh_time;	//亮时间
 	uint16_t cam_LedDark_time;	//暗时间
-	uint8_t  cam_LedColour;   	//颜色
+	LedColour_e  cam_LedColour; //颜色
 }LED_SetState_t;
 
-
+//LED闪烁初始化
 void Led_BlinkInit(void);
 
-void LED_Proc_test(void);
-
-void LedSet_Proc(void);
+//LED菜单任务进程
+void LedSet_Menu_Proc(void);
 
 #endif

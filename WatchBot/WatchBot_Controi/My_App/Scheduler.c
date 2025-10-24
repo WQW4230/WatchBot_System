@@ -117,7 +117,7 @@ void vTask_Delay(uint32_t Delay_ms)
 */
 void vTask_Delete(void(*Func)(void))
 {
-	for(uint16_t i=0; i<task_count; i++)
+	for(uint16_t i=0; i<MAX_TASK; i++)
 	{
 		//任务块数组寻找需要删除任务
 		if(task[i].Task_Fun == Func)

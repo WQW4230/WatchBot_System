@@ -81,6 +81,7 @@ void motor_Init(void)
 	TIM_OCInitStruct.TIM_Pulse = 0;		//CCR
 	
 	TIM_OC3Init(TIM3, &TIM_OCInitStruct);//定时器3 直流电机通道
+	Moto_SetState(MOTOR_STOP);  			 //电机默认刹车
 	
 	TIM_Cmd(TIM2, ENABLE);
 	TIM_Cmd(TIM3, ENABLE);

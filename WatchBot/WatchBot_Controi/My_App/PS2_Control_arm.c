@@ -149,5 +149,5 @@ void PS2_Uptada(void)
 	OLED_ShowFloatNum(0, 48, state.last_Angle.FanSpeed, 3, 4, OLED_6X8);
 
 	
-	Arm_MoveTo(state.last_Angle.Base, state.last_Angle.Roll, state.last_Angle.Pitch);
+	Arm_MoveTo(state.last_Angle.Base, state.last_Angle.Roll, state.last_Angle.Pitch, state.last_Angle.FanSpeed);
 }

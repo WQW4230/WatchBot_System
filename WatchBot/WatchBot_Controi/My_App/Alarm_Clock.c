@@ -37,7 +37,7 @@ void Alarm_Init(void)
 	
 	//Buzzer_SetMode(&PB14_Buzzer, Buzzer_Beep, 1000, 500);
 	
-	Scheduler_AddTask(Buzzer_Proc, 10, 1, 1000);
+	//Scheduler_AddTask(Buzzer_Proc, 10, 1, 1000);
 }
 
 

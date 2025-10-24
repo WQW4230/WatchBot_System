@@ -1,7 +1,15 @@
 #include "menu.h"
-#include "NEC_driver.h"
+#include "stm32f10x.h"
+#include <stddef.h>
 #include <stdlib.h>
+#include "Scheduler.h"
+
 #include "OLED.h"
+#include "Scheduler.h"
+#include "NEC_driver.h"
+
+#include "LED_Frequency.h"
+
 #include "GuessNum.h"
 #include "GuessMine.h"
 #include "Contact.h"
@@ -11,21 +19,111 @@
 #include "Alarm_Clock.h"
 #include "LED_Frequency.h"
 
+Menu_t Menu_State = {0, 0, 0};//主页控制句柄
+
+void Menu_Proc(void); //主页进程函数
+
+
+menu_items app_items[] =  		//软件名称及其软件函数指针
+{
+	{"0通讯录", &LedSet_Menu_Proc},
+	{"1贪吃蛇", &LedSet_Menu_Proc},
+	{"2扫雷",   &LedSet_Menu_Proc},	
+	{"3猜数字", &LedSet_Menu_Proc},	
+	{"4LED调速",&LedSet_Menu_Proc},
+	{"5定时器", &LedSet_Menu_Proc},
+	{"6机械臂", &LedSet_Menu_Proc},	
+};
+
+
+void Menu_HomeShow(void)
+{
+	OLED_Clear();
+	for(uint8_t i=0; i<APP_PAGE_SIZE; i++)
+	{
+		uint8_t app_index = (Menu_State.top_index + i) % APP_COUNT; //计算当前需要打印软件名称的数组位置
+		OLED_Printf(0, i*20, OLED_8X16, app_items[app_index].app_name);
+		
+		//当前选中位置颜色取反
+		if(i == Menu_State.cursor)
+		{
+			OLED_ReverseArea(0, i*20, 70, 20);
+		}
+	}
+	
+	//读当前时间已经移动到Alarm的时间比较函数下调用一次即可
+	//RTC_ReadTime();
+	OLED_Printf(70, 0, OLED_6X8, "%d-%d-%d", Rtctime.year, Rtctime.mon, Rtctime.day);
+	OLED_Printf(76, 8, OLED_6X8, "%d:%d:%d", Rtctime.hour, Rtctime.min, Rtctime.sec);
+}
 
 uint8_t Menu_Flag = 1;//主页状态标志位;
-static uint8_t Menu_PageStart = 0;//页面起始 0/0-2， 1/1-3， 2/2-4， 3/3-5
-static uint8_t Menu_Cursor = 0;//当前光标指向的位置
 
-static char* menu_items[] = 
+//菜单选项向上
+static void Option_up(void)
 {
-    "0通讯录",
-    "1贪吃蛇",
-    "2扫雷",
-    "3猜数字",
-		"4LED调速",
-    "5定时器",
-		"6机械臂",
-};
+	if(Menu_State.cursor > 0)
+		Menu_State.cursor--;
+	else
+		Menu_State.top_index = (Menu_State.top_index +APP_COUNT - 1) % APP_COUNT;	
+}
+
+//菜单选项向下
+static void Option_down(void)
+{
+	if(Menu_State.cursor < APP_PAGE_SIZE - 1)
+		Menu_State.cursor++;
+	else
+		Menu_State.top_index = (Menu_State.top_index + APP_COUNT + 1) % APP_COUNT;
+}
+
+//获取当前光标指向哪个软件
+static void Current_option(void)
+{
+	Menu_State.select_app = (Menu_State.cursor + Menu_State.top_index) % APP_COUNT;
+}
+
+static void Task_creation(void)
+{
+	Current_option();//先更新当前光标指向的是哪个软件
+	void (*fun)(void) = app_items[Menu_State.select_app].fun; //获得App函数指针
+	
+	vTask_Delete(Menu_Proc); //删除主页任务进程
+	Scheduler_AddTask(fun, 50, 5, 1000);
+}
+
+//功能主页任务进程
+void Menu_Proc(void)
+{
+	static uint8_t first_show = 1; //第一次进入菜单的时候显示
+	
+	if(first_show)
+	{
+		Menu_HomeShow();
+	}	
+	
+	if(NEC_RxFlag == 0) return; //没有红外按键按下退出;
+	uint8_t key = IR_GetKey();	//获取按键值
+	
+	switch(key)
+	{
+		// W键按下 菜单选项向上
+		case Key_W:
+			Option_up();
+			break;
+		
+		// S键按下 菜单选项向下
+		case Key_S:
+			Option_down();
+			break;
+		// OK键按下 进入当前软件
+		case Key_OK:
+			Task_creation();
+			break;
+	}
+	
+	Menu_HomeShow();
+}
 
 //Random_Max：输入需要范围的随机数，返回值是0 — (Max-1)
 //获取随机数
@@ -39,119 +137,4 @@ uint32_t GetRandom(uint32_t Random_Max)
 	}
 	return rand()% Random_Max;
 }
-
-
-//翻页显示
-static void Menu_HomeShow(void)
-{
-    OLED_Clear();
-	
-    for(uint8_t i = 0; i < APP_PageSize; i++)
-    {
-        uint8_t index = (Menu_PageStart + i); // 当前要显示的第几个应用
-        if(index < APP_Top)
-				{
-					OLED_Printf(0, (20*i), OLED_8X16, menu_items[index]);
-					if(index == Menu_Cursor)
-					{
-						OLED_ReverseArea(0, (20*i), 70, 20);
-					}
-				}
-    }
-		//读当前时间已经移动到Alarm的时间比较函数下调用一次即可
-		//RTC_ReadTime();
-		OLED_Printf(70, 0, OLED_6X8, "%d-%d-%d", Rtctime.year, Rtctime.mon, Rtctime.day);
-		OLED_Printf(76, 8, OLED_6X8, "%d:%d:%d", Rtctime.hour, Rtctime.min, Rtctime.sec);
-    OLED_Update();
-}
-void Menu_Proc(void)
-{
-	if(Menu_Flag == 1)
-	{
-		Menu_HomeShow();
-	}	
-	if((NEC_RxFlag == 1) && (Menu_Flag == 1))
-	{
-		NEC_RxFlag = 0;
-		switch(IR_GetKey())
-		{
-			case Key_W:
-			{			
-				if(Menu_Cursor == 0)
-					Menu_Cursor = APP_Top - 1;
-				else
-					Menu_Cursor--;
-					//光标超过当前页面的第一行
-				if(Menu_Cursor < Menu_PageStart)
-				{
-					Menu_PageStart = Menu_Cursor;
-				}
-				
-				break;
-			}
-			case Key_S:
-			{
-				Menu_Cursor++;
-				if(Menu_Cursor >= APP_Top)
-					Menu_Cursor = 0;
-				
-				//光标超过当前页面的最后一行
-				if(Menu_Cursor >= Menu_PageStart + APP_PageSize)
-				{
-					 Menu_PageStart = Menu_Cursor - (APP_PageSize - 1);
-				}
-				break;
-			}
-			
-			case Key_OK:
-			{
-				switch(Menu_Cursor)
-				{
-					case 0:
-						Menu_Flag = 0;
-						Contact_Flag = 1;
-						OLED_Clear();
-						break;
-					case 1:
-						Menu_Flag = 0;					
-						SnakeState_Flag = 1;
-						OLED_Clear();
-						break;
-					case 2:
-						Menu_Flag = 0;
-						GuessMine_Flag = 1;
-						OLED_Clear();
-						Mine_CursorShow();
-						break;
-					case 3:
-						Menu_Flag = 0;
-						GuessNum_Flag = 1;
-						OLED_Clear();
-						
-						break;
-					case 4:
-						Menu_Flag = 0;
-						OLED_Clear();
-						OLED_Printf(0, 0, OLED_8X16, "Flicker:");
-						OLED_Update();
-					
-						break;
-					case 5:
-						Menu_Flag = 0;					
-						Alarm_Flag = 1;
-						OLED_Clear();
-						break;
-					
-					case 6:
-						Menu_Flag = 0;
-						//Arm_Flag = 1;
-						OLED_Clear();
-						break;
-				}
-			}		
-		}	
-	}
-}
-
-
 
