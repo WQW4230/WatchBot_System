@@ -184,7 +184,7 @@ void Set_RTC_Time(void)
 				Alarm.year = Tmp[0];
 				Alarm.mon  = Tmp[1];
 				Alarm.day  = Tmp[2];
-				Alarm.hour = Tmp[3] - 8;//东八区换算
+				Alarm.hour = Tmp[3];
 				Alarm.min  = Tmp[4];
 				Alarm.sec  = Tmp[5];
 				RTC_SetTime(Alarm);

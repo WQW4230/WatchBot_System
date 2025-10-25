@@ -40,10 +40,9 @@ void HighLow(void)
 
 void Get_GuessNum(void)
 {
-	if(NEC_RxFlag == 1)
-	{
-		NEC_RxFlag = 0;
-		uint8_t GuessNum_Key = IR_GetKey();
+	uint8_t key;	//存按键值
+	if(IR_GetKey(&key) == -1) return;//无按键或错误
+		uint8_t GuessNum_Key = key;
 		//按键为0-9Guess才进行自增
 		if(GuessNum_Key <= 9)
 		{
@@ -57,7 +56,6 @@ void Get_GuessNum(void)
 			
 			case Key_XingHao:
 			{
-				Menu_Flag = 1;
 				GuessNum_Flag = 0;
 				GuessNum_Guess = 0;
 				GuessNum_Show_Flag = 0;
@@ -71,7 +69,7 @@ void Get_GuessNum(void)
 			}
 			
 		}
-	}
+	
 }
 
 //游戏显示函数，只显示一次

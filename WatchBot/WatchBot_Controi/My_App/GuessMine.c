@@ -81,11 +81,9 @@ void GuessMine_Proc(void)
 {
 	if(GuessMine_Flag == 1)
 	{
-		if(NEC_RxFlag == 1)
-		{
-			NEC_RxFlag = 0;
-
-			switch(IR_GetKey())
+		uint8_t key;	//存按键值
+	if(IR_GetKey(&key) == -1) return;//无按键或错误
+			switch(key)
 			{
 				case Key_W:
 					if(Mine_Cursor_Y > 0)
@@ -195,7 +193,6 @@ void GuessMine_Proc(void)
 				case Key_XingHao:
 				{
 					GuessMine_Flag = 0;
-					Menu_Flag = 1;
 					memset(MineField_Flag, 0, sizeof(MineField_Flag));//清空标记数组
 					Opened_Count = 0;
 					Opened_Flag = 0;
@@ -210,6 +207,6 @@ void GuessMine_Proc(void)
 		}	
 
 			
-	}
+	
 
 }

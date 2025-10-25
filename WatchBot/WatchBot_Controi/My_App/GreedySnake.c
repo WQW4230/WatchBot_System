@@ -172,8 +172,9 @@ void Snake_Move(Snake *s)
 {
 	uint16_t Temp_X = s->Snake_Body[s->Snake_Head].x;
 	uint16_t Temp_Y = s->Snake_Body[s->Snake_Head].y;
-	
-	switch(IR_GetKey())
+	uint8_t key;	//存按键值
+	if(IR_GetKey(&key) == -1) return;//无按键或错误
+	switch(key)
 	{
 		case Key_W: Temp_Y--; break;
 			
@@ -242,6 +243,8 @@ void Snake_Move(Snake *s)
 //进程函数
 void GreedySnake_Proc(void)
 {	
+	uint8_t key;	//存按键值
+	if(IR_GetKey(&key) == -1) return;//无按键或错误
 	if(SnakeState_Flag == 1)
 	{	
 		static uint8_t Snake_DelayTime_Flag = 0;//延迟状态机标志位
@@ -295,10 +298,9 @@ void GreedySnake_Proc(void)
 			}
 		}
 		//退出游戏
-		if(IR_GetKey() == Key_XingHao)
+		if(key == Key_XingHao)
 		{
-			SnakeDeInit(&Snake_P1);
-			Menu_Flag = 1;		
+			SnakeDeInit(&Snake_P1);	
 			SnakeInit_Flag = 0;			
 			SnakeState_Flag = 0;
 			OLED_Clear();

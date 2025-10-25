@@ -221,6 +221,8 @@ void RTC_WaitForLastTask(void)
   /* Loop until RTOFF flag is set */
   while ((RTC->CRL & RTC_FLAG_RTOFF) == (uint16_t)RESET)
   {
+		
+		
   }
 }
 

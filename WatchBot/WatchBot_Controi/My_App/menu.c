@@ -8,21 +8,15 @@
 #include "Scheduler.h"
 #include "NEC_driver.h"
 
-#include "LED_Frequency.h"
 
-#include "GuessNum.h"
-#include "GuessMine.h"
-#include "Contact.h"
-#include "Greedysnake.h"
-#include "arm_control.h" 
-#include "rtc_driver.h"
-#include "Alarm_Clock.h"
-#include "LED_Frequency.h"
+
 
 Menu_t Menu_State = {0, 0, 0};//主页控制句柄
 
 void Menu_Proc(void); //主页进程函数
 
+extern void LedSet_Menu_Proc(void);
+extern void Alarm_Clock_Proc(void);
 
 menu_items app_items[] =  		//软件名称及其软件函数指针
 {
@@ -31,12 +25,12 @@ menu_items app_items[] =  		//软件名称及其软件函数指针
 	{"2扫雷",   &LedSet_Menu_Proc},	
 	{"3猜数字", &LedSet_Menu_Proc},	
 	{"4LED调速",&LedSet_Menu_Proc},
-	{"5定时器", &LedSet_Menu_Proc},
+	{"5定时器", &Alarm_Clock_Proc},
 	{"6机械臂", &LedSet_Menu_Proc},	
 };
 
-
-void Menu_HomeShow(void)
+//主页屏幕刷新
+static void Menu_HomeShow(void)
 {
 	OLED_Clear();
 	for(uint8_t i=0; i<APP_PAGE_SIZE; i++)
@@ -53,11 +47,9 @@ void Menu_HomeShow(void)
 	
 	//读当前时间已经移动到Alarm的时间比较函数下调用一次即可
 	//RTC_ReadTime();
-	OLED_Printf(70, 0, OLED_6X8, "%d-%d-%d", Rtctime.year, Rtctime.mon, Rtctime.day);
-	OLED_Printf(76, 8, OLED_6X8, "%d:%d:%d", Rtctime.hour, Rtctime.min, Rtctime.sec);
+	//OLED_Printf(70, 0, OLED_6X8, "%d-%d-%d", Rtctime.year, Rtctime.mon, Rtctime.day);
+	//OLED_Printf(76, 8, OLED_6X8, "%d:%d:%d", Rtctime.hour, Rtctime.min, Rtctime.sec);
 }
-
-uint8_t Menu_Flag = 1;//主页状态标志位;
 
 //菜单选项向上
 static void Option_up(void)
@@ -83,6 +75,7 @@ static void Current_option(void)
 	Menu_State.select_app = (Menu_State.cursor + Menu_State.top_index) % APP_COUNT;
 }
 
+//菜单任务选中创建
 static void Task_creation(void)
 {
 	Current_option();//先更新当前光标指向的是哪个软件
@@ -102,8 +95,8 @@ void Menu_Proc(void)
 		Menu_HomeShow();
 	}	
 	
-	if(NEC_RxFlag == 0) return; //没有红外按键按下退出;
-	uint8_t key = IR_GetKey();	//获取按键值
+	uint8_t key;	//存按键值
+	if(IR_GetKey(&key) == -1) return;//无按键或错误
 	
 	switch(key)
 	{

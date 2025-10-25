@@ -54,10 +54,8 @@ typedef enum
 	Key_OK 			= 17,	
 }Key_Enum;
 
-extern uint8_t NEC_RxFlag;//接收到一帧完整红外信号时置位表示当前数据可用
-
 void NEC_Init(void);//初始化红外遥控所有通道及其中断初始化
 
-Key_Enum IR_GetKey(void);//获取当前按钮值 返回按键映射表的枚举常量
+int IR_GetKey(uint8_t *key);//获取当前按钮值 
 
 #endif

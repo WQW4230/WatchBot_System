@@ -92,13 +92,11 @@ void Input_State(void)
 {
 	if(Input_State_Flag == 1)
 	{
-		if(NEC_RxFlag == 1)
-		{
-			Input_Char(IR_GetKey());//进入按键输入函数
+		uint8_t key;	//存按键值
+	if(IR_GetKey(&key) == -1) return;//无按键或错误
 			
-			NEC_RxFlag = 0;
 			
-			if(IR_GetKey() == Key_XingHao)
+			if(key == Key_XingHao)
 			{
 				OLED_Clear();
 				Input_State_Flag = 0;
@@ -110,7 +108,7 @@ void Input_State(void)
 				key_last = 0;
 			}
 		}
-	}
+	
 }
 
 //初始化顺序表
@@ -156,10 +154,9 @@ static void Name_HomeShow(void)
 		
 		OLED_ReverseArea(0, Temp_Cursor*20, 128, 20);
 		
-		if(NEC_RxFlag == 1)
-		{
-			NEC_RxFlag = 0;
-			switch(IR_GetKey())
+		uint8_t key;	//存按键值
+	if(IR_GetKey(&key) == -1) return;//无按键或错误
+			switch(key)
 			{
 				case Key_W:
 				{
@@ -198,7 +195,7 @@ static void Name_HomeShow(void)
 		}
 		
 		OLED_Update();
-	}
+	
 }
 
 //一级菜单翻页显示
@@ -237,10 +234,9 @@ void Contact_Proc(void)
 	
 	if(Contact_Flag == 1)
 	{
-		if(NEC_RxFlag == 1)
-		{
-			NEC_RxFlag = 0;
-			switch(IR_GetKey())
+		uint8_t key;	//存按键值
+	if(IR_GetKey(&key) == -1) return;//无按键或错误
+			switch(key)
 			{
 				case Key_W:
 				{
@@ -307,7 +303,6 @@ void Contact_Proc(void)
 				{
 					OLED_Clear();
 					Contact_Flag = 0;
-					Menu_Flag = 1;
 					break;
 				}
 				
@@ -336,5 +331,5 @@ void Contact_Proc(void)
 			}			
 		}
 		Contact_HomeShow();
-	}	
+	
 }

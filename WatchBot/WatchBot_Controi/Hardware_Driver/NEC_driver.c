@@ -1,10 +1,8 @@
 #include "NEC_driver.h"
+#include <stddef.h>
 
 //NEC协议的全局句柄！！！！！！！！！
 static IR_NEC_HandleTypedef IR_NEC;
-
-//接收到完整红外信号时置位表示当前数据可用
-uint8_t NEC_RxFlag;
 
 typedef struct
 {
@@ -58,7 +56,6 @@ static void NEC_CheckCode(IR_NEC_HandleTypedef *IR_NEC)
 	if((IR_NEC->Addres ^ AddresInv) == 0xff && (IR_NEC->Data ^ DataInv) == 0xff && IR_NEC->Addres == ADDRES)
 	{
 		IR_NEC->Flag  = 1; //当前数据可用
-		NEC_RxFlag    = 1;
 		IR_NEC->State = NEC_STATE_REPEAT; //进入连发码状态
 	}
 	else
@@ -156,6 +153,7 @@ static void NEC_State_Repeat(IR_NEC_HandleTypedef *IR_NEC)
 	if(IR_NEC->PulseCount == 40) //330ms未抬起则连发
 	{
 		uint16_t PulseWidth = IR_NEC->PulseWidth;
+		IR_NEC->Flag  = 1; //当前数据可用
 		IR_NEC->PulseCount = 34;
 		
 		if(PulseWidth > 4500 && PulseWidth < 6000)
@@ -256,24 +254,25 @@ void NEC_Init(void)
 	NVIC_Init(&NVIC_InitStruct);
 }
 
-//获取当前按钮值 返回按键映射表的枚举常量
+//获取当前按钮值 存入key中
 //如果接收到红外信号，并且读取该函数会返回@Key_Enum中的值
-//如果没有收到红外信号，则会返回Key_ERROR
-Key_Enum IR_GetKey(void)
+//如果没有收到红外信号，则返回-1 有信号则返回 1
+int IR_GetKey(uint8_t *key)
 {
+	if(key == NULL) return -1;
 	if(IR_NEC.Flag == 1)
 	{
 		IR_NEC.Flag = 0;
-		NEC_RxFlag  = 0;
 		for(uint16_t i=0; i<(sizeof(Key_arr) / sizeof(Key_arr[0])); i++)
 		{
 			if(IR_NEC.Data == Key_arr[i].IR_KeyData)
 			{
-				return Key_arr[i].KeyEnum;
+				*key = Key_arr[i].KeyEnum;
+				return 1;
 			}
 		}
 	}
-	return Key_ERROR;
+	return -1;
 }
 
 //中断入口

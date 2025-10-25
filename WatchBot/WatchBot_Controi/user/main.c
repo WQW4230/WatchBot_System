@@ -11,9 +11,7 @@
 
 #include "menu.h"
 
-uint64_t Now = 0;
-uint64_t Last = 0;
-uint64_t Time = 0;
+#include "rtc_driver.h"
 
 int main(void)
 {
@@ -29,10 +27,10 @@ int main(void)
 	NEC_Init();
 	//Arm_deom();
 	
-	Scheduler_AddTask(PS2_Uptada, 50, 4, 1000);
-	Scheduler_AddTask(Arm_Update, 50, 3, 1000);
-	//Scheduler_AddTask(Menu_Proc, 100, 5, 1000);
-	Scheduler_AddTask(OLED_UpdateStep, 60, 5, 1000);
+	Scheduler_AddTask(PS2_Uptada, 3, 4, 1000);
+	Scheduler_AddTask(Arm_Update, 100, 5, 1000);
+	Scheduler_AddTask(Menu_Proc, 100, 5, 1000);
+	Scheduler_AddTask(OLED_UpdateStep, 7, 5, 1000);
 		
 	Scheduler_Run();
 	

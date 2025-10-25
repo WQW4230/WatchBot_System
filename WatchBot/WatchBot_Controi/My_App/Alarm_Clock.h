@@ -3,27 +3,20 @@
 
 #include "stm32f10x.h"   
 
-typedef struct Alarm_Time
+typedef struct 
 {
-	uint8_t day;
-	uint8_t hour;
-	uint8_t min;
-}Alarm_Time;
+  uint16_t alarm_clock[4]; 				// 设定闹钟的时间 最后一个数组代表闹钟标志位 0代表闹钟关闭 1代表闹钟开启 2代表闹钟正在触发
+	uint16_t Change_Time[6]; 				// 更改的时间
+  uint8_t cursor;    			 				// 当前光标所在行（0~2）
+	uint16_t buzzer_ontime;  				// 蜂鸣器蜂鸣时间
+	uint16_t buzzer_offtime; 				// 蜂鸣器关闭时间
+} Alarm_menu_state;
 
-extern uint8_t Alarm_Flag;
-
-extern uint16_t Alarm_count;//警报声音需要响几次，该变量为句柄 直接+就好
 
 void Alarm_Init(void);
 
-void Alarm_Proc(void);
+void Alarm_Clock_Proc(void);
 
-
-//蜂鸣器Delay_us：间隔时间，单位ms
-void Alarm_Delay(uint16_t Delay_us);
-
-//蜂鸣器蜂鸣几次 放在主程序
-void Alarm_count_Proc(uint16_t *Alarm_count);
 	
 
 #endif

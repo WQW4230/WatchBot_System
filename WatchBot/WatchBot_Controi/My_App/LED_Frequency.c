@@ -73,10 +73,9 @@ static void LedSet_Proc_Stm(void)
 		
 		first_show = 0; //复位
 	}
-	if(NEC_RxFlag == 0) return;
 	
-	//获取按键值
-	uint8_t key = IR_GetKey();
+	uint8_t key;	//存按键值
+	if(IR_GetKey(&key) == -1) return;//无按键或错误
 
 	switch(key)
 	{
@@ -158,10 +157,9 @@ static void LedSet_Proc_Esp(void) //LED设置二级菜单 第二行
 		
 		first_show = 0; //复位
 	}
-	if(NEC_RxFlag == 0) return;
 	
-	//获取按键值
-	uint8_t key = IR_GetKey();
+	uint8_t key;	//存按键值
+	if(IR_GetKey(&key) == -1) return;//无按键或错误
 
 	switch(key)
 	{
@@ -247,10 +245,9 @@ static void LedSet_Proc_Cam(void) //LED设置二级菜单 第二行ESP32CAM_LED�
 		
 		first_show = 0; //复位
 	}
-	if(NEC_RxFlag == 0) return;
 	
-	//获取按键值
-	uint8_t key = IR_GetKey();
+	uint8_t key;	//存按键值
+	if(IR_GetKey(&key) == -1) return;//无按键或错误
 
 	switch(key)
 	{
@@ -357,10 +354,8 @@ void LedSet_Menu_Proc(void)
 		first_show = 0; //复位
 	}
 	
-	if(NEC_RxFlag == 0) return;
-	
-	//获取按键值
-	uint8_t key = IR_GetKey();
+	uint8_t key;	//存按键值
+	if(IR_GetKey(&key) == -1) return;//无按键或错误
 	
 	switch(key)
 	{
