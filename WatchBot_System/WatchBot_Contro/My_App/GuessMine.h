@@ -22,11 +22,25 @@
 #define ROWS 23
 #define COLS 10
 
+typedef struct
+{
+	uint8_t MineField[ROWS][COLS];//整个棋盘
+	uint8_t MineField_Flag[ROWS][COLS];//为1表示格子已经翻开
 
-extern uint8_t GuessMine_Flag;
+	//光标映射在屏幕上的实际长宽
+	uint8_t Mine_Cursor_X;
+	uint8_t Mine_Cursor_Y;
 
-void Mine_CursorShow(void);//棋盘边框打印 调用一次即可
-void GuessMine_Proc(void);//非阻塞进程函数
+	//光标映射在棋盘的实际位置
+	uint8_t MineBoard_X;
+	uint8_t MineBoard_Y;
+
+ uint16_t Opened_Count;//打开格子数量
+ uint16_t Opened_Flag;//插旗正确数量
+ uint16_t Closed_Flag;//剩余旗子数量
+	}GuessMine_Statu_t;
+
 void MineBoard_Init(void);//布置雷初始化函数
+void GuessMine_Proc(void);//非阻塞进程函数
 
 #endif

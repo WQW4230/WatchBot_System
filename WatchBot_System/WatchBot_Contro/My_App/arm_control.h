@@ -68,4 +68,7 @@ void Arm_Update(void);
 //测试用demo
 void Arm_deom(void);
 
+const Arm_Angle_t *Arm_GetCurrent_Angle(void);
+const Arm_Angle_t *Arm_GetTarget_Angle(void);
+
 #endif

@@ -4,9 +4,6 @@
 #include <math.h>
 #include "arm_control.h"
 
-#include "OLED.h"//测试
-
-
 //句柄只能在当前函数调用
 static JOY_State state; 
 
@@ -135,6 +132,12 @@ static void Angle_Dead(JOY_State *state)
 		Last->FanSpeed = current->FanSpeed;
 	}
 	
+}
+
+//只读当前摇杆角度
+const JOY_Angle *Joy_GetCurrent_Angle(void)
+{
+	return &state.current_Angle;
 }
 
 //放在任务里按时间调度即可

@@ -1,6 +1,5 @@
 #include "arm_control.h"
 #include "motor_driver.h"
-#include "Scheduler.h"
 #include <math.h>
 
 #include "OLED.h" //测试用
@@ -154,6 +153,17 @@ void Arm_Update(void)
 	//调整当前角度
 	Servo_SetAngle(Current_Angle.Base_Angle, Current_Angle.Roll_Angle, Current_Angle.Pitch_Angle, Current_Angle.Fan_Speed);
 }
+//只读 获得舵机臂当前角度句柄
+const Arm_Angle_t *Arm_GetCurrent_Angle(void)
+{
+	return &Current_Angle;
+}
+
+//只读 获得舵机臂目标角度句柄
+const Arm_Angle_t *Arm_GetTarget_Angle(void)
+{
+	return &Target_Angle;
+}
 
 //初始化函数
 void Arm_Init(void)
@@ -166,105 +176,105 @@ void Arm_Init(void)
 */
 void Arm_deom(void)
 {
-	Arm_Init();
-	
-	uint32_t Last;
-	
-	Servo_SetAngle(90, -90, -90, 0);
-	App_Timer_Delay_ms(1500);
-	Arm_MoveTo(-90, 90, -90, 0);
-	Last =  App_Timer_GetTick();
-	while(1)
-	{
-		OLED_Clear();
-		Arm_Update();
-		OLED_Update();
-		if(App_Timer_GetTick() > Last + 3000)
-		{
-			Last =  App_Timer_GetTick();
-			break;
-		}
-	}
-	
-	Arm_MoveTo(90, -90, 90, 0);
-	Last =  App_Timer_GetTick();
-	while(1)
-	{
-		OLED_Clear();
-		Arm_Update();
-		OLED_Update();
-		if(App_Timer_GetTick() > Last + 3000)
-		{
-			Last =  App_Timer_GetTick();
-			break;
-		}
-	}
-	Arm_MoveTo(90, 90, -90, 0);
-	Last =  App_Timer_GetTick();
-	while(1)
-	{
-		OLED_Clear();
-		Arm_Update();
-		OLED_Update();
-		if(App_Timer_GetTick() > Last + 3000)
-		{
-			Last =  App_Timer_GetTick();
-			break;
-		}
-	}
-	
-	Arm_MoveTo(-90, 90, -90, 0);
-	Last =  App_Timer_GetTick();
-	while(1)
-	{
-		OLED_Clear();
-		Arm_Update();
-		OLED_Update();
-		if(App_Timer_GetTick() > Last + 3000)
-		{
-			Last =  App_Timer_GetTick();
-			break;
-		}
-	}
-	Arm_MoveTo(-90, -90, 90, 0);
-	Last =  App_Timer_GetTick();
-	while(1)
-	{
-		OLED_Clear();
-		Arm_Update();
-		OLED_Update();
-		if(App_Timer_GetTick() > Last + 3000)
-		{
-			Last =  App_Timer_GetTick();
-			break;
-		}
-	}
-	
-	Arm_MoveTo(0, 0, 0, 0);
-	Last =  App_Timer_GetTick();
-	while(1)
-	{
-		OLED_Clear();
-		Arm_Update();
-		OLED_Update();
-		if(App_Timer_GetTick() > Last + 3000)
-		{
-			Last =  App_Timer_GetTick();
-			break;
-		}
-	}
-	
-	Arm_MoveTo(0, 90, 90, 0);
-	Last =  App_Timer_GetTick();
-	while(1)
-	{
-		OLED_Clear();
-		Arm_Update();
-		OLED_Update();
-		if(App_Timer_GetTick() > Last + 3000)
-		{
-			Last =  App_Timer_GetTick();
-			break;
-		}
-	}
+//	Arm_Init();
+//	
+//	uint32_t Last;
+//	
+//	Servo_SetAngle(90, -90, -90, 0);
+//	App_Timer_Delay_ms(1500);
+//	Arm_MoveTo(-90, 90, -90, 0);
+//	Last =  App_Timer_GetTick();
+//	while(1)
+//	{
+//		OLED_Clear();
+//		Arm_Update();
+//		OLED_Update();
+//		if(App_Timer_GetTick() > Last + 1500)
+//		{
+//			Last =  App_Timer_GetTick();
+//			break;
+//		}
+//	}
+//	
+//	Arm_MoveTo(90, -90, 90, 0);
+//	Last =  App_Timer_GetTick();
+//	while(1)
+//	{
+//		OLED_Clear();
+//		Arm_Update();
+//		OLED_Update();
+//		if(App_Timer_GetTick() > Last + 1500)
+//		{
+//			Last =  App_Timer_GetTick();
+//			break;
+//		}
+//	}
+//	Arm_MoveTo(90, 90, -90, 0);
+//	Last =  App_Timer_GetTick();
+//	while(1)
+//	{
+//		OLED_Clear();
+//		Arm_Update();
+//		OLED_Update();
+//		if(App_Timer_GetTick() > Last + 1500)
+//		{
+//			Last =  App_Timer_GetTick();
+//			break;
+//		}
+//	}
+//	
+//	Arm_MoveTo(-90, 90, -90, 0);
+//	Last =  App_Timer_GetTick();
+//	while(1)
+//	{
+//		OLED_Clear();
+//		Arm_Update();
+//		OLED_Update();
+//		if(App_Timer_GetTick() > Last + 1500)
+//		{
+//			Last =  App_Timer_GetTick();
+//			break;
+//		}
+//	}
+//	Arm_MoveTo(-90, -90, 90, 0);
+//	Last =  App_Timer_GetTick();
+//	while(1)
+//	{
+//		OLED_Clear();
+//		Arm_Update();
+//		OLED_Update();
+//		if(App_Timer_GetTick() > Last + 1500)
+//		{
+//			Last =  App_Timer_GetTick();
+//			break;
+//		}
+//	}
+//	
+//	Arm_MoveTo(0, 0, 0, 0);
+//	Last =  App_Timer_GetTick();
+//	while(1)
+//	{
+//		OLED_Clear();
+//		Arm_Update();
+//		OLED_Update();
+//		if(App_Timer_GetTick() > Last + 1500)
+//		{
+//			Last =  App_Timer_GetTick();
+//			break;
+//		}
+//	}
+//	
+//	Arm_MoveTo(0, 90, 90, 0);
+//	Last =  App_Timer_GetTick();
+//	while(1)
+//	{
+//		OLED_Clear();
+//		Arm_Update();
+//		OLED_Update();
+//		if(App_Timer_GetTick() > Last + 1500)
+//		{
+//			Last =  App_Timer_GetTick();
+//			break;
+//		}
+//	}
 }

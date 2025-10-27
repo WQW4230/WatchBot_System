@@ -1,6 +1,7 @@
 #include "menu.h"
 #include "stm32f10x.h"
 #include "Scheduler.h"
+#include "rtc_driver.h"
 
 #include "OLED.h"
 #include "Scheduler.h"
@@ -8,22 +9,23 @@
 
 static Menu_t Menu_State = {0, 0, 0};//主页控制句柄
 
-extern void Contact_Proc(void);
+
+extern void Alarm_Clock_Proc(void);
+extern void LedSet_Menu_Proc(void);
 extern void GreedySnake_Proc(void);
+extern void Contact_Proc(void);
 extern void GuessMine_Proc(void);
 extern void GuessNum_Proc(void);
-extern void LedSet_Menu_Proc(void);
-extern void Alarm_Clock_Proc(void);
 
 menu_items app_items[] =  		//软件名称及其软件函数指针
 {
-	{"0通讯录", &Contact_Proc},
-	{"1贪吃蛇", &GreedySnake_Proc},
-	{"2扫雷",   &GuessMine_Proc},	
-	{"3猜数字", &GuessNum_Proc},	
-	{"4LED调速",&LedSet_Menu_Proc},
-	{"5定时器", &Alarm_Clock_Proc},
-	{"6机械臂", &LedSet_Menu_Proc},	
+	{"0机械臂",    &Alarm_Clock_Proc},
+	{"1定时器",    &Alarm_Clock_Proc},
+	{"2LED调速",   &LedSet_Menu_Proc},	
+	{"3贪吃蛇",    &GreedySnake_Proc},	
+	{"4通讯录",    &Contact_Proc},
+	{"5扫雷",      &GuessMine_Proc},
+	{"6猜数字",    &GuessNum_Proc},	
 };
 
 //主页屏幕刷新
@@ -38,14 +40,16 @@ static void Menu_HomeShow(void)
 		//当前选中位置颜色取反
 		if(i == Menu_State.cursor)
 		{
-			OLED_ReverseArea(0, i*20, 70, 20);
+			OLED_ReverseArea(0, i*20, 63, 20);
 		}
 	}
 	
+	//时间显示
 	//读当前时间已经移动到Alarm的时间比较函数下调用一次即可
-	//RTC_ReadTime();
-	//OLED_Printf(70, 0, OLED_6X8, "%d-%d-%d", Rtctime.year, Rtctime.mon, Rtctime.day);
-	//OLED_Printf(76, 8, OLED_6X8, "%d:%d:%d", Rtctime.hour, Rtctime.min, Rtctime.sec);
+	RTC_ReadTime();
+	OLED_Printf(63, 0, OLED_8X16, "%d年", Rtctime.year);
+	OLED_Printf(63, 16, OLED_8X16, "%d月%d日", Rtctime.mon, Rtctime.day);
+	OLED_Printf(63, 32, OLED_8X16, "%d:%d:%d", Rtctime.hour, Rtctime.min, Rtctime.sec);
 }
 
 //菜单选项向上
@@ -54,7 +58,7 @@ static void Option_up(void)
 	if(Menu_State.cursor > 0)
 		Menu_State.cursor--;
 	else
-		Menu_State.top_index = (Menu_State.top_index +APP_COUNT - 1) % APP_COUNT;	
+		Menu_State.top_index = (Menu_State.top_index + APP_COUNT - 1) % APP_COUNT;	
 }
 
 //菜单选项向下

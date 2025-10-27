@@ -1,6 +1,5 @@
 #include "motor_driver.h"
 
-
 void motor_Init(void)
 {
 	//初始化GPIO使能PA012  三路舵机

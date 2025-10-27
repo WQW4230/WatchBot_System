@@ -465,14 +465,14 @@
               <FilePath>.\My_App\Alarm_Clock.h</FilePath>
             </File>
             <File>
-              <FileName>GuessNum.c</FileName>
+              <FileName>Contact.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\My_App\GuessNum.c</FilePath>
+              <FilePath>.\My_App\Contact.c</FilePath>
             </File>
             <File>
-              <FileName>GuessNum.h</FileName>
+              <FileName>Contact.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\My_App\GuessNum.h</FilePath>
+              <FilePath>.\My_App\Contact.h</FilePath>
             </File>
             <File>
               <FileName>GreedySnake.c</FileName>
@@ -485,16 +485,6 @@
               <FilePath>.\My_App\GreedySnake.h</FilePath>
             </File>
             <File>
-              <FileName>Contact.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\My_App\Contact.c</FilePath>
-            </File>
-            <File>
-              <FileName>Contact.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\My_App\Contact.h</FilePath>
-            </File>
-            <File>
               <FileName>GuessMine.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\My_App\GuessMine.c</FilePath>
@@ -503,6 +493,26 @@
               <FileName>GuessMine.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\My_App\GuessMine.h</FilePath>
+            </File>
+            <File>
+              <FileName>GuessNum.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\GuessNum.c</FilePath>
+            </File>
+            <File>
+              <FileName>GuessNum.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\GuessNum.h</FilePath>
+            </File>
+            <File>
+              <FileName>Arm_menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\Arm_menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>Arm_menu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\Arm_menu.h</FilePath>
             </File>
           </Files>
         </Group>

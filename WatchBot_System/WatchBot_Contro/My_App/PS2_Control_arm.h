@@ -36,12 +36,10 @@ JOY2_Y == 3
 
 typedef struct
 {
-	
 	float Base;     	//摇杆映射到基座旋转角的值
   float Roll; 			//摇杆映射到大臂翻滚角的值
   float Pitch;			//摇杆映射到末端俯仰角的值
 	float FanSpeed;   //摇杆映射到直流电机转速的值
-	
 }JOY_Angle;  //摇杆映射到的角读
 
 typedef struct 
@@ -56,8 +54,10 @@ typedef struct
 //摇杆初始化
 void JOY_Control_Init(void);
 
-
 //将摇杆过滤后的值写入伺服舵机系统
 void PS2_Uptada(void);
+
+//只读当前摇杆角度
+const JOY_Angle *Joy_GetCurrent_Angle(void);
 
 #endif

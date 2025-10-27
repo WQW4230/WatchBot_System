@@ -31,7 +31,7 @@ void Alarm_Init(void)
 	RTC_ReadTime(); //读当前时间
 	Alarm = Rtctime;//当前时间赋值给设置时间
 	
-	Scheduler_AddTask(Buzzer_Proc, 250, 6, 1000);//创建蜂鸣器任务
+	Scheduler_AddTask(Buzzer_Proc, 60, 6, 1000);//创建蜂鸣器任务
 	
 	Alarm_setHandle.Change_Time[0] = Alarm.year;
 	Alarm_setHandle.Change_Time[1] = Alarm.mon;
