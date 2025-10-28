@@ -9,7 +9,7 @@
 
 static Menu_t Menu_State = {0, 0, 0};//主页控制句柄
 
-
+extern void ArmMenu_Proc(void);
 extern void Alarm_Clock_Proc(void);
 extern void LedSet_Menu_Proc(void);
 extern void GreedySnake_Proc(void);
@@ -19,7 +19,7 @@ extern void GuessNum_Proc(void);
 
 menu_items app_items[] =  		//软件名称及其软件函数指针
 {
-	{"0机械臂",    &Alarm_Clock_Proc},
+	{"0机械臂",    &ArmMenu_Proc},
 	{"1定时器",    &Alarm_Clock_Proc},
 	{"2LED调速",   &LedSet_Menu_Proc},	
 	{"3贪吃蛇",    &GreedySnake_Proc},	
@@ -89,13 +89,8 @@ static void Task_creation(void)
 //功能主页任务进程
 void Menu_Proc(void)
 {
-	static uint8_t first_show = 1; //第一次进入菜单的时候显示
-	
-	if(first_show)
-	{
-		Menu_HomeShow();
-	}	
-	
+	Menu_HomeShow();
+
 	uint8_t key;	//存按键值
 	if(IR_GetKey(&key) == -1) return;//无按键或错误
 	
@@ -115,8 +110,7 @@ void Menu_Proc(void)
 			Task_creation();
 			break;
 	}
-	
-	Menu_HomeShow();
+
 }
 
 

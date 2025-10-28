@@ -30,11 +30,8 @@ int main(void)
 	
 	ArmMenu_Init();
 	
-	//Arm_MoveTo(90, -90, -90, 0);
-	
-	//Scheduler_AddTask(PS2_Uptada, 50, 4, 1000);
 	Scheduler_AddTask(Menu_Proc, 100, 5, 1000);
-	Scheduler_AddTask(OLED_UpdateStep, 7, 5, 1000);
+	Scheduler_AddTask(OLED_UpdateStep, 7, 70, 1000);
 	
 		
 	Scheduler_Run();
