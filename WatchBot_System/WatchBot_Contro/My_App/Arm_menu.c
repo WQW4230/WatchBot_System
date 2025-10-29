@@ -4,6 +4,7 @@
 #include "NEC_driver.h"
 #include "arm_control.h"
 #include "PS2_Control_arm.h"
+#include "Arm_Action_Data.h"
 
 extern void Menu_Proc(void);
 
@@ -22,14 +23,14 @@ void ArmMenu_Init(void)
 	//舵臂—摇杆初始化
 	Arm_Init();
 	JOY_Control_Init();
-	//Arm_MoveTo(90, -90, -90, 0);
 	
-	Scheduler_AddTask(ArmMode_Task, 20, 4, 1000);
+	//Arm_deom();//测试用
 	
-	//Arm_deom();
-	
+	Scheduler_AddTask(ArmMode_Task, 10, 4, 1000);
+
 	arm_menu.mode = ARM_MODE_REMOTE;
 	arm_menu.show = ARM_MENU_HOME;
+	arm_menu.Action_Status = ARM_STATUS_STOP;
 	arm_menu.mode_cursor = 0;
 	arm_menu.remote_cursor = 0;
 	arm_menu.action_cursor = 0;
@@ -200,7 +201,91 @@ static void ArmAuro_Proc(ArmMenu_Status_t *statu)
 		break;
 	}
 }
-//动作选择任务进程
+
+//动作运行任务进程 确认动作后在调度器不断轮询
+static void ActionRum(void)
+{	
+	const Arm_ActionaGroup *p1 = &Actiona_Table[arm_menu.action_cursor]; //当前选中动作表简化名字
+	
+	arm_menu.Action_Status = ARM_STATUS_RUN; //正在表演
+	
+	uint16_t index = arm_menu.Action_Index;//动作索引
+	
+	float base  = p1->ActionList[index].Base_Angle;
+	float roll  = p1->ActionList[index].Roll_Angle;
+	float pitch = p1->ActionList[index].Pitch_Angle; 
+	float fan   =  p1->ActionList[index].Fan_Speed;
+	uint16_t delay = p1->ActionList[index].Duration;
+	
+	Arm_MoveTo(base, roll, pitch, fan);
+	arm_menu.Action_Index++;
+	vTask_Delay(delay);
+	
+	//表演结束
+	if(index == p1->Actions_ChangesNum)
+	{
+		arm_menu.Action_Index = 0;
+		vTask_Delete(ActionRum);
+		arm_menu.Action_Status = ARM_STATUS_STOP;
+	}
+	
+}
+
+//创建后台动作任务
+static void ActionStart(void)
+{
+	if(arm_menu.Action_Status == ARM_STATUS_STOP)
+	{
+		arm_menu.Action_Status = ARM_STATUS_START;
+	}
+}
+
+//检查动作是否需要删除 中途退出或者更改动作
+static void ActionStop(void)
+{
+	if(arm_menu.Action_Status == ARM_STATUS_STOP)
+		return;
+	arm_menu.Action_Index = 0;
+	arm_menu.Action_Status = ARM_STATUS_STOP;
+	vTask_Delete(ActionRum);
+}
+
+//切换动作或者退出动作模式检查当前状态
+static void Change_Action()
+{
+	 switch(arm_menu.Action_Status)
+	 {
+		 case ARM_STATUS_START:  
+			 Scheduler_AddTask(ActionRum, 200, 2, 1000);
+			 arm_menu.Action_Status = ARM_STATUS_RUN;
+			 break;
+		 case ARM_STATUS_RUN:
+			 break;
+		 
+		 case ARM_STATUS_STOP:
+			 //等待下一次任务
+			 break;
+		 
+		 case ARM_STATUS_IDLE:
+			 break;
+	 }
+}
+
+//动作二级菜单任务进程
+static void Arm_ActionSecondary(ArmMenu_Status_t *status)
+{
+	uint8_t key;	//存按键值
+	if(IR_GetKey(&key) == -1) return;//无按键或错误
+	
+	switch(key)
+	{
+		case Key_XingHao:
+			ActionStop();
+			break;
+	}
+}
+
+//动作选择一级菜单任务进程
 static void Arm_Action(ArmMenu_Status_t *statu)
 {
 	uint8_t key;	//存按键值
@@ -209,24 +294,40 @@ static void Arm_Action(ArmMenu_Status_t *statu)
 	switch(key)
 	{
 		case Key_W:
-			
+			if(statu->action_cursor > 0)
+				statu->action_cursor--;
+			else
+				statu->action_cursor = 3;
 			break;
 		
 		case Key_S:
-			
+			if(statu->action_cursor < 3)
+				statu->action_cursor++;
+			else
+				statu->action_cursor = 0;
 			break;
 		
 		case Key_OK:
-			
+			ActionStart();
+//			statu->Action_Status = ARM_STATUS_IDLE;
 			break;
 		
 		case Key_XingHao:
-			
+			statu->show = ARM_MENU_HOME;
 			break;
 		
-		case Key_JingHao:
-			
-			break;
+	}
+}
+
+//动作显示菜单
+void ArmAction_Show(ArmMenu_Status_t *status, const Arm_ActionaGroup *Actiona_Table)
+{
+	OLED_Clear();
+	for(uint8_t i=0; i<3; i++)
+	{
+		OLED_Printf(0, 16 * i, OLED_8X16, "%s", Actiona_Table[i].Action_Name);
+		if(status->action_cursor == i)
+			OLED_ReverseArea(0, 16 * i, 128, 16);
 	}
 }
 
@@ -321,7 +422,16 @@ void ArmMode_Details(ArmMenu_Status_t *statu)
 		break;
 		
 		case ARM_MENU_ACTION:
-			
+			if(statu->Action_Status == ARM_STATUS_STOP) //停止状态才能显示
+			{
+				ArmAction_Show(statu, Actiona_Table);
+				Arm_Action(statu);
+			}
+			else
+			{	
+				Arm_ActionSecondary(statu);
+				ArmAuto_Show(statu);
+			}
 		break;
 	}
 }
@@ -345,6 +455,7 @@ void ArmMode_Task(void)
 			break;
 		
 		case ARM_MODE_ACTION://选择动作
+			Change_Action();
 			Arm_Update();
 			break;
 	}

@@ -514,6 +514,16 @@
               <FileType>5</FileType>
               <FilePath>.\My_App\Arm_menu.h</FilePath>
             </File>
+            <File>
+              <FileName>Arm_Action_Data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\Arm_Action_Data.c</FilePath>
+            </File>
+            <File>
+              <FileName>Arm_Action_Data.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\Arm_Action_Data.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

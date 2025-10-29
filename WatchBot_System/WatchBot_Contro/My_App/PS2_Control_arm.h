@@ -21,7 +21,7 @@ JOY2_Y == 3
 #define JOY1_X_DIR 1
 #define JOY1_Y_DIR 1
 #define JOY2_X_DIR 1
-#define JOY2_Y_DIR -1
+#define JOY2_Y_DIR 1
 
 //摇杆中心值
 #define JOY1_X_CENTRE 2048

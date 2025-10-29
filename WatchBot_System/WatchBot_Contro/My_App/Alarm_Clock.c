@@ -69,11 +69,18 @@ static void menu_selector(uint8_t index)
 
 //设置时间戳
 static void Time_Set(void)
-{
+{ 
+	uint8_t key;	//存按键值
 	static uint8_t time_index = 0; //选中的时间索引，0-5表示年月日 
 	uint16_t *SetTime_arr = Alarm_setHandle.Change_Time; //拿到设置时间句柄
 	
-	uint8_t key;	//存按键值
+	OLED_Clear();
+	OLED_Printf(0, 0, OLED_8X16, "更改完再OK");
+	OLED_Printf(0, 16, OLED_8X16, "左右键选择");
+	OLED_Printf(0, 32, OLED_6X8, "%d-%d-%d-%d-%d-%d", 
+	SetTime_arr[0], SetTime_arr[1], SetTime_arr[2], SetTime_arr[3], SetTime_arr[4], SetTime_arr[5]);
+	OLED_Printf(0, 48, OLED_8X16, "%d", SetTime_arr[time_index]);
+	
 	if(IR_GetKey(&key) == -1) return;//无按键或错误
 
 	switch(key)
@@ -116,13 +123,6 @@ static void Time_Set(void)
 			if(key > 9) break;
 			SetTime_arr[time_index] = (10 * SetTime_arr[time_index]) + key;
 	}
-	OLED_Clear();
-	OLED_Printf(0, 0, OLED_8X16, "更改完再OK");
-	OLED_Printf(0, 16, OLED_8X16, "左右键选择");
-	OLED_Printf(0, 32, OLED_6X8, "%d-%d-%d-%d-%d-%d", 
-	SetTime_arr[0], SetTime_arr[1], SetTime_arr[2], SetTime_arr[3], SetTime_arr[4], SetTime_arr[5]);
-	OLED_Printf(0, 48, OLED_8X16, "%d", SetTime_arr[time_index]);
-	
 }
 
 /*

@@ -24,6 +24,14 @@ typedef enum
 	ARM_MODE_ACTION		//预设动作
 }ArmControl_Mode_e;
 
+typedef enum
+{
+	 ARM_STATUS_STOP = 0,   // 不执行任何动作
+   ARM_STATUS_START,      // 新动作启动（初始化）
+   ARM_STATUS_RUN,        // 正在执行动作
+	 ARM_STATUS_IDLE,       // 空闲状态
+}Arm_Action_Status_e;
+
 typedef struct
 {
 	float Base_Angle;   //基座旋转角
@@ -34,13 +42,15 @@ typedef struct
 
 typedef struct
 {
-	ArmMenu_Show_e show;      //当前显示的界面
-	ArmControl_Mode_e mode; 	//选择的模式
-	Remote_SetAngle_t remote_angle; //红外遥控目标值
-	uint8_t mode_cursor;			//选择模式光标
-  uint8_t remote_cursor;  	//远程遥控光标
-	uint8_t action_cursor;  	//动作选择的光标
-	
+	ArmMenu_Show_e show;      					//当前显示的界面
+	ArmControl_Mode_e mode; 					  //选择的模式
+	Arm_Action_Status_e Action_Status; 	//动作演示状态
+	Remote_SetAngle_t remote_angle; 		//红外遥控目标值
+	uint16_t Action_Index;          	  //当前执行到第几个动作
+	uint8_t mode_cursor;						 		//选择模式光标
+  uint8_t remote_cursor;  	 					//远程遥控光标
+	uint8_t action_cursor;  	 				  //动作选择的光标
+		
 }ArmMenu_Status_t;
 
 void ArmMenu_Init(void);

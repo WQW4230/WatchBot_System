@@ -8,12 +8,12 @@
 
 /*
 该宏定义定义舵机旋转最大角度的占空比值
-MAX对应的是顺时针 90° 
-MIN对应的是逆时针-90°
+MAX对应的是逆时针 90° 
+MIN对应的是顺时针-90°
 */
-#define BASE_ANGLE_MAX  600
-#define	BASE_ANGLE_MIN  2500
-#define	ROLL_ANGLE_MAX  500
+#define BASE_ANGLE_MAX  2500
+#define	BASE_ANGLE_MIN  600
+#define	ROLL_ANGLE_MAX  530
 #define	ROLL_ANGLE_MIN  2450
 #define	PITCH_ANGLE_MAX 400
 #define	PITCH_ANGLE_MIN 2450

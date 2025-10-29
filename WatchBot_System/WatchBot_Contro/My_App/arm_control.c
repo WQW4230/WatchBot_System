@@ -2,9 +2,6 @@
 #include "motor_driver.h"
 #include <math.h>
 
-#include "OLED.h" //测试用
-
-
 static Arm_Angle_t Current_Angle; //当前角度
 static Arm_Angle_t Target_Angle;  //目标角度
 
@@ -72,7 +69,7 @@ void Servo_SetAngle(float Base, float Roll, float Pitch, float speed)
 	CLAMP_FAN(speed, SPEED_MIN, SPEED_MAX);
 	
 	//放入线性映射函数得到PWM具体占空比
-	uint16_t Base_Temp  = Angle_Map(Base , BASE_ANGLE_MAX,  BASE_ANGLE_MIN);
+	uint16_t Base_Temp  = Angle_Map(Base ,BASE_ANGLE_MAX ,BASE_ANGLE_MIN );
 	uint16_t Roll_Temp  = Angle_Map(Roll , ROLL_ANGLE_MAX,  ROLL_ANGLE_MIN);
 	uint16_t Pitch_Temp = Angle_Map(Pitch, PITCH_ANGLE_MAX, PITCH_ANGLE_MIN);
 	uint16_t Speed_Temp = FanSpeed_Map(speed, FAN_SPEED_MAX, FAN_SPEED_MIN);
@@ -186,9 +183,7 @@ void Arm_deom(void)
 //	Last =  App_Timer_GetTick();
 //	while(1)
 //	{
-//		OLED_Clear();
 //		Arm_Update();
-//		OLED_Update();
 //		if(App_Timer_GetTick() > Last + 1500)
 //		{
 //			Last =  App_Timer_GetTick();
@@ -200,9 +195,7 @@ void Arm_deom(void)
 //	Last =  App_Timer_GetTick();
 //	while(1)
 //	{
-//		OLED_Clear();
 //		Arm_Update();
-//		OLED_Update();
 //		if(App_Timer_GetTick() > Last + 1500)
 //		{
 //			Last =  App_Timer_GetTick();
@@ -213,9 +206,7 @@ void Arm_deom(void)
 //	Last =  App_Timer_GetTick();
 //	while(1)
 //	{
-//		OLED_Clear();
 //		Arm_Update();
-//		OLED_Update();
 //		if(App_Timer_GetTick() > Last + 1500)
 //		{
 //			Last =  App_Timer_GetTick();
@@ -227,9 +218,7 @@ void Arm_deom(void)
 //	Last =  App_Timer_GetTick();
 //	while(1)
 //	{
-//		OLED_Clear();
 //		Arm_Update();
-//		OLED_Update();
 //		if(App_Timer_GetTick() > Last + 1500)
 //		{
 //			Last =  App_Timer_GetTick();
@@ -240,9 +229,7 @@ void Arm_deom(void)
 //	Last =  App_Timer_GetTick();
 //	while(1)
 //	{
-//		OLED_Clear();
 //		Arm_Update();
-//		OLED_Update();
 //		if(App_Timer_GetTick() > Last + 1500)
 //		{
 //			Last =  App_Timer_GetTick();
@@ -254,9 +241,7 @@ void Arm_deom(void)
 //	Last =  App_Timer_GetTick();
 //	while(1)
 //	{
-//		OLED_Clear();
 //		Arm_Update();
-//		OLED_Update();
 //		if(App_Timer_GetTick() > Last + 1500)
 //		{
 //			Last =  App_Timer_GetTick();
@@ -268,9 +253,7 @@ void Arm_deom(void)
 //	Last =  App_Timer_GetTick();
 //	while(1)
 //	{
-//		OLED_Clear();
 //		Arm_Update();
-//		OLED_Update();
 //		if(App_Timer_GetTick() > Last + 1500)
 //		{
 //			Last =  App_Timer_GetTick();
