@@ -524,6 +524,16 @@
               <FileType>5</FileType>
               <FilePath>.\My_App\Arm_Action_Data.h</FilePath>
             </File>
+            <File>
+              <FileName>USART_FrameHandler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\USART_FrameHandler.c</FilePath>
+            </File>
+            <File>
+              <FileName>USART_FrameHandler.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\USART_FrameHandler.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -590,16 +600,6 @@
               <FilePath>.\Hardware_Driver\NEC_driver.h</FilePath>
             </File>
             <File>
-              <FileName>usart_frame_handler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware_Driver\usart_frame_handler.c</FilePath>
-            </File>
-            <File>
-              <FileName>usart_frame_handler.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware_Driver\usart_frame_handler.h</FilePath>
-            </File>
-            <File>
               <FileName>rtc_driver.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Hardware_Driver\rtc_driver.c</FilePath>
@@ -608,6 +608,16 @@
               <FileName>rtc_driver.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Hardware_Driver\rtc_driver.h</FilePath>
+            </File>
+            <File>
+              <FileName>usart_rx_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware_Driver\usart_rx_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>usart_rx_driver.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware_Driver\usart_rx_driver.h</FilePath>
             </File>
           </Files>
         </Group>

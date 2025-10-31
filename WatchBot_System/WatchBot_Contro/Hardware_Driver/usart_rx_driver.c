@@ -1,50 +1,8 @@
-#include "usart_frame_handler.h"
-#include "stm32f10x.h" 
+#include "usart_rx_driver.h"
+#include "stm32f10x.h"          
 
-uint8_t ESP32_Rx_Flag = 0;
-
-#define FRAME_HEADER 0x88 //帧头
-#define FRAME_END    0x66 //帧尾
-#define DATA_MIN_LEN 5		 //一帧最少几位
-#define DATA_MAX_LEN 8    //最多8个
-
-#define FRAME_IDX_HEADER   0   								// 帧头在第0位
-#define FRAME_IDX_CMD      1  							  // 命令在第1位
-#define FRAME_IDX_LEN      2   								// 数据长度在第2位
-#define FRAME_IDX_DATA     3   								// 数据从第3位开始
-#define FRAME_IDX_END_MIN	 DATA_MIN_LEN	- 1		// 一帧8字节时帧尾位置
-#define FRAME_IDX_END_MAX  DATA_MAX_LEN	- 1		// 一帧5字节时帧尾位置
-
-/*
-一帧的数据结构如下
-
-帧头     0x88
-命令     
-一帧长度
-
-数据
-...
-数据
-
-帧尾     0x66
-
-*/
-typedef enum
-{
-	STATE_WAIT_EADER,   //等待帧头
-	STATE_RECV_DATA,    //接收数据
-	
-}USATR_State;
-
-typedef struct Frame_t
-{
-	USATR_State State;
-	uint8_t ESP_Data[DATA_MAX_LEN]; // 数据帧
-	uint8_t Data_index;       //数据帧当前长度
-}Frame_t;
 
 static Frame_t USART_Frame = {STATE_WAIT_EADER, {0}, 0};
-
 
 //初始化配置gpio和usart时钟参数
 void usart_slave_Init(void)
@@ -88,23 +46,23 @@ void usart_slave_Init(void)
 /*
 	中断处理函数
 */
-void USART_ProcessByte(uint8_t byte)
+void USART_ProcessByte(Frame_t *USART_Frame, uint8_t byte)
 {
-	switch(USART_Frame.State)
+	switch(USART_Frame->State)
 	{
 		//等待帧头
 		case STATE_WAIT_EADER:
 		{
 			if(byte == FRAME_HEADER)
 			{
-				USART_Frame.Data_index = 0;
-				USART_Frame.ESP_Data[USART_Frame.Data_index] = byte;
-				USART_Frame.Data_index += 1 ;
-				USART_Frame.State = STATE_RECV_DATA;				
+				USART_Frame->Data_index = 0;
+				USART_Frame->ESP_Data[USART_Frame->Data_index] = byte;
+				USART_Frame->Data_index += 1 ;
+				USART_Frame->State = STATE_RECV_DATA;				
 			}
 			else
 			{
-				USART_Frame.Data_index = 0 ;
+				USART_Frame->Data_index = 0 ;
 			}		
 		}
 		break;
@@ -112,24 +70,25 @@ void USART_ProcessByte(uint8_t byte)
 		//接收数据
 		case STATE_RECV_DATA:
 		{
-			USART_Frame.ESP_Data[USART_Frame.Data_index] = byte;
-			USART_Frame.Data_index += 1 ;
+			USART_Frame->ESP_Data[USART_Frame->Data_index] = byte;
+			USART_Frame->Data_index += 1 ;
 			
-			switch(USART_Frame.Data_index)
+			switch(USART_Frame->Data_index)
 			{
 				//数据帧长度为5时 校验数据位长度并校验帧尾是否正确
 				case DATA_MIN_LEN:
 				{
 					//接收成功
-					if(USART_Frame.ESP_Data[FRAME_IDX_LEN] == DATA_MIN_LEN && USART_Frame.ESP_Data[FRAME_IDX_END_MIN] == FRAME_END)
+					if(USART_Frame->ESP_Data[FRAME_IDX_LEN] == DATA_MIN_LEN && USART_Frame->ESP_Data[FRAME_IDX_END_MIN] == FRAME_END)
 					{
-						ESP32_Rx_Flag = 1;
-						USART_Frame.State = STATE_WAIT_EADER;
+						USART_Frame->ESP32_Tx_Flag = 1;
+						USART_Frame->Data_Len = USART_Frame->Data_index;
+						USART_Frame->State = STATE_WAIT_EADER;
 					}
-					else if(USART_Frame.ESP_Data[FRAME_IDX_LEN] == DATA_MIN_LEN&& USART_Frame.Data_index == DATA_MIN_LEN) 
+					else if(USART_Frame->ESP_Data[FRAME_IDX_LEN] == DATA_MIN_LEN&& USART_Frame->Data_index == DATA_MIN_LEN) 
 					{
 						//如果是5字节的并且索引已经超过5字节则是乱码
-						USART_Frame.State = STATE_WAIT_EADER;
+						USART_Frame->State = STATE_WAIT_EADER;
 					}
 				}		
 				break;
@@ -137,15 +96,16 @@ void USART_ProcessByte(uint8_t byte)
 				case DATA_MAX_LEN:
 				{
 					//接收成功
-					if(USART_Frame.ESP_Data[FRAME_IDX_LEN] == DATA_MAX_LEN && USART_Frame.ESP_Data[FRAME_IDX_END_MAX] == FRAME_END)
+					if(USART_Frame->ESP_Data[FRAME_IDX_LEN] == DATA_MAX_LEN && USART_Frame->ESP_Data[FRAME_IDX_END_MAX] == FRAME_END)
 					{
-						ESP32_Rx_Flag = 1;
-						USART_Frame.State = STATE_WAIT_EADER;
+						USART_Frame->ESP32_Tx_Flag = 1;
+						USART_Frame->Data_Len = USART_Frame->Data_index;
+						USART_Frame->State = STATE_WAIT_EADER;
 					}
-					else if(USART_Frame.ESP_Data[FRAME_IDX_LEN] == DATA_MAX_LEN&& USART_Frame.Data_index == DATA_MAX_LEN) 
+					else if(USART_Frame->ESP_Data[FRAME_IDX_LEN] == DATA_MAX_LEN&& USART_Frame->Data_index == DATA_MAX_LEN) 
 					{
 						//如果是8字节的并且索引已经超过8字节则是乱码
-						USART_Frame.State = STATE_WAIT_EADER;
+						USART_Frame->State = STATE_WAIT_EADER;
 					}
 				}	
 				break;
@@ -156,6 +116,23 @@ void USART_ProcessByte(uint8_t byte)
 
 	}
 }
+/*
+  读从机发送的数据
+	参数ESP_Data： 接收的地址大小8
+  返回值：为1可用
+
+*/
+uint8_t USART_ReadFrame(uint8_t *ESP_Data)
+{
+	if(USART_Frame.ESP32_Tx_Flag == 0) return 0; //无数据帧返回0
+	
+	USART_Frame.ESP32_Tx_Flag = 0; //有数据帧
+	for(uint8_t i=0; i<USART_Frame.Data_Len; i++)
+	{
+		ESP_Data[i] = USART_Frame.ESP_Data[i];
+	}
+	return 1;
+}
 
 //中断响应函数
 void USART3_IRQHandler(void)
@@ -163,6 +140,6 @@ void USART3_IRQHandler(void)
 	if(USART_GetITStatus(USART3, USART_IT_RXNE) == SET)
 	{
 		uint8_t byte = USART_ReceiveData(USART3);
-		USART_ProcessByte(byte);
+		USART_ProcessByte(&USART_Frame, byte);
 	}
 }

@@ -6,7 +6,7 @@
 #include <string.h>
 #include "NEC_driver.h"
 
-Buzzer_t PB14_Buzzer; //蜂鸣器初始化句柄
+Buzzer_t PB14_Buzzer; //蜂鸣器控制句柄
 RTC_Time Alarm; //当前时间戳句柄
 
 Alarm_menu_state Alarm_setHandle; //闹钟菜单控制句柄

@@ -224,6 +224,7 @@ static void ActionRum(void)
 	//表演结束
 	if(index == p1->Actions_ChangesNum)
 	{
+		Arm_MoveTo(base, roll, pitch, fan);
 		arm_menu.Action_Index = 0;
 		vTask_Delete(ActionRum);
 		arm_menu.Action_Status = ARM_STATUS_STOP;

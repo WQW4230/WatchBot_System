@@ -14,6 +14,7 @@
 #include "GreedySnake.h"
 #include "Contact.h"   //通讯录
 #include "GuessMine.h" //扫雷
+#include "USART_FrameHandler.h"//串口通信
 
 int main(void)
 {
@@ -27,9 +28,11 @@ int main(void)
 	SnakeGame_Init();//贪吃蛇
 	Contact_Init();//通讯录顺序表初始化
 	MineBoard_Init(); //扫雷初始化
+	USART_FrameHandler_Init();//串口通信初始化
 	
 	ArmMenu_Init();//机械臂控制菜单
 	
+	Scheduler_AddTask(USART_FrameHandler_Task, 100, 7, 1000);
 	Scheduler_AddTask(Menu_Proc, 100, 5, 1000);
 	Scheduler_AddTask(OLED_UpdateStep, 7, 70, 1000);
 	
