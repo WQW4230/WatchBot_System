@@ -123,8 +123,14 @@ WatchBot_Contr 1.17  新增机械臂动作菜单可选两种动作demo，快速�
 修复舵机实时参数错误显示
 
 更新日志 2025/10/31
-WatchBot_Contr 1.18 新增串口收发指令集，USART下发人脸追踪解算参数
+WatchBot_Contr 1.18 新增串口接收指令集，USART下发人脸追踪解算参数
 （目标 yaw/roll/pitch/fanspeed），蜂鸣器蜂鸣频率，STM32 接收并转换为目标角度执行/蜂鸣器频率
+
+更新日志 2025/11/2
+WatchBot_Contr 2.00 新增STM串口发送指令集，USART发送控制ESP32板载led以及摄像头闪光灯控制指令
+
+更新日志 2025/11/7
+WatchBot_Contr 2.01 新增ESP32S3_LCDili9341驱动程序，图像库。esp32板载LED驱动程序
 
 - 该项目完全开源
 - 本项目仅供学习与研究使用，不保证功能完整或适用性。  

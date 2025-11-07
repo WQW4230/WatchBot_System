@@ -534,6 +534,16 @@
               <FileType>5</FileType>
               <FilePath>.\My_App\USART_FrameHandler.h</FilePath>
             </File>
+            <File>
+              <FileName>USART_queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\USART_queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>USART_queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\USART_queue.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

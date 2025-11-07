@@ -6,6 +6,7 @@
 
 #define QuickTravel_Num (sizeof(QuickTravel_Action) / sizeof(QuickTravel_Action[0]))
 #define Bow_Num         (sizeof(Bow_Action) / sizeof(Bow_Action[0]))
+#define GoOnPatrol_Num      (sizeof(GoOnPatrol_Action) / sizeof(GoOnPatrol_Action[0]))
 	
 typedef struct
 {

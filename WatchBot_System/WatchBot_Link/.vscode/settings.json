@@ -1,0 +1,20 @@
+{
+  "idf.espIdfPathWin": "d:\\Office\\ESP32IDF\\ESP_5.51\\v5.5.1\\esp-idf",
+  "idf.toolsPathWin": "d:\\Office\\ESP32IDF\\ESP_5.51\\mytools",
+  "idf.pythonInstallPath": "d:\\Office\\ESP32IDF\\ESP_5.51\\mytools\\tools\\idf-python\\3.11.2\\python.exe",
+  "idf.customExtraVars": {
+    "IDF_TARGET": "esp32s3"
+  },
+  "clangd.path": "d:\\Office\\ESP32IDF\\ESP_5.51\\mytools\\tools\\esp-clang\\esp-19.1.2_20250312\\esp-clang\\bin\\clangd.exe",
+  "clangd.arguments": [
+    "--background-index",
+    "--query-driver=d:\\Office\\ESP32IDF\\ESP_5.51\\mytools\\tools\\xtensa-esp-elf\\esp-14.2.0_20241119\\xtensa-esp-elf\\bin\\xtensa-esp32s3-elf-gcc.exe",
+    "--compile-commands-dir=c:\\Users\\49864\\Desktop\\ESP32_Example\\06-lcd\\build"
+  ],
+  "files.associations": {
+    "esp32_s3_szp.h": "c",
+    "esp_lcd_ili9341.h": "c"
+  },
+  "idf.portWin": "COM3",
+  "idf.flashType": "UART"
+}

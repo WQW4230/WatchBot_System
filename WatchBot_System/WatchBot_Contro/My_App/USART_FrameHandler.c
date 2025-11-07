@@ -38,7 +38,7 @@ static void Cmd_BuzzerControl(uint8_t *status)
 	Buzzer_SetMode(&PB14_Buzzer, Buzzer_Beep, ON, OFF);
 }
 
-//串口控制模块
+//串口控制硬件 自动模式下启用 
 void USART_FrameHandler_Task(void)
 {
 	uint8_t Frame_buf[DATA_MAX_LEN];
@@ -60,4 +60,23 @@ void USART_FrameHandler_Task(void)
 			Cmd_BuzzerOFF(Frame_buf);
 			break;
 	}
+}
+
+/*
+	发送指令集
+	CMD： 命令位
+	ON ： 开启时间
+	OFF： 关闭时间
+*/
+void USART_SenFrame(uint8_t CMD, uint16_t ON, uint16_t OFF)
+{
+	uint8_t On_High, On_Low, Off_High, Off_Low;
+  On_High = (uint8_t)(ON >> 8); // 右移 8 位，获取高字节
+  On_Low  = (uint8_t)(ON & 0xFF); // 低字节取 ON 的低 8 位
+	
+  Off_High = (uint8_t)(OFF >> 8); // 右移 8 位，获取高字节
+  Off_Low  = (uint8_t)(OFF & 0xFF); // 低字节取 OFF 的低 8 位
+	uint8_t arr[8] = {FRAME_HEADER, CMD, 0x08, On_High, On_Low, Off_High, Off_Low, FRAME_END};
+	
+	USART3_SendString(arr);
 }

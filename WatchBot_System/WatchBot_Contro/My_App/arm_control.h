@@ -23,8 +23,9 @@ MIN对应的是顺时针-90°
 //舵机角度每次变换，越小越平滑
 #define ANGLE_STEP 1.2
 //目标的PID系数
-#define ANGLE_PID  0.05
 #define ANGLE_BASE_PID 0.03
+#define ANGLE_ROLL_PID 0.03
+#define ANGLE_PITCH_PID 0.03
 #define FAN_SPEED_PID 0.2
 
 

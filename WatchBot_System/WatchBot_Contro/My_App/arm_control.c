@@ -140,8 +140,8 @@ void Arm_Update(void)
 //	}
 	
 	Current_Angle.Base_Angle	= (Current_Angle.Base_Angle  * (1 - ANGLE_BASE_PID)) + (Target_Angle.Base_Angle * ANGLE_BASE_PID);
-	Current_Angle.Roll_Angle 	= (Current_Angle.Roll_Angle  * (1 - ANGLE_PID)) 	   + (Target_Angle.Roll_Angle * ANGLE_PID);
-	Current_Angle.Pitch_Angle = (Current_Angle.Pitch_Angle * (1 - ANGLE_PID))      + (Target_Angle.Pitch_Angle * ANGLE_PID);
+	Current_Angle.Roll_Angle 	= (Current_Angle.Roll_Angle  * (1 - ANGLE_ROLL_PID)) 	   + (Target_Angle.Roll_Angle * ANGLE_ROLL_PID);
+	Current_Angle.Pitch_Angle = (Current_Angle.Pitch_Angle * (1 - ANGLE_PITCH_PID))      + (Target_Angle.Pitch_Angle * ANGLE_PITCH_PID);
 	Current_Angle.Fan_Speed 	= (Current_Angle.Fan_Speed   * (1 - FAN_SPEED_PID))  + (Target_Angle.Fan_Speed * FAN_SPEED_PID);
 	
 	//设置直流电机状态

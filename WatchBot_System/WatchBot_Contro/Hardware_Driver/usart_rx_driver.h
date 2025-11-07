@@ -46,10 +46,12 @@ typedef struct Frame_t
 }Frame_t;
        
 
-void usart_slave_Init(void);   //初始化USART串口
+void usart_slave_Init(void);   //初始化USART串口 以及发送队列
 
 void USART_ProcessByte(Frame_t *USART_Frame, uint8_t byte); //中断函数内调用处理处理数据帧--非中断测试用
 
 uint8_t USART_ReadFrame(uint8_t *ESP_Data); //读一针数据
 	
+void USART3_SendString(const uint8_t *data); //发送
+
 #endif

@@ -32,7 +32,6 @@ int main(void)
 	
 	ArmMenu_Init();//机械臂控制菜单
 	
-	Scheduler_AddTask(USART_FrameHandler_Task, 100, 7, 1000);
 	Scheduler_AddTask(Menu_Proc, 100, 5, 1000);
 	Scheduler_AddTask(OLED_UpdateStep, 7, 70, 1000);
 	

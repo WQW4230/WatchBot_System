@@ -7,6 +7,7 @@
 #include "Arm_Action_Data.h"
 
 extern void Menu_Proc(void);
+extern void USART_FrameHandler_Task(void);//串口控制舵机臂
 
 static ArmMenu_Status_t arm_menu;//全局控制句柄
 
@@ -211,6 +212,15 @@ static void ActionRum(void)
 	
 	uint16_t index = arm_menu.Action_Index;//动作索引
 	
+	//表演结束
+	if(index == p1->Actions_ChangesNum)
+	{
+		arm_menu.Action_Index = 0;
+		vTask_Delete(ActionRum);
+		arm_menu.Action_Status = ARM_STATUS_STOP;
+		return;
+	}
+	
 	float base  = p1->ActionList[index].Base_Angle;
 	float roll  = p1->ActionList[index].Roll_Angle;
 	float pitch = p1->ActionList[index].Pitch_Angle; 
@@ -220,16 +230,6 @@ static void ActionRum(void)
 	Arm_MoveTo(base, roll, pitch, fan);
 	arm_menu.Action_Index++;
 	vTask_Delay(delay);
-	
-	//表演结束
-	if(index == p1->Actions_ChangesNum)
-	{
-		Arm_MoveTo(base, roll, pitch, fan);
-		arm_menu.Action_Index = 0;
-		vTask_Delete(ActionRum);
-		arm_menu.Action_Status = ARM_STATUS_STOP;
-	}
-	
 }
 
 //创建后台动作任务
@@ -453,6 +453,7 @@ void ArmMode_Task(void)
 		
 		case ARM_MODE_AUTO://自动控制
 			Arm_Update();
+			USART_FrameHandler_Task();
 			break;
 		
 		case ARM_MODE_ACTION://选择动作

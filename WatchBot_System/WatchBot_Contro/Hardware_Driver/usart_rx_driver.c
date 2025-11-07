@@ -1,8 +1,10 @@
 #include "usart_rx_driver.h"
+#include "USART_queue.h"
 #include "stm32f10x.h"          
 
 
 static Frame_t USART_Frame = {STATE_WAIT_EADER, {0}, 0};
+static Queue_HandleTypeDef hTxQueue; //发送队列句柄
 
 //初始化配置gpio和usart时钟参数
 void usart_slave_Init(void)
@@ -31,7 +33,7 @@ void usart_slave_Init(void)
   USART_Init(USART3, &USART_InitStruct);
 	
 	//中断配置
-	USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
+	USART_ITConfig(USART3, USART_IT_RXNE, ENABLE); //开启中断发送
 	
 	NVIC_InitTypeDef NVIC_InitStruct;
 	NVIC_InitStruct.NVIC_IRQChannel = USART3_IRQn;
@@ -41,6 +43,9 @@ void usart_slave_Init(void)
 	NVIC_Init(&NVIC_InitStruct);
 	
 	USART_Cmd(USART3, ENABLE);
+	
+	//发送队列句柄初始化
+	Queue_Init(&hTxQueue);
 	
 }
 /*
@@ -137,9 +142,36 @@ uint8_t USART_ReadFrame(uint8_t *ESP_Data)
 //中断响应函数
 void USART3_IRQHandler(void)
 {
-	if(USART_GetITStatus(USART3, USART_IT_RXNE) == SET)
+	uint8_t c = 0;
+	
+	if(USART_GetITStatus(USART3, USART_IT_RXNE) == SET) //收到指令集
 	{
 		uint8_t byte = USART_ReceiveData(USART3);
 		USART_ProcessByte(&USART_Frame, byte);
 	}
+	else if(USART_GetITStatus(USART3, USART_IT_TXE) == SET) //发送指令集
+	{
+		if(Queue_Dequeue(&hTxQueue, &c) == SUCCESS)
+		{
+			USART_SendData(USART3, c);
+		}
+		else
+		{
+			USART_ITConfig(USART3, USART_IT_TXE, DISABLE);//关闭中断发送
+		}
+	}
 }
+
+//执行入队操作
+//data：需要发送的数据数组
+void USART3_SendString(const uint8_t *data)
+{
+	uint32_t i;
+	USART_ITConfig(USART3, USART_IT_TXE, DISABLE);
+	for(i = 0; i<8 ; i++)
+	{
+		Queue_Enqueue(&hTxQueue, data[i]);
+	}
+	USART_ITConfig(USART3, USART_IT_TXE, ENABLE);
+}
+

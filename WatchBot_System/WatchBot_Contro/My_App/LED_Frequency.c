@@ -3,6 +3,7 @@
 #include "Scheduler.h"
 #include "OLED.h"
 #include "NEC_driver.h"
+#include "USART_FrameHandler.h"
 
 LED_SetState_t LED_Set; //led全局控制句柄
 LED_t LED_PC13_Struct;  //PC13LED控制句柄
@@ -189,6 +190,10 @@ static void LedSet_Proc_Esp(void) //LED设置二级菜单 第二行
 			Led_Esp_index = (Led_Esp_index + 1) % 2;
 			break;
 		
+		case Key_OK:
+			USART_SenFrame(CMD_ESP32_LED, LED_Set.esp_LedBrigh_time, LED_Set.esp_LedDark_time);
+			break;
+		
 		// 数字键 0 -9 输入
 		default:
 			if(key >= 10) break; //如果按键不是0 - 9就退出;
@@ -278,7 +283,8 @@ static void LedSet_Proc_Cam(void) //LED设置二级菜单 第二行ESP32CAM_LED�
 			break;
 		
 		// OK键 选择颜色时候点一下切换一次
-		case Key_OK:
+		case Key_A:
+		case Key_D:
 			if(Led_Cam_index != 2) break; //光标不在颜色位置直接退出
 		
 			Cam_Colour = (Cam_Colour + 1) % 3;//三种颜色
@@ -298,6 +304,21 @@ static void LedSet_Proc_Cam(void) //LED设置二级菜单 第二行ESP32CAM_LED�
 			}
 			break;
 		
+		//确认键
+		case Key_OK:
+			switch(LED_Set.cam_LedColour)
+			{
+				case WHITE: //白色
+					USART_SenFrame(CMD_ESP32CAM_WHITE_LED, LED_Set.esp_LedBrigh_time, LED_Set.esp_LedDark_time);
+					break;
+				case BLUE:  //蓝色
+					USART_SenFrame(CMD_ESP32CAM_BLUE_LED, LED_Set.esp_LedBrigh_time, LED_Set.esp_LedDark_time);
+					break;
+				case RED:		//红色
+					USART_SenFrame(CMD_ESP32CAM_RED_LED, LED_Set.esp_LedBrigh_time, LED_Set.esp_LedDark_time);
+					break;
+			}
+			
 		// 数字键 0 -9 输入
 		default:
 			if(key >= 10) break; //如果按键不是0 - 9就退出;
