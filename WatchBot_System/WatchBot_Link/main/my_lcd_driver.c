@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "esp32_s3_szp.h"
+#include "my_lcd_driver.h"
 #include "esp_lcd_ili9341.h"
 
 static const char *TAG = "esp32_s3_szp";
@@ -19,7 +19,7 @@ esp_err_t bsp_display_brightness_init(void)
         .timer_sel = 1,
         .duty = 0,
         .hpoint = 0,
-        .flags.output_invert = true
+        .flags.output_invert = false
     };
     const ledc_timer_config_t LCD_backlight_timer = {
         .speed_mode = LEDC_LOW_SPEED_MODE,
@@ -53,19 +53,7 @@ esp_err_t bsp_display_brightness_set(int brightness_percent)
     return ESP_OK;
 }
 
-// 关闭背光
-esp_err_t bsp_display_backlight_off(void)
-{
-    return bsp_display_brightness_set(0);
-}
-
-// 打开背光 最亮
-esp_err_t bsp_display_backlight_on(void)
-{
-    return bsp_display_brightness_set(100);
-}
-
-static esp_lcd_panel_handle_t panel_handle = NULL;
+esp_lcd_panel_handle_t panel_handle = NULL;
 
 // 液晶屏初始化
 esp_err_t bsp_display_new(void)
@@ -93,15 +81,15 @@ esp_err_t bsp_display_new(void)
         .pclk_hz = BSP_LCD_PIXEL_CLOCK_HZ,
         .lcd_cmd_bits = LCD_CMD_BITS,
         .lcd_param_bits = LCD_PARAM_BITS,
-        .spi_mode = 2,
+        .spi_mode = 0,
         .trans_queue_depth = 10,
     };
     ESP_GOTO_ON_ERROR(esp_lcd_new_panel_io_spi((esp_lcd_spi_bus_handle_t)BSP_LCD_SPI_NUM, &io_config, &io_handle), err, TAG, "New panel IO failed");
-    // 初始化液晶屏驱动芯片ST7789
+    // 初始化液晶屏驱动芯片ili9341
     ESP_LOGD(TAG, "Install LCD driver");
     const esp_lcd_panel_dev_config_t panel_config = {
         .reset_gpio_num = BSP_LCD_RST,
-        .rgb_ele_order = LCD_RGB_ELEMENT_ORDER_RGB,
+        .rgb_ele_order = COLOR_RGB_ELEMENT_ORDER_BGR,
         .bits_per_pixel = BSP_LCD_BITS_PER_PIXEL,
     };
     ESP_GOTO_ON_ERROR(esp_lcd_new_panel_ili9341(io_handle, &panel_config, &panel_handle), err, TAG, "New panel failed");
@@ -109,7 +97,7 @@ esp_err_t bsp_display_new(void)
     esp_lcd_panel_reset(panel_handle);  // 液晶屏复位
     gpio_set_level(BSP_LCD_SPI_CS, 0);  // 拉低CS引脚
     esp_lcd_panel_init(panel_handle);  // 初始化配置寄存器
-    esp_lcd_panel_invert_color(panel_handle, true); // 颜色反转
+    //esp_lcd_panel_invert_color(panel_handle, true); // 颜色反转
     esp_lcd_panel_swap_xy(panel_handle, true);  // 显示翻转 
     esp_lcd_panel_mirror(panel_handle, true, false); // 镜像
 
@@ -135,7 +123,7 @@ esp_err_t bsp_lcd_init(void)
     ret = bsp_display_new(); // 液晶屏驱动初始化
     lcd_set_color(0x0000); // 设置整屏背景黑色
     ret = esp_lcd_panel_disp_on_off(panel_handle, true); // 打开液晶屏显示
-    ret = bsp_display_backlight_on(); // 打开背光显示
+    ret = bsp_display_brightness_set(100); // 打开背光显示
 
     return  ret;
 }

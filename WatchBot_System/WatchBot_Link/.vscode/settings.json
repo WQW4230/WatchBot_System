@@ -13,8 +13,20 @@
   ],
   "files.associations": {
     "esp32_s3_szp.h": "c",
-    "esp_lcd_ili9341.h": "c"
+    "esp_lcd_ili9341.h": "c",
+    "logo_en_240x240_lcd.h": "c",
+    "camera_driver.h": "c",
+    "sdmmc_host.h": "c",
+    "my_lcd_driver.h": "c",
+    "my_sd_driver.h": "c",
+    "gpio.h": "c",
+    "rmt_tx.h": "c",
+    "yingwu.h": "c",
+    "stdlib.h": "c",
+    "freertos.h": "c",
+    "app_camera_lcd.h": "c",
+    "task.h": "c"
   },
-  "idf.portWin": "COM3",
+  "idf.portWin": "COM4",
   "idf.flashType": "UART"
 }

@@ -1,14 +1,22 @@
 #include <stdio.h>
-#include "esp32_s3_szp.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "app_camera_lcd.h"
+#include "my_lcd_driver.h"
+#include "my_sd_driver.h"
 #include "yingwu.h"
 #include "logo_en_240x240_lcd.h"
 
 
 void app_main(void)
 {
-    bsp_lcd_init();  // 液晶屏初始化
+    app_camera_lcd_init();
     //lcd_draw_pictrue(0, 0, 240, 240, logo_en_240x240_lcd); // 显示乐鑫logo图片
     lcd_draw_pictrue(0, 0, 320, 240, gImage_yingwu); // 显示3只鹦鹉图片
+    vTaskDelay(3000 / portTICK_PERIOD_MS);  // 延时3000毫秒
+
+    app_camera_lcd();
+    //My_SD_Init();
 }
 
 
