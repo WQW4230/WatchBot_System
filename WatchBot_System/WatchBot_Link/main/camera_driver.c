@@ -39,7 +39,7 @@ void bsp_camera_init(void)
         .pin_href = CAM_PIN_HREF,
         .pin_pclk = CAM_PIN_PCLK,
 
-        .xclk_freq_hz = 10000000,       // XCLK = 10MHz
+        .xclk_freq_hz = 15000000,       // XCLK = 10MHz
         .ledc_timer = LEDC_TIMER_1,
         .ledc_channel = LEDC_CHANNEL_1,
         .pixel_format = PIXFORMAT_RGB565, // RGB565 输出与lcd屏保持一致
@@ -95,3 +95,6 @@ void camera_capture(void)
     // 释放帧缓冲
     esp_camera_fb_return(fb);
 }
+
+
+

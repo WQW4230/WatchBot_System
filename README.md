@@ -130,10 +130,13 @@ WatchBot_Contr 1.18 新增串口接收指令集，USART下发人脸追踪解算�
 WatchBot_Contr 2.00 新增STM串口发送指令集，USART发送控制ESP32板载led以及摄像头闪光灯控制指令
 
 更新日志 2025/11/7
-WatchBot_Contr 2.01 新增ESP32S3_LCDili9341驱动程序，图像库。esp32板载LED驱动程序
+WatchBot_Link 2.01 新增ESP32S3_LCDili9341驱动程序，图像库。esp32板载LED驱动程序
 
 更新日志 2025/11/8
-WatchBot_Contr 2.02 新增ESP32S3_ov2640摄像头驱动程序，适配LCD显示屏，可将画面发送至屏幕
+WatchBot_Link 2.02 新增ESP32S3_ov2640摄像头驱动程序，适配LCD显示屏，可将画面发送至屏幕
+
+更新日志 2025/11/9
+WatchBot_Link 2.03 新增ESP32S3_ws2812驱动程序，颜色时间模式可调 板载led功能完善、sd卡读写模块
 
 - 该项目完全开源
 - 本项目仅供学习与研究使用，不保证功能完整或适用性。  

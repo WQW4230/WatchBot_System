@@ -11,6 +11,8 @@ static QueueHandle_t xQueueLCDFrame = NULL;
 
 void app_camera_lcd_init(void)
 {
+    // bap_camera_capture_init();
+    // camera_capture_to_sd();
     bsp_camera_init();
     bsp_lcd_init();
 }
@@ -45,6 +47,6 @@ static void task_process_camera(void *arg)
 void app_camera_lcd(void)
 {
     xQueueLCDFrame = xQueueCreate(2, sizeof(camera_fb_t *));
-    xTaskCreatePinnedToCore(task_process_camera, "task_process_camera", 3 * 1024, NULL, 5, NULL, 1);
-    xTaskCreatePinnedToCore(task_process_lcd, "task_process_lcd", 4 * 1024, NULL, 5, NULL, 0);
+    xTaskCreatePinnedToCore(task_process_camera, "task_process_camera", 3 * 1024, NULL, 15, NULL, 1);
+    xTaskCreatePinnedToCore(task_process_lcd, "task_process_lcd", 4 * 1024, NULL, 15, NULL, 0);
 }

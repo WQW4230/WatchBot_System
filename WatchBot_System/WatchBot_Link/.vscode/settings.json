@@ -25,7 +25,15 @@
     "stdlib.h": "c",
     "freertos.h": "c",
     "app_camera_lcd.h": "c",
-    "task.h": "c"
+    "task.h": "c",
+    "esp_check.h": "c",
+    "esp_camera.h": "c",
+    "random": "c",
+    "led_ws2812_driver.h": "c",
+    "app_led_control.h": "c",
+    "chrono": "c",
+    "variant": "c",
+    "cstdint": "c"
   },
   "idf.portWin": "COM4",
   "idf.flashType": "UART"

@@ -4,6 +4,8 @@
 #include <freertos/task.h>
 #include <esp_camera.h>
 
+#define MOUNT_POINT "/sdcard" //sd卡路径
+
 #define CAM_PIN_PWDN -1
 #define CAM_PIN_RESET   -1
 #define CAM_PIN_D0  11
@@ -21,7 +23,8 @@
 #define CAM_PIN_XCLK 15
 #define CAM_PIN_PCLK 13
 
-void bsp_camera_init();
-void camera_capture();
+void bsp_camera_init(void);
+void camera_capture(void);
+
 
 #endif
