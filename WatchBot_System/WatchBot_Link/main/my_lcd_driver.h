@@ -27,12 +27,12 @@
 #define BSP_LCD_H_RES              (320)
 #define BSP_LCD_V_RES              (240)
 
-#define BSP_LCD_BACKLIGHT     (GPIO_NUM_41) //背光控制可有可无已上拉
-#define BSP_LCD_SPI_CLK       (GPIO_NUM_40)
-#define BSP_LCD_SPI_MOSI      (GPIO_NUM_39)
-#define BSP_LCD_DC            (GPIO_NUM_38)
-#define BSP_LCD_RST           (GPIO_NUM_47)
-#define BSP_LCD_SPI_CS        (GPIO_NUM_14)
+#define BSP_LCD_BACKLIGHT     //(GPIO_NUM_41) //背光控制可有可无已上拉 不需要
+#define BSP_LCD_SPI_CLK       (GPIO_NUM_20)
+#define BSP_LCD_SPI_MOSI      (GPIO_NUM_41)
+#define BSP_LCD_DC            (GPIO_NUM_47)
+#define BSP_LCD_RST           (GPIO_NUM_14)
+#define BSP_LCD_SPI_CS        //(GPIO_NUM_14) //资源紧张默认下拉
 
 extern esp_lcd_panel_handle_t panel_handle;//液晶屏句柄
 

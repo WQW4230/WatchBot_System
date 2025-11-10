@@ -6,6 +6,9 @@
 #define SD_PIN_D0  40
 
 #define MOUNT_POINT        "/sdcard"
+#define LMAGE_PATH   "/lmage" //图片路径
+#define VIDEO_PATH   "/video" //视频路径
+
 #define EXAMPLE_MAX_CHAR_SIZE    512
 
 void My_SD_Init(void);

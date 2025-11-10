@@ -1,6 +1,9 @@
 #include "my_sd_driver.h"
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/unistd.h>
 #include "esp_vfs_fat.h"
 #include "sdmmc_cmd.h"
 #include "driver/sdmmc_host.h"
@@ -57,7 +60,7 @@ void My_SD_Init(void)
     esp_vfs_fat_sdmmc_mount_config_t mount_config = {
         .format_if_mount_failed = true,   // 如果挂载不成功是否需要格式化SD卡
         .max_files = 5, // 允许打开的最大文件数
-        .allocation_unit_size = 16 * 1024  // 分配单元大小
+        .allocation_unit_size = 128 * 1024  // 分配单元大小
     };
     
     sdmmc_card_t *card;
@@ -119,7 +122,7 @@ void bap_camera_capture_init(void)
     ESP_LOGI("BOOT", "PSRAM Size: %d KB", esp_psram_get_size() / 1024);
     
     // 初始化 PSRAM 缓存
-    esp_psram_init();
+    //esp_psram_init();
 
     camera_config_t cam_config = {
         .pin_pwdn = CAM_PIN_PWDN,
@@ -140,18 +143,27 @@ void bap_camera_capture_init(void)
         .pin_href = CAM_PIN_HREF,
         .pin_pclk = CAM_PIN_PCLK,
 
-        .xclk_freq_hz = 10000000,       // XCLK = 15MHz
+        .xclk_freq_hz = 20000000,       // XCLK = 20MHz
         .ledc_timer = LEDC_TIMER_1,
         .ledc_channel = LEDC_CHANNEL_1,
         .pixel_format = PIXFORMAT_JPEG, // JPEG格式保存
-        .frame_size = FRAMESIZE_240X240,   // 
-        .jpeg_quality = 63,             // 0-63 越小质量越好
+        .frame_size = FRAMESIZE_UXGA,     // 1600x1200
+        .jpeg_quality = 10,             // 0-63 越小质量越好
         .fb_count = 2,
         .fb_location = CAMERA_FB_IN_PSRAM,
         .grab_mode = CAMERA_GRAB_WHEN_EMPTY,
         .sccb_i2c_port = 1,
     };
 
+     // 先释放之前的摄像头
+    esp_camera_deinit();  
+
+    // 修改配置
+    cam_config.pixel_format = PIXFORMAT_JPEG;
+    cam_config.frame_size = FRAMESIZE_UXGA;
+
+    // 再初始化
+    // 再初始化
     esp_err_t err = esp_camera_init(&cam_config);
     if (err != ESP_OK)
     {
@@ -165,30 +177,87 @@ void bap_camera_capture_init(void)
      sensor_t *s = esp_camera_sensor_get(); // 获取摄像头型号
 
     if (s->id.PID == OV2640_PID) {
-        s->set_hmirror(s, 1);  // 这里控制摄像头镜像 写1镜像 写0不镜像
+        s->set_hmirror(s, 1);  //摄像头镜像 写1镜像 写0不镜像
     }
 
-    camera_capture();
+    //摄像头参数设置
+    // sensor_t *SB = esp_camera_sensor_get();
+    // if (SB) 
+    // {
+    //     SB->set_brightness(SB, 2);     // 亮度      -2 to 2
+    //     SB->set_contrast(SB, 0);       // 对比度    -2 to 2
+    //     SB->set_saturation(SB, 1);     // 饱和度-2 to 2
+    //     SB->set_special_effect(SB, 0); // 特效  0 to 6 (0 - No Effect, 1 - Negative, 2 - Grayscale, 3 - Red Tint, 4 - Green Tint, 5 - Blue Tint, 6 - Sepia)
+    //     SB->set_whitebal(SB, 1);       // 白平衡 0 = disable , 1 = enable
+    //     SB->set_awb_gain(SB, 1);       // 白平衡增益 0 = disable , 1 = enable
+    //     SB->set_wb_mode(SB, 4);        // 白平衡模式 0 to 4 - if awb_gain enabled (0 - Auto, 1 - Sunny, 2 - Cloudy, 3 - Office, 4 - Home)
+    //     SB->set_exposure_ctrl(SB, 1);  // 自动曝光  0 = disable , 1 = enable
+    //     SB->set_aec2(SB, 1);           // 自动曝光2 0 = disable , 1 = enable
+    //     SB->set_ae_level(SB, 2);       // 曝光补偿  -2 to 2
+    //     SB->set_aec_value(SB, 300);    // 固定曝光值 0 to 1200
+    //     SB->set_gain_ctrl(SB, 1);      // 自动增益 0 = disable , 1 = enable
+    //     SB->set_agc_gain(SB, 0);       // 手动增益0 to 30
+    //     SB->set_gainceiling(SB, (gainceiling_t)0); //增益上限  // 0 to 6
+    //     SB->set_bpc(SB, 1);            // 黑点矫正 0 = disable , 1 = enable
+    //     SB->set_wpc(SB, 1);            // 百点矫正 0 = disable , 1 = enable
+    //     SB->set_raw_gma(SB, 1);        // 伽马矫正 0 = disable , 1 = enable
+    //     SB->set_lenc(SB, 1);           // 镜头矫正 0 = disable , 1 = enable
+    //     SB->set_hmirror(SB, 0);        // 镜像水平 0 = disable , 1 = enable
+    //     SB->set_vflip(SB, 0);          // 镜像垂直 0 = disable , 1 = enable
+    //     SB->set_dcw(SB, 1);            // 降优化采样0 = disable , 1 = enable
+    //     SB->set_colorbar(SB, 0);       // 彩条测试 0 = disable , 1 = enable
+    // }
+
+    //camera_capture();
 }
+
+// void camera_capture_to_sd(void)
+// {
+//     const char *file_path = MOUNT_POINT"/heleflo.txt";
+//     FILE *f = fopen(file_path, "w");
+//     if (f == NULL) {
+//         ESP_LOGE(TAG, "Failed to open file for writing");
+//         return;
+//     }
+//     fprintf(f, "hello498644995\n");
+//     fclose(f);
+//     ESP_LOGI(TAG, "Wrote 'hello' to %s", file_path);
+
+//     // 打开txt文件，并读出文件中的内容
+//     esp_err_t ret = s_example_read_file(file_path);
+//     if (ret != ESP_OK) {
+//         return;
+//     }
+// }
+
+
 //拍一帧存到sd卡 
 //需要使用 bap_camera_capture_init将摄像头初始化成最大分辨率及其jpeg格式
 void camera_capture_to_sd(void)
 {
-    //frame2jpg
+    // 拍照
     camera_fb_t *fb = esp_camera_fb_get();
     if (!fb) {
         ESP_LOGE(TAG, "Camera capture failed");
         return;
     }
 
+    // 创建路径
+    mkdir(MOUNT_POINT LMAGE_PATH, 0775);
+
     static uint32_t file_number = 0;
     char filename[64];
 
-    snprintf(filename, sizeof(filename), MOUNT_POINT"/PHOTO%03lu.JPG", file_number++);
+    // 避免文件名冲突
+    do {
+        snprintf(filename, sizeof(filename),
+                 MOUNT_POINT LMAGE_PATH "/PHOTO%03lu.JPG", file_number++);
+    } while (access(filename, F_OK) == 0);
 
+    // 写入文件
     FILE *f = fopen(filename, "wb");
     if (!f) {
-        ESP_LOGE(TAG, "Failed to open file on SD card: %s", filename);
+        ESP_LOGE(TAG, "Failed to open file: %s", filename);
         esp_camera_fb_return(fb);
         return;
     }
@@ -197,9 +266,9 @@ void camera_capture_to_sd(void)
     fclose(f);
 
     if (written == fb->len) {
-        ESP_LOGI(TAG, "Saved file: %s (%zu bytes)", filename, fb->len);
+        ESP_LOGI(TAG, "Saved: %s (%zu bytes)", filename, fb->len);
     } else {
-        ESP_LOGE(TAG, "File write failed: wrote %zu/%zu bytes", written, fb->len);
+        ESP_LOGE(TAG, "Write failed: wrote %zu/%zu bytes", written, fb->len);
     }
 
     esp_camera_fb_return(fb);

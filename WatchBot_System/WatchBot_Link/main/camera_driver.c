@@ -18,7 +18,7 @@ void bsp_camera_init(void)
     ESP_LOGI("BOOT", "PSRAM Size: %d KB", esp_psram_get_size() / 1024);
     
     // 初始化 PSRAM 缓存
-    esp_psram_init();
+    //esp_psram_init();
 
     camera_config_t cam_config = {
         .pin_pwdn = CAM_PIN_PWDN,
@@ -51,6 +51,14 @@ void bsp_camera_init(void)
         .sccb_i2c_port = 1,
     };
 
+    // 先释放之前的摄像头
+    esp_camera_deinit();  
+
+    // 修改配置
+    cam_config.pixel_format = PIXFORMAT_RGB565;
+    cam_config.frame_size = FRAMESIZE_QVGA;
+
+    // 再初始化
     esp_err_t err = esp_camera_init(&cam_config);
     if (err != ESP_OK)
     {
@@ -67,6 +75,36 @@ void bsp_camera_init(void)
         s->set_hmirror(s, 1);  // 这里控制摄像头镜像 写1镜像 写0不镜像
     }
 
+
+
+     //摄像头参数设置
+    sensor_t *SB = esp_camera_sensor_get();
+    if (SB) 
+    {
+        SB->set_brightness(SB, 0);     // -2 to 2
+        SB->set_contrast(SB, 0);       // -2 to 2
+        SB->set_saturation(SB, 0);     // -2 to 2
+        SB->set_special_effect(SB, 0); // 0 to 6 (0 - No Effect, 1 - Negative, 2 - Grayscale, 3 - Red Tint, 4 - Green Tint, 5 - Blue Tint, 6 - Sepia)
+        SB->set_whitebal(SB, 1);       // 0 = disable , 1 = enable
+        SB->set_awb_gain(SB, 1);       // 0 = disable , 1 = enable
+        SB->set_wb_mode(SB, 0);        // 0 to 4 - if awb_gain enabled (0 - Auto, 1 - Sunny, 2 - Cloudy, 3 - Office, 4 - Home)
+        SB->set_exposure_ctrl(SB, 1);  // 0 = disable , 1 = enable
+        SB->set_aec2(SB, 0);           // 0 = disable , 1 = enable
+        SB->set_ae_level(SB, 0);       // -2 to 2
+        SB->set_aec_value(SB, 300);    // 0 to 1200
+        SB->set_gain_ctrl(SB, 1);      // 0 = disable , 1 = enable
+        SB->set_agc_gain(SB, 0);       // 0 to 30
+        SB->set_gainceiling(SB, (gainceiling_t)0);  // 0 to 6
+        SB->set_bpc(SB, 0);            // 0 = disable , 1 = enable
+        SB->set_wpc(SB, 1);            // 0 = disable , 1 = enable
+        SB->set_raw_gma(SB, 1);        // 0 = disable , 1 = enable
+        SB->set_lenc(SB, 1);           // 0 = disable , 1 = enable
+        SB->set_hmirror(SB, 0);        // 0 = disable , 1 = enable
+        SB->set_vflip(SB, 0);          // 0 = disable , 1 = enable
+        SB->set_dcw(SB, 1);            // 0 = disable , 1 = enable
+        SB->set_colorbar(SB, 0);       // 0 = disable , 1 = enable
+    }
+        
     camera_capture();
 }
 

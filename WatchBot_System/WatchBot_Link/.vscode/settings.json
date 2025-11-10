@@ -33,7 +33,8 @@
     "app_led_control.h": "c",
     "chrono": "c",
     "variant": "c",
-    "cstdint": "c"
+    "cstdint": "c",
+    "led_blink.h": "c"
   },
   "idf.portWin": "COM4",
   "idf.flashType": "UART"

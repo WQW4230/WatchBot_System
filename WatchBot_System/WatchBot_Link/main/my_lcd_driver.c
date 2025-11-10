@@ -12,7 +12,7 @@ esp_err_t bsp_display_brightness_init(void)
 {
     // Setup LEDC peripheral for PWM backlight control
     const ledc_channel_config_t LCD_backlight_channel = {
-        .gpio_num = BSP_LCD_BACKLIGHT,
+        //.gpio_num = BSP_LCD_BACKLIGHT,
         .speed_mode = LEDC_LOW_SPEED_MODE,
         .channel = LCD_LEDC_CH,
         .intr_type = LEDC_INTR_DISABLE,
@@ -77,7 +77,8 @@ esp_err_t bsp_display_new(void)
     ESP_LOGD(TAG, "Install panel IO");
     const esp_lcd_panel_io_spi_config_t io_config = {
         .dc_gpio_num = BSP_LCD_DC,
-        .cs_gpio_num = BSP_LCD_SPI_CS,
+        // .cs_gpio_num = BSP_LCD_SPI_CS,
+        .cs_gpio_num = GPIO_NUM_NC,
         .pclk_hz = BSP_LCD_PIXEL_CLOCK_HZ,
         .lcd_cmd_bits = LCD_CMD_BITS,
         .lcd_param_bits = LCD_PARAM_BITS,
@@ -95,7 +96,7 @@ esp_err_t bsp_display_new(void)
     ESP_GOTO_ON_ERROR(esp_lcd_new_panel_ili9341(io_handle, &panel_config, &panel_handle), err, TAG, "New panel failed");
     
     esp_lcd_panel_reset(panel_handle);  // 液晶屏复位
-    gpio_set_level(BSP_LCD_SPI_CS, 0);  // 拉低CS引脚
+    //gpio_set_level(BSP_LCD_SPI_CS, 0);  // 拉低CS引脚
     esp_lcd_panel_init(panel_handle);  // 初始化配置寄存器
     //esp_lcd_panel_invert_color(panel_handle, true); // 颜色反转
     esp_lcd_panel_swap_xy(panel_handle, true);  // 显示翻转 
