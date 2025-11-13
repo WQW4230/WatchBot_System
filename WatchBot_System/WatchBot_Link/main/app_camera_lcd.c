@@ -50,3 +50,8 @@ void app_camera_lcd(void)
     xTaskCreatePinnedToCore(task_process_camera, "task_process_camera", 3 * 1024, NULL, 15, NULL, 1);
     xTaskCreatePinnedToCore(task_process_lcd, "task_process_lcd", 4 * 1024, NULL, 15, NULL, 0);
 }
+// 液晶屏显示内容 方便外面文件调用
+void lcd_draw_bitmap(int x_start, int y_start, int x_end, int y_end, const void *color_data)
+{
+    esp_lcd_panel_draw_bitmap(panel_handle, x_start, y_start, x_end, y_end, color_data);
+}

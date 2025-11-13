@@ -1,4 +1,10 @@
 dependencies:
+  esp-dl:
+    dependencies: []
+    source:
+      path: C:\Users\49864\Desktop\WatchBot_Link\components\esp-dl
+      type: local
+    version: 2.0.0
   espressif/cmake_utilities:
     component_hash: 351350613ceafba240b761b4ea991e0f231ac7a9f59a9ee901f751bddc0bb18f
     dependencies:
@@ -52,9 +58,10 @@ dependencies:
       type: idf
     version: 5.5.1
 direct_dependencies:
+- espressif/esp-dl
 - espressif/esp32-camera
 - espressif/esp_lcd_ili9341
 - idf
-manifest_hash: ea070fcf5ab85295ebb27e787d01a53962e4f08cfa70c9207d8c29224afa4c33
+manifest_hash: 26170f3cc305865181bae5f3b4d26546fdecbb96acad0c29ff73ec3814f91fdb
 target: esp32s3
 version: 2.0.0

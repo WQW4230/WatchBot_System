@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define WS2812_GPIO_NUM 48
 #define WS2812_LED_NUM 1
 
@@ -46,5 +50,9 @@ void app_led_init(void);
 void camera_flash_Alarm(void *Param);
 void camera_flash_set(uint32_t degree, ws2821_colour_e colour, uint32_t bright_time, uint32_t darkness_time);
 void esp32_led_set(uint32_t degree,  uint32_t bright_time, uint32_t darkness_time);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

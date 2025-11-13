@@ -16,3 +16,4 @@ dependencies:
   #   public: true
   espressif/esp_lcd_ili9341: ^2.0.0
   espressif/esp32-camera: '*'
+  espressif/esp-dl: ^3.2.0

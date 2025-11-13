@@ -106,10 +106,10 @@ void app_led_init(void)
     Led_Blink_Init();
     ws2812_init(WS2812_GPIO_NUM,WS2812_LED_NUM,&ws2812_handle);
     //板载led控制句柄初始化
-    esp32_led.led_on = 0;
-    esp32_led.led_off = 0;
+    esp32_led.led_on = 1000;
+    esp32_led.led_off = 1000;
     esp32_led.blink_count = 0;
-    esp32_led.led_mode = LED_MODE_BLACK;
+    esp32_led.led_mode = LED_MODE_BLINK;
     esp32_led.led_color = COLOR_BLACK;
     //ws2812控制句柄初始化
     camera_flash.led_on = 500;

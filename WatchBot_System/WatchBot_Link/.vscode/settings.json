@@ -34,7 +34,11 @@
     "chrono": "c",
     "variant": "c",
     "cstdint": "c",
-    "led_blink.h": "c"
+    "led_blink.h": "c",
+    "stdio.h": "c",
+    "stdint.h": "c",
+    "esp_log.h": "c",
+    "queue.h": "c"
   },
   "idf.portWin": "COM4",
   "idf.flashType": "UART"

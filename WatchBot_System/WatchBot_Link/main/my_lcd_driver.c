@@ -77,8 +77,8 @@ esp_err_t bsp_display_new(void)
     ESP_LOGD(TAG, "Install panel IO");
     const esp_lcd_panel_io_spi_config_t io_config = {
         .dc_gpio_num = BSP_LCD_DC,
-        // .cs_gpio_num = BSP_LCD_SPI_CS,
-        .cs_gpio_num = GPIO_NUM_NC,
+        //.cs_gpio_num = BSP_LCD_SPI_CS,
+        //.cs_gpio_num = GPIO_NUM_NC,
         .pclk_hz = BSP_LCD_PIXEL_CLOCK_HZ,
         .lcd_cmd_bits = LCD_CMD_BITS,
         .lcd_param_bits = LCD_PARAM_BITS,
