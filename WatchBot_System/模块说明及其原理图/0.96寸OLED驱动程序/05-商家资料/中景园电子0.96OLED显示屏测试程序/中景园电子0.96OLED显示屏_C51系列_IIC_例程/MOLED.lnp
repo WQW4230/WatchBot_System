@@ -1,4 +1,0 @@
-"OLED_MAIN.obj",
-"oled.obj" 
-TO "MOLED" 
-RAMSIZE(256) 

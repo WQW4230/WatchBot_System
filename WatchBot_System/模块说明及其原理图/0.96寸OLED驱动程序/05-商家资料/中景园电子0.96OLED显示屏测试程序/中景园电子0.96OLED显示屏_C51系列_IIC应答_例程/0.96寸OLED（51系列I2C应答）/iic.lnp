@@ -1,4 +1,0 @@
-"STARTUP.obj",
-"iic.obj" 
-TO "iic" 
-RAMSIZE(256) 

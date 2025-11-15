@@ -38,8 +38,11 @@
     "stdio.h": "c",
     "stdint.h": "c",
     "esp_log.h": "c",
-    "queue.h": "c"
+    "queue.h": "c",
+    "stm32_link.h": "c",
+    "rmt_encoder.h": "c",
+    "uart.h": "c"
   },
-  "idf.portWin": "COM4",
+  "idf.portWin": "COM3",
   "idf.flashType": "UART"
 }

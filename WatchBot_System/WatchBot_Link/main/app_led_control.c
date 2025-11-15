@@ -1,5 +1,5 @@
 #include "app_led_control.h"
-#include "led_blink.h"
+#include "driver/gpio.h"
 #include "led_ws2812_driver.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -16,6 +16,28 @@ const rgb_color_t color_table[COLOR_NUM] = {
     [COLOR_YELLOW]  = { 255, 255, 0 },
     [COLOR_WHITE]   = { 255, 255, 255 },
 };
+
+
+void Led_Blink_Init(void)
+{
+    gpio_config_t gpio_configStruct;
+    gpio_configStruct.mode = GPIO_MODE_OUTPUT;
+    gpio_configStruct.pull_down_en = GPIO_PULLDOWN_DISABLE;
+    gpio_configStruct.pull_up_en = GPIO_PULLDOWN_DISABLE;
+    gpio_configStruct.pin_bit_mask = 1ULL << LED_BLINK_PIN;
+    gpio_configStruct.intr_type = GPIO_INTR_DISABLE;
+    gpio_config(&gpio_configStruct);
+}
+
+void led_Blink_on(void)
+{
+    gpio_set_level(LED_BLINK_PIN, 1);
+}
+
+void led_Blink_off(void)
+{
+    gpio_set_level(LED_BLINK_PIN, 0);
+}
 
 void camera_flash_task(void *Param)
 {
@@ -120,4 +142,65 @@ void app_led_init(void)
     
     xTaskCreatePinnedToCore(camera_flash_task, "CameraFlash", 2048, &camera_flash, 0, NULL, 0);
     xTaskCreatePinnedToCore(esp32_led_task, "Esp32Led", 2048, &esp32_led, 0, NULL, 0);
+}
+
+void camera_flash_set(ws2821_mode_e led_mode, color_name_e colour, uint32_t blink_count, uint32_t bright_time, uint32_t darkness_time)
+{
+    switch (led_mode)
+    {
+    case LED_MODE_BLACK:
+        camera_flash.led_mode = LED_MODE_BLACK;
+        break;
+    case LED_MODE_LIMITEF:
+        camera_flash.led_mode = LED_MODE_LIMITEF;
+         camera_flash.led_color = COLOR_WHITE;
+        break;
+    case LED_MODE_BLINK:
+        camera_flash.led_on = bright_time;
+        camera_flash.led_off = darkness_time;
+        camera_flash.blink_count = 0;
+        camera_flash.led_mode = LED_MODE_BLINK;
+        camera_flash.led_color = colour;
+        break;
+    case LED_MODE_ALARM:
+        camera_flash.led_mode = LED_MODE_ALARM;
+        break;
+    case LED_MODE_LIMITED:
+        camera_flash.led_on = bright_time;
+        camera_flash.led_off = darkness_time;
+        camera_flash.blink_count = blink_count;
+        camera_flash.led_mode = LED_MODE_LIMITED;
+        camera_flash.led_color = colour;
+        break;
+    default:
+        break;
+    }
+}
+void esp32_led_set(ws2821_mode_e led_mode,  uint32_t blink_count, uint32_t bright_time, uint32_t darkness_time)
+{
+    switch (led_mode)
+    {
+    case LED_MODE_BLACK:
+        esp32_led.led_mode = LED_MODE_BLACK;
+        break;
+    case LED_MODE_LIMITEF:
+        esp32_led.led_mode = LED_MODE_LIMITEF;
+        break;
+    case LED_MODE_LIMITED:
+        esp32_led.led_on = bright_time;
+        esp32_led.led_off = darkness_time;
+        esp32_led.blink_count = blink_count;
+        esp32_led.led_mode = LED_MODE_LIMITED;
+        esp32_led.led_color = COLOR_BLACK;
+        break;
+    case LED_MODE_BLINK:
+        esp32_led.led_on = bright_time;
+        esp32_led.led_off = darkness_time;
+        esp32_led.blink_count = 0;
+        esp32_led.led_mode = LED_MODE_BLINK;
+        esp32_led.led_color = COLOR_BLACK;
+        break;
+    default:
+        break;
+    }
 }

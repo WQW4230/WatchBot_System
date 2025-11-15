@@ -7,8 +7,9 @@
 extern "C" {
 #endif
 
-#define WS2812_GPIO_NUM 48
-#define WS2812_LED_NUM 1
+#define LED_BLINK_PIN 2 //板载LED引脚
+#define WS2812_GPIO_NUM 48//灯珠引脚
+#define WS2812_LED_NUM 1  //几个灯珠
 
 typedef struct {
     uint8_t r;
@@ -33,7 +34,7 @@ typedef enum
     LED_MODE_LIMITED, //有限
     LED_MODE_ALARM,   //报警
     LED_MODE_BLINK //闪烁
-}ws2821_colour_e;
+}ws2821_mode_e;
 
 extern const rgb_color_t color_table[COLOR_NUM];
 
@@ -42,14 +43,13 @@ typedef struct
     uint32_t led_on; 
     uint32_t led_off;
     color_name_e led_color; //颜色
-    ws2821_colour_e led_mode; //模式
+    ws2821_mode_e led_mode; //模式
     uint32_t blink_count;  //如果有限亮几次?
 }led_param;
 
 void app_led_init(void);
-void camera_flash_Alarm(void *Param);
-void camera_flash_set(uint32_t degree, ws2821_colour_e colour, uint32_t bright_time, uint32_t darkness_time);
-void esp32_led_set(uint32_t degree,  uint32_t bright_time, uint32_t darkness_time);
+void camera_flash_set(ws2821_mode_e led_mode, color_name_e colour, uint32_t blink_count, uint32_t bright_time, uint32_t darkness_time);
+void esp32_led_set(ws2821_mode_e led_mode,  uint32_t blink_count, uint32_t bright_time, uint32_t darkness_time);
 
 #ifdef __cplusplus
 }
