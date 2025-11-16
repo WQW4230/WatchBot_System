@@ -243,8 +243,14 @@ static void LedSet_Proc_Cam(void) //LED设置二级菜单 第二行ESP32CAM_LED�
 				OLED_Printf(0, 48, OLED_8X16, "Colour:Blue");
 				break;
 			case RED:
-					OLED_Printf(0, 48, OLED_8X16, "Colour:Red");
-					break;
+				OLED_Printf(0, 48, OLED_8X16, "Colour:Red");
+				break;
+			case ALARM:
+				OLED_Printf(0, 48, OLED_8X16, "Colour:Alarm");
+				break;
+			case OFF:
+				OLED_Printf(0, 48, OLED_8X16, "Colour:Off");
+				break;
 		}
 		OLED_ReverseArea(0, 16 * Led_Cam_index + 16, 128, 16);
 		
@@ -287,7 +293,7 @@ static void LedSet_Proc_Cam(void) //LED设置二级菜单 第二行ESP32CAM_LED�
 		case Key_D:
 			if(Led_Cam_index != 2) break; //光标不在颜色位置直接退出
 		
-			Cam_Colour = (Cam_Colour + 1) % 3;//三种颜色
+			Cam_Colour = (Cam_Colour + 1) % 5;//五种模式
 			switch(Cam_Colour)
 			{
 				case WHITE:
@@ -301,6 +307,11 @@ static void LedSet_Proc_Cam(void) //LED设置二级菜单 第二行ESP32CAM_LED�
 				case RED:
 					LED_Set.cam_LedColour = RED;
 					break;
+				case ALARM:
+					LED_Set.cam_LedColour = ALARM;
+					break;
+				case OFF:
+					LED_Set.cam_LedColour = OFF;
 			}
 			break;
 		
@@ -316,6 +327,12 @@ static void LedSet_Proc_Cam(void) //LED设置二级菜单 第二行ESP32CAM_LED�
 					break;
 				case RED:		//红色
 					USART_SenFrame(CMD_ESP32CAM_RED_LED, LED_Set.esp_LedBrigh_time, LED_Set.esp_LedDark_time);
+					break;
+				case ALARM:
+					USART_SenFrame(CMD_ESP32CAM_ALARM_LED, LED_Set.esp_LedBrigh_time, LED_Set.esp_LedDark_time);
+					break;
+				case OFF:
+					USART_SenFrame(CMD_ESPCAM_OFF_LDE, LED_Set.esp_LedBrigh_time, LED_Set.esp_LedDark_time);
 					break;
 			}
 			
@@ -350,8 +367,15 @@ static void LedSet_Proc_Cam(void) //LED设置二级菜单 第二行ESP32CAM_LED�
 			OLED_Printf(0, 48, OLED_8X16, "Colour:Blue");
 			break;
 		case RED:
-				OLED_Printf(0, 48, OLED_8X16, "Colour:Red");
-				break;
+			OLED_Printf(0, 48, OLED_8X16, "Colour:Red");
+			break;
+		case ALARM:
+			OLED_Printf(0, 48, OLED_8X16, "Colour:Alarm");
+			break;
+		case OFF:
+			OLED_Printf(0, 48, OLED_8X16, "Colour:Off");
+			break;
+		
 	}
 	OLED_ReverseArea(0, 16 * Led_Cam_index + 16, 128, 16);
 }

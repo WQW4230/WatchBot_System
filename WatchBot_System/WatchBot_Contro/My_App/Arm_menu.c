@@ -29,6 +29,8 @@ void ArmMenu_Init(void)
 	
 	Scheduler_AddTask(ArmMode_Task, 10, 4, 1000);
 
+	Arm_MoveTo(-90, -60, -90, 0);
+	
 	arm_menu.mode = ARM_MODE_REMOTE;
 	arm_menu.show = ARM_MENU_HOME;
 	arm_menu.Action_Status = ARM_STATUS_STOP;
@@ -46,14 +48,14 @@ static void ArmAuto_Show(ArmMenu_Status_t *statu)
 	
 	OLED_Clear();
 	
-	OLED_Printf(0, 	0, OLED_8X16, "Base ");
-	OLED_ShowFloatNum(40, 0, Current->Base_Angle, 2, 3, OLED_8X16);
+	OLED_Printf(0, 	0, OLED_8X16, "Pan ");
+	OLED_ShowFloatNum(40, 0, Current->Pan_Angle, 2, 3, OLED_8X16);
 
 	OLED_Printf(0, 16, OLED_8X16, "Roll ");
 	OLED_ShowFloatNum(40, 16, Current->Roll_Angle, 2, 3, OLED_8X16);
 	
-	OLED_Printf(0, 32, OLED_8X16, "Pitch");
-	OLED_ShowFloatNum(40, 32, Current->Pitch_Angle, 2, 3, OLED_8X16);
+	OLED_Printf(0, 32, OLED_8X16, "Tilt");
+	OLED_ShowFloatNum(40, 32, Current->Tilt_Angle, 2, 3, OLED_8X16);
 	
 	OLED_Printf(0, 48, OLED_8X16, "Fan  ");
 	OLED_ShowFloatNum(40, 48, Current->Fan_Speed, 2, 3, OLED_8X16);
@@ -67,20 +69,20 @@ static void ArmRemote_Show(ArmMenu_Status_t *statu)
 	const Arm_Angle_t * Target  = Arm_GetTarget_Angle();
 	
 	OLED_Clear();
-	OLED_Printf(0, 	0, OLED_8X16, "Base ");
-	OLED_ShowFloatNum(40, 0, Current->Base_Angle, 2, 3, OLED_6X8);
-	OLED_ShowFloatNum(40, 8, Target->Base_Angle, 2, 3, OLED_6X8);
-	OLED_ShowFloatNum(85, 0, statu->remote_angle.Base_Angle, 2, 1, OLED_8X16);
+	OLED_Printf(0, 	0, OLED_8X16, "Pan ");
+	OLED_ShowFloatNum(40, 0, Current->Pan_Angle, 2, 3, OLED_6X8);
+	OLED_ShowFloatNum(40, 8, Target->Pan_Angle, 2, 3, OLED_6X8);
+	OLED_ShowFloatNum(85, 0, statu->remote_angle.Pan_Angle, 2, 1, OLED_8X16);
 	
 	OLED_Printf(0, 16, OLED_8X16, "Roll ");
 	OLED_ShowFloatNum(40, 16, Current->Roll_Angle, 2, 3, OLED_6X8);
 	OLED_ShowFloatNum(40, 24, Target->Roll_Angle, 2, 3, OLED_6X8);
 	OLED_ShowFloatNum(85, 16, statu->remote_angle.Roll_Angle, 2, 1, OLED_8X16);
 	
-	OLED_Printf(0, 32, OLED_8X16, "Pitch");
-	OLED_ShowFloatNum(40, 32, Current->Pitch_Angle, 2, 3, OLED_6X8);
-	OLED_ShowFloatNum(40, 40, Target->Pitch_Angle, 2, 3, OLED_6X8);
-	OLED_ShowFloatNum(85, 32, statu->remote_angle.Pitch_Angle, 2, 1, OLED_8X16);
+	OLED_Printf(0, 32, OLED_8X16, "Tilt");
+	OLED_ShowFloatNum(40, 32, Current->Tilt_Angle, 2, 3, OLED_6X8);
+	OLED_ShowFloatNum(40, 40, Target->Tilt_Angle, 2, 3, OLED_6X8);
+	OLED_ShowFloatNum(85, 32, statu->remote_angle.Tilt_Angle, 2, 1, OLED_8X16);
 	
 	OLED_Printf(0, 48, OLED_8X16, "Fan  ");
 	OLED_ShowFloatNum(40, 48, Current->Fan_Speed, 2, 3, OLED_6X8);
@@ -139,9 +141,9 @@ static void Arm_Remote_Proc(ArmMenu_Status_t *statu)
 		case Key_A:
 			switch(statu->remote_cursor)
 			{
-				case 0: statu->remote_angle.Base_Angle 	-=ARM_IR_ANGLE_STEP; break;
+				case 0: statu->remote_angle.Pan_Angle 	-=ARM_IR_ANGLE_STEP; break;
 				case 1:	statu->remote_angle.Roll_Angle	-=ARM_IR_ANGLE_STEP; break;
-				case 2:	statu->remote_angle.Pitch_Angle -=ARM_IR_ANGLE_STEP; break;
+				case 2:	statu->remote_angle.Tilt_Angle -=ARM_IR_ANGLE_STEP; break;
 				case 3:	statu->remote_angle.Fan_Speed 	-=ARM_IR_ANGLE_STEP; break;
 			}
 		break;
@@ -149,16 +151,16 @@ static void Arm_Remote_Proc(ArmMenu_Status_t *statu)
 		case Key_D:
 			switch(statu->remote_cursor)
 			{
-				case 0: statu->remote_angle.Base_Angle 	+=ARM_IR_ANGLE_STEP; break;
+				case 0: statu->remote_angle.Pan_Angle 	+=ARM_IR_ANGLE_STEP; break;
 				case 1:	statu->remote_angle.Roll_Angle 	+=ARM_IR_ANGLE_STEP; break;
-				case 2:	statu->remote_angle.Pitch_Angle +=ARM_IR_ANGLE_STEP; break;
+				case 2:	statu->remote_angle.Tilt_Angle +=ARM_IR_ANGLE_STEP; break;
 				case 3:	statu->remote_angle.Fan_Speed 	+=ARM_IR_ANGLE_STEP; break;
 			}
 		break;
 		
 		case Key_OK:
-			Arm_MoveTo(statu->remote_angle.Base_Angle , statu->remote_angle.Roll_Angle,
-								 statu->remote_angle.Pitch_Angle, statu->remote_angle.Fan_Speed  );
+			Arm_MoveTo(statu->remote_angle.Pan_Angle , statu->remote_angle.Roll_Angle,
+								 statu->remote_angle.Tilt_Angle, statu->remote_angle.Fan_Speed  );
 		break;
 		
 		case Key_XingHao:
@@ -168,9 +170,9 @@ static void Arm_Remote_Proc(ArmMenu_Status_t *statu)
 		case Key_JingHao:
 			switch(statu->remote_cursor)
 			{
-				case 0: statu->remote_angle.Base_Angle 	= 0; break;
+				case 0: statu->remote_angle.Pan_Angle 	= 0; break;
 				case 1:	statu->remote_angle.Roll_Angle 	= 0; break;
-				case 2:	statu->remote_angle.Pitch_Angle = 0; break;
+				case 2:	statu->remote_angle.Tilt_Angle = 0; break;
 				case 3:	statu->remote_angle.Fan_Speed 	= 0; break;
 			}
 		break;
@@ -180,9 +182,9 @@ static void Arm_Remote_Proc(ArmMenu_Status_t *statu)
 			
 			switch(statu->remote_cursor)
 			{
-				case 0: statu->remote_angle.Base_Angle  = 10 * statu->remote_angle.Base_Angle + Arm_IR_InputJudgment(statu->remote_angle.Base_Angle, key); break;
+				case 0: statu->remote_angle.Pan_Angle  = 10 * statu->remote_angle.Pan_Angle + Arm_IR_InputJudgment(statu->remote_angle.Pan_Angle, key); break;
 				case 1:	statu->remote_angle.Roll_Angle 	= 10 * statu->remote_angle.Roll_Angle + Arm_IR_InputJudgment(statu->remote_angle.Roll_Angle, key); break;
-				case 2:	statu->remote_angle.Pitch_Angle = 10 * statu->remote_angle.Pitch_Angle + Arm_IR_InputJudgment(statu->remote_angle.Pitch_Angle, key); break;
+				case 2:	statu->remote_angle.Tilt_Angle = 10 * statu->remote_angle.Tilt_Angle + Arm_IR_InputJudgment(statu->remote_angle.Tilt_Angle, key); break;
 				case 3:	statu->remote_angle.Fan_Speed 	= 10 * statu->remote_angle.Fan_Speed + Arm_IR_InputJudgment(statu->remote_angle.Fan_Speed, key); break;
 			}
 		break;
@@ -221,13 +223,13 @@ static void ActionRum(void)
 		return;
 	}
 	
-	float base  = p1->ActionList[index].Base_Angle;
+	float Pan  = p1->ActionList[index].Pan_Angle;
 	float roll  = p1->ActionList[index].Roll_Angle;
-	float pitch = p1->ActionList[index].Pitch_Angle; 
+	float Tilt = p1->ActionList[index].Tilt_Angle; 
 	float fan   =  p1->ActionList[index].Fan_Speed;
 	uint16_t delay = p1->ActionList[index].Duration;
 	
-	Arm_MoveTo(base, roll, pitch, fan);
+	Arm_MoveTo(Pan, roll, Tilt, fan);
 	arm_menu.Action_Index++;
 	vTask_Delay(delay);
 }

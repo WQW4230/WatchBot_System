@@ -11,23 +11,22 @@
 MAX对应的是逆时针 90° 
 MIN对应的是顺时针-90°
 */
-#define BASE_ANGLE_MAX  2500
-#define	BASE_ANGLE_MIN  600
+#define PAN_ANGLE_MAX   2500
+#define	PAN_ANGLE_MIN   600
 #define	ROLL_ANGLE_MAX  530
 #define	ROLL_ANGLE_MIN  2450
-#define	PITCH_ANGLE_MAX 400
-#define	PITCH_ANGLE_MIN 2450
+#define	TILT_ANGLE_MAX  400
+#define	TILT_ANGLE_MIN  2450
 #define FAN_SPEED_MAX   1000
 #define FAN_SPEED_MIN   300
 
 //舵机角度每次变换，越小越平滑
 #define ANGLE_STEP 1.2
-//目标的PID系数
-#define ANGLE_BASE_PID 0.03
-#define ANGLE_ROLL_PID 0.03
-#define ANGLE_PITCH_PID 0.03
-#define FAN_SPEED_PID 0.2
-
+//目标的PID系数 目标值系数比
+#define ANGLE_PAN_PID   0.02
+#define ANGLE_ROLL_PID  0.03
+#define ANGLE_TILT_PID  0.03
+#define FAN_SPEED_PID   0.2
 
 //对输入的角度进行校验，不能超过限位
 #define ANGLE_MAX  90
@@ -46,27 +45,17 @@ MIN对应的是顺时针-90°
 
 typedef struct
 {
-	float Base_Angle;   //基座旋转角
+	float Pan_Angle;    //基座旋转角
 	float Roll_Angle; 	//大臂翻滚角
-	float Pitch_Angle;	//末端俯仰角
+	float Tilt_Angle;	//末端俯仰角
 	float Fan_Speed;    //风扇转速
 }Arm_Angle_t;
 
-//初始化函数
+
 void Arm_Init(void);
-
-//直接设置机械臂角度，不平滑移动
-//输入值-90° - +90°
-void Servo_SetAngle(float Base, float Roll, float Pitch, float speed);
-
-//平滑移动
-//输入值-90° - +90°
-void Arm_MoveTo(float Base, float Roll, float Pitch, float Speed);
-
-//更新函数
+void Servo_SetAngle(float Pan, float Roll, float Tilt, float speed);
+void Arm_MoveTo(float Pan, float Roll, float Tilt, float Speed);
 void Arm_Update(void);
-
-//测试用demo
 void Arm_deom(void);
 
 //读当前机械臂角度参数

@@ -2,6 +2,7 @@
 #define _USART_FRAMEHANDLER_H_
 
 #include <stdint.h>
+#include "esp_err.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,9 +18,10 @@ extern "C" {
 
 typedef enum
 {
-	CMD_ARM_CONTROL = 		 0x00,   //控制机械臂
-	CMD_BUZZER_CTRL =   	 0x01,	 //控制STM板载蜂鸣器
-	CMD_BUZZER_OFF  =        0x02,   //关闭STM板载蜂鸣器
+	CMD_ARM_PAN_ROLL = 	 	 0x00,   //控制偏航角和翻滚角
+	CMD_ARM_TILT_FAN =       0x01,   //控制俯仰角和风扇
+	CMD_BUZZER_CTRL =   	 0x02,	 //控制STM板载蜂鸣器
+	CMD_BUZZER_OFF  =        0x03,   //关闭STM板载蜂鸣器
 }USART_TxCommand_e;
 
 typedef enum
@@ -34,9 +36,13 @@ typedef enum
 }USART_RxCommand_e;
 
 void USART_FrameHandler_Init(void);
-void arm_control(int32_t base, int32_t roll, int32_t pitch, uint32_t fan);
+void arm_control(float pan, float roll, float tilt, float fan);
 void BuzzerControl(uint16_t ON, uint16_t OFF);
 void Buzzer_off(void);
+
+/////////////////////////
+//测试用
+//void cmd_camera_flash_set(uint8_t *data);
 
 #endif
 

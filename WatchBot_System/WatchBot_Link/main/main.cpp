@@ -31,6 +31,8 @@ extern "C" void app_main(void)
     camera_flash_set(LED_MODE_ALARM, COLOR_WHITE, 0, 0, 0);
     vTaskDelay(pdMS_TO_TICKS(3000));  // 延时3000毫秒
     camera_flash_set(LED_MODE_BLINK, COLOR_WHITE, 0, 300, 300);
+    
+    arm_control(-90, -80, -70, -60);
 }
 
 

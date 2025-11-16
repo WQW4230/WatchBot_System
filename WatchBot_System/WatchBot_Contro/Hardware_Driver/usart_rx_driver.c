@@ -167,8 +167,10 @@ void USART3_IRQHandler(void)
 void USART3_SendString(const uint8_t *data)
 {
 	uint32_t i;
+	uint8_t data_length = data[FRAME_IDX_LEN];//获取一帧的长度
+	
 	USART_ITConfig(USART3, USART_IT_TXE, DISABLE);
-	for(i = 0; i<8 ; i++)
+	for(i = 0; i<data_length ; i++)
 	{
 		Queue_Enqueue(&hTxQueue, data[i]);
 	}

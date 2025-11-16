@@ -10,7 +10,9 @@
 static Menu_t Menu_State = {0, 0, 0};//主页控制句柄
 
 extern void ArmMenu_Proc(void);
+
 extern void Alarm_Clock_Proc(void);
+extern void camera_service_proc(void);
 extern void LedSet_Menu_Proc(void);
 extern void GreedySnake_Proc(void);
 extern void Contact_Proc(void);
@@ -20,12 +22,13 @@ extern void GuessNum_Proc(void);
 menu_items app_items[] =  		//软件名称及其软件函数指针
 {
 	{"0机械臂",    &ArmMenu_Proc},
-	{"1定时器",    &Alarm_Clock_Proc},
-	{"2LED调速",   &LedSet_Menu_Proc},	
-	{"3贪吃蛇",    &GreedySnake_Proc},	
-	{"4通讯录",    &Contact_Proc},
-	{"5扫雷",      &GuessMine_Proc},
-	{"6猜数字",    &GuessNum_Proc},	
+	{"1相机"  ,    &camera_service_proc},
+	{"2定时器",    &Alarm_Clock_Proc},
+	{"3LED设置",   &LedSet_Menu_Proc},	
+	{"4贪吃蛇",    &GreedySnake_Proc},	
+	{"5通讯录",    &Contact_Proc},
+	{"6扫雷",      &GuessMine_Proc},
+	{"7猜数字",    &GuessNum_Proc},	
 };
 
 //主页屏幕刷新

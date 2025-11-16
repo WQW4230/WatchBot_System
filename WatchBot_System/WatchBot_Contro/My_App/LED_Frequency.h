@@ -9,7 +9,8 @@ typedef enum
 	WHITE = 0, //白色
 	BLUE,	 //蓝色
 	RED,	 //红色
-
+	ALARM,  //报警色
+	OFF,    //关闭
 }LedColour_e;
 
 typedef struct

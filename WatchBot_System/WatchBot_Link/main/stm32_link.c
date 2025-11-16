@@ -5,13 +5,22 @@
 #include <stdio.h>
 #include "driver/uart.h"
 #include "esp_log.h"
+#include "USART_FrameHandler.h"
 
 static const char *TAG = "stm32_link"; 
-static QueueHandle_t uart_queue = NULL; //uart接收队列
-QueueHandle_t executeFrame_queue = NULL; //执行指令队列
+static uint8_t uart_buffer[1024];
+static QueueHandle_t uart_queue;
+QueueHandle_t cmd_execution_handle;//串口命令执行队列
 
 Frame_t USART_Frame = {STATE_WAIT_EADER, {0}, 0, 0, 0};
 
+
+/*
+	收到的字节存储并且判断
+	USART_Frame 数据帧结构体变量
+	byte 一帧数据
+	数据可用时会将ESP32_Tx_Flag置位
+*/
 void USART_ProcessByte(Frame_t *USART_Frame, uint8_t byte)
 {
 	switch(USART_Frame->State)
@@ -49,9 +58,8 @@ void USART_ProcessByte(Frame_t *USART_Frame, uint8_t byte)
 					{
 						USART_Frame->ESP32_Tx_Flag = 1;
 						USART_Frame->Data_Len = USART_Frame->Data_index;
-                        xQueueSend(executeFrame_queue, &USART_Frame, portMAX_DELAY);//发送队列通知
+						xQueueSend(cmd_execution_handle, USART_Frame->ESP_Data, portMAX_DELAY);
                         USART_Frame->State = STATE_WAIT_EADER;
-                        USART_Frame->ESP32_Tx_Flag = 0;
 						return;
 					}
 					else if(USART_Frame->ESP_Data[FRAME_IDX_LEN] == DATA_MIN_LEN&& USART_Frame->Data_index == DATA_MIN_LEN) 
@@ -69,9 +77,8 @@ void USART_ProcessByte(Frame_t *USART_Frame, uint8_t byte)
 					{
 						USART_Frame->ESP32_Tx_Flag = 1;
 						USART_Frame->Data_Len = USART_Frame->Data_index;
-                        xQueueSend(executeFrame_queue, &USART_Frame, portMAX_DELAY);//发送队列通知
+						xQueueSend(cmd_execution_handle, USART_Frame->ESP_Data, portMAX_DELAY);
                         USART_Frame->State = STATE_WAIT_EADER;
-                        USART_Frame->ESP32_Tx_Flag = 0;
 						return;
 					}
 					else if(USART_Frame->ESP_Data[FRAME_IDX_LEN] == DATA_MAX_LEN&& USART_Frame->Data_index == DATA_MAX_LEN) 
@@ -90,66 +97,127 @@ void USART_ProcessByte(Frame_t *USART_Frame, uint8_t byte)
 }
 
 /*
-    发送一帧命令
+    发送一帧数据
 */
-void stm32_send_frame(const uint8_t *data)
+esp_err_t stm32_send_frame(const uint8_t *data)
 {
     uint8_t data_length = data[FRAME_IDX_LEN];
     uart_write_bytes(UART_NUM_1, data, data_length);
+	return ESP_OK;
 }
 
-void stm32_receive_task(void)
+/*
+	读取一帧数据
+*/
+esp_err_t stm32_read_frame(uint8_t *data)
 {
-    uint8_t data[128];
-    uart_event_t event;//队列状态
+	if(USART_Frame.ESP32_Tx_Flag == 0) return ESP_FAIL; 
+	
+	USART_Frame.ESP32_Tx_Flag = 0; //有数据帧标志位清除
+	for(uint8_t i=0; i<USART_Frame.Data_Len; i++)
+	{
+		data[i] = USART_Frame.ESP_Data[i];
+	}
+	return ESP_OK;
+}
 
-    while(1)
+static void uart_event_task(void *pvParameters)
+{
+    uart_event_t event;
+    size_t buffered_size;
+    while (1)
     {
-        if(xQueueReceive(uart_queue, &event, portMAX_DELAY))
+        //Waiting for UART event.
+        if (xQueueReceive(uart_queue, (void *)&event, (TickType_t)portMAX_DELAY)) 
         {
-            uint16_t length = 0;
-            length = uart_read_bytes(UART_NUM_1, data, event.size, portMAX_DELAY);
-            for(uint16_t i=0; i<length; i++)
-            {
-                USART_ProcessByte(&USART_Frame, data[i]);
+            ESP_LOGI(TAG, "uart[%d] event:", USER_UART_NUM);
+            switch (event.type) {
+            case UART_DATA:
+                ESP_LOGI(TAG, "[UART DATA]: %d", event.size);
+                uart_read_bytes(USER_UART_NUM, uart_buffer, event.size, portMAX_DELAY);
+				for(uint32_t i=0; i<event.size; i++)
+				{
+					USART_ProcessByte(&USART_Frame, uart_buffer[i]);
+				}
+                ESP_LOGI(TAG, "[DATA EVT]:");
+                uart_write_bytes(USER_UART_NUM, uart_buffer, event.size); //调试用
+                break;
+            //Event of HW FIFO overflow detected
+            case UART_FIFO_OVF:
+                ESP_LOGI(TAG, "hw fifo overflow");
+                uart_flush_input(USER_UART_NUM);
+                xQueueReset(uart_queue);
+                break;
+            //Event of UART ring buffer full
+            case UART_BUFFER_FULL:
+                ESP_LOGI(TAG, "ring buffer full");
+                // If buffer full happened, you should consider increasing your buffer size
+                // As an example, we directly flush the rx buffer here in order to read more data.
+                uart_flush_input(USER_UART_NUM);
+                xQueueReset(uart_queue);
+                break;
+            //Event of UART RX break detected
+            case UART_BREAK:
+                ESP_LOGI(TAG, "uart rx break");
+                break;
+            //Event of UART parity check error
+            case UART_PARITY_ERR:
+                ESP_LOGI(TAG, "uart parity error");
+                break;
+            //Event of UART frame error
+            case UART_FRAME_ERR:
+                ESP_LOGI(TAG, "uart frame error");
+                break;
+            default:
+                ESP_LOGI(TAG, "uart event type: %d", event.type);
+                break;
             }
         }
     }
+    vTaskDelete(NULL);
 }
 
-void stm32_link_init(void)
+/*
+		
+*/
+void stm32_receive_task(void *pvParameters)
 {
-    ESP_LOGI(TAG, "初始化 STM32 UART 链接...");
-    
-    uart_config_t uart_config;
-    uart_config.baud_rate  = 115200;
-    uart_config.data_bits  = UART_DATA_8_BITS;
-    uart_config.parity     = UART_PARITY_DISABLE;
-    uart_config.source_clk = UART_SCLK_DEFAULT;
-    uart_config.stop_bits  = UART_STOP_BITS_1;
-	uart_config.flow_ctrl  = UART_HW_FLOWCTRL_DISABLE;
+    uint8_t data[128];
+	uint16_t length = 0;
+    while(1)
+    {      
+        length = uart_read_bytes(UART_NUM_1, data, 128, portMAX_DELAY);
+		if(length > 0)
+		{
+			for(uint16_t i=0; i<length; i++)
+        	{
+            	USART_ProcessByte(&USART_Frame, data[i]);
+        	}
+		} 
+    }
+}
 
-    if (uart_param_config(UART_NUM_1, &uart_config) != ESP_OK) 
+esp_err_t stm32_link_init(void)
+{
+    ESP_LOGI(TAG, "初始化 STM32 UART 链接初始化...");
+    uart_config_t uart_cfg={
+        .baud_rate=115200,                          //波特率115200
+        .data_bits=UART_DATA_8_BITS,                //8位数据位
+        .flow_ctrl=UART_HW_FLOWCTRL_DISABLE,        //无硬件流控制
+        .parity=UART_PARITY_DISABLE,                //无校验位
+        .stop_bits=UART_STOP_BITS_1                 //1位停止位
+    };
+    uart_driver_install(USER_UART_NUM,1024,1024,20,&uart_queue,0);     //安装串口驱动
+    uart_param_config(USER_UART_NUM,&uart_cfg);
+    uart_set_pin(USER_UART_NUM, UART_TX_IO, UART_RX_IO, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE); 
+
+	if (xTaskCreatePinnedToCore(uart_event_task,"uart_event_task",4096,NULL,9,NULL,1) != pdPASS) 
     {
-        ESP_LOGE(TAG, "UART 参数配置失败！");
-        return;
+        ESP_LOGE(TAG, "UART 接收任务创建失败");
+        return ESP_FAIL;
     }
 
-    if (uart_set_pin(UART_NUM_1, UART_TX_PIN, UART_RX_PIN, UART_PIN_NO_CHANGE,UART_PIN_NO_CHANGE) != ESP_OK) 
-    {
-        ESP_LOGE(TAG, "UART 引脚配置失败！");
-        return;
-    }
-	executeFrame_queue = xQueueCreate(10, sizeof(Frame_t));
-	if (executeFrame_queue == NULL)
-	{
-		ESP_LOGE(TAG, "UART 队列创建失败");
-		return;
-	}
-
-	if (uart_driver_install(UART_NUM_1, 2048, 2048, 10, &uart_queue, 0) != ESP_OK)
-	{
-		ESP_LOGE(TAG, "UART 队列创建失败");
-		return;
-	}
+	cmd_execution_handle = xQueueCreate(30, DATA_MAX_LEN * sizeof(uint8_t));
+	
+	return ESP_OK;
 }

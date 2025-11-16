@@ -10,9 +10,9 @@
 	
 typedef struct
 {
-	float Base_Angle;   //基座旋转角
+	float Pan_Angle;   //基座旋转角
 	float Roll_Angle; 	//大臂翻滚角
-	float Pitch_Angle;	//末端俯仰角
+	float Tilt_Angle;	//末端俯仰角
 	float Fan_Speed;    //风扇转速
 	uint16_t Duration;  //动作持续时间
 }Arm_ActionAngle_t;

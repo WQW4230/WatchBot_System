@@ -12,10 +12,10 @@ JOY1_Y == 1
 JOY2_X == 2
 JOY2_Y == 3
 */
-#define JOY_FAN   0   //直流电机   JOY1_X == 0
-#define JOY_ROLL   1   //大臂		   JOY1_Y == 1
-#define JOY_PITCH  2	 //小臂			 JOY2_X == 2
-#define JOY_BASE    3   //基座		 JOY2_Y == 3
+#define JOY_FAN    0   //直流电机   JOY1_X == 0
+#define JOY_ROLL   1   //翻滚角		   JOY1_Y == 1
+#define JOY_TILT   2	 //俯仰角			 JOY2_X == 2  （原 Pitch）
+#define JOY_PAN    3   //基座		 JOY2_Y == 3  （原 Base）
 
 //摇杆方向是否翻转
 #define JOY1_X_DIR 1
@@ -36,11 +36,11 @@ JOY2_Y == 3
 
 typedef struct
 {
-	float Base;     	//摇杆映射到基座旋转角的值
-  float Roll; 			//摇杆映射到大臂翻滚角的值
-  float Pitch;			//摇杆映射到末端俯仰角的值
-	float FanSpeed;   //摇杆映射到直流电机转速的值
-}JOY_Angle;  //摇杆映射到的角读
+	float Pan;     	//摇杆映射到基座旋转角的值
+  float Roll; 		//摇杆映射到大臂翻滚角的值
+  float Tilt;		//摇杆映射到末端俯仰角的值
+	float FanSpeed; //摇杆映射到直流电机转速的值
+}JOY_Angle;  //摇杆映射到的角度
 
 typedef struct 
 {

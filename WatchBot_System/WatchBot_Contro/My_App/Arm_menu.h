@@ -26,17 +26,17 @@ typedef enum
 
 typedef enum
 {
-	 ARM_STATUS_STOP = 0,   // 不执行任何动作
-   ARM_STATUS_START,      // 新动作启动（初始化）
-   ARM_STATUS_RUN,        // 正在执行动作
-	 ARM_STATUS_IDLE,       // 空闲状态
+	ARM_STATUS_STOP = 0,   // 不执行任何动作
+  ARM_STATUS_START,      // 新动作启动（初始化）
+  ARM_STATUS_RUN,        // 正在执行动作
+	ARM_STATUS_IDLE,       // 空闲状态
 }Arm_Action_Status_e;
 
 typedef struct
 {
-	float Base_Angle;   //基座旋转角
-	float Roll_Angle; 	//大臂翻滚角
-	float Pitch_Angle;	//末端俯仰角
+	float Pan_Angle;    //基座旋转角
+	float Roll_Angle;   //大臂翻滚角
+	float Tilt_Angle;	  //末端俯仰角
 	float Fan_Speed;    //风扇转速
 }Remote_SetAngle_t;
 

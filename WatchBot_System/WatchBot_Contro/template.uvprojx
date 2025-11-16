@@ -544,6 +544,16 @@
               <FileType>5</FileType>
               <FilePath>.\My_App\USART_queue.h</FilePath>
             </File>
+            <File>
+              <FileName>camera_service.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\My_App\camera_service.c</FilePath>
+            </File>
+            <File>
+              <FileName>camera_service.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\My_App\camera_service.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

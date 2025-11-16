@@ -6,9 +6,9 @@
 #include "app_led_control.h"
 #include "esp_log.h"
 
-static const char *TAG = "USART_FrameHandler"; 
+extern QueueHandle_t cmd_execution_handle;//串口命令执行队列
 
-extern QueueHandle_t executeFrame_queue; //执行指令队列
+static const char *TAG = "USART_FrameHandler"; 
 
 /*
     设置蜂鸣器
@@ -40,22 +40,39 @@ void Buzzer_off(void)
     控制机械臂
 
 */
-void arm_control(int32_t base, int32_t roll, int32_t pitch, uint32_t fan)
+void arm_control(float pan, float roll, float tilt, float fan)
 {
-    //传输只有八位不能表示负数，传输到了再转换负数
-    uint8_t base_u8  = (uint8_t)(base  + 90);
-    uint8_t roll_u8  = (uint8_t)(roll  + 90);
-    uint8_t pitch_u8 = (uint8_t)(pitch + 90);
-    uint8_t fan_u8   = (uint8_t)(fan   + 90);
+    //传输一字节八位，不能表示负数和浮点数，+90 *100转换成无符号16位 拿高低位传输
+    //传输到了再转成浮点数并且-90转换负数 公式 angle = (x / 100.0f) - 90
+    uint16_t pan_u16  = (uint16_t)((pan  + 90) * 100 + 0.5);
+    uint16_t roll_u16  = (uint16_t)((roll  + 90) * 100 + 0.5);
+    uint16_t tilt_u16 = (uint16_t)((tilt + 90) * 100 + 0.5);
+    uint16_t fan_u16   = (uint16_t)((fan   + 90) * 100 + 0.5);
 
-    uint8_t data[8] = {FRAME_HEADER, CMD_ARM_CONTROL, DATA_MAX_LEN, base_u8, roll_u8, pitch_u8, fan_u8, FRAME_END};
-    stm32_send_frame(data);
+    //第一帧 pan —— roll
+    uint8_t pan_u8_high, pan_u8_low, roll_u8_high, roll_u8_low;
+    pan_u8_high = (uint8_t)(pan_u16 >> 8);
+    pan_u8_low  = (uint8_t)(pan_u16);
+    roll_u8_high = (uint8_t)(roll_u16 >> 8);
+    roll_u8_low  = (uint8_t)(roll_u16);
+    uint8_t pan_roll_data[8] = {FRAME_HEADER, CMD_ARM_PAN_ROLL, DATA_MAX_LEN, pan_u8_high, pan_u8_low, roll_u8_high, roll_u8_low, FRAME_END};
+    stm32_send_frame(pan_roll_data);
+
+    //第二帧 tilt —— fan
+    uint8_t tilt_u8_high, tilt_u8_low, fan_u8_high, fan_u8_low;
+    tilt_u8_high = (uint8_t)(tilt_u16 >> 8);
+    tilt_u8_low  = (uint8_t)(tilt_u16);
+    fan_u8_high   = (uint8_t)(fan_u16 >> 8);
+    fan_u8_low    = (uint8_t)(fan_u16);
+    uint8_t tilt_fan_data[8] = {FRAME_HEADER, CMD_ARM_TILT_FAN, DATA_MAX_LEN, tilt_u8_high, tilt_u8_low, fan_u8_high, fan_u8_low, FRAME_END};
+    
+    stm32_send_frame(tilt_fan_data);
 }
 //发送模块
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //接收模块
 // 命令映射表
-typedef void (*CmdHandler_t)(Frame_t *frame);
+typedef void (*CmdHandler_t)(uint8_t *);
 
 typedef struct 
 {
@@ -63,8 +80,8 @@ typedef struct
     CmdHandler_t handler;
 } CmdMap_t;
 
-extern void cmd_esp32_led_set(Frame_t *frame);
-extern void cmd_camera_flash_set(Frame_t *frame);
+extern void cmd_esp32_led_set(uint8_t *data);
+extern void cmd_camera_flash_set(uint8_t *data);
 
 CmdMap_t cmd_table[] = 
 {
@@ -77,19 +94,19 @@ CmdMap_t cmd_table[] =
 	//{CMD_ESP32_PICTURE},   //拍照
 };
 
-void cmd_esp32_led_set(Frame_t *frame)
+void cmd_esp32_led_set(uint8_t *data)
 {
     //小端传输
-    uint16_t ON = ((uint16_t)(frame->ESP_Data[3] << 8)) | frame->ESP_Data[4];
-	uint16_t OFF  = ((uint16_t)(frame->ESP_Data[5] << 8)) | frame->ESP_Data[6];
+    uint16_t ON = ((uint16_t)(data[3] << 8)) | data[4];
+	uint16_t OFF  = ((uint16_t)(data[5] << 8)) | data[6];
     esp32_led_set(LED_MODE_BLINK, 0, ON, OFF);
 }
 
-void cmd_camera_flash_set(Frame_t *frame)
+void cmd_camera_flash_set(uint8_t *data)
 {
-    if(frame->Data_Len == DATA_MIN_LEN)//一帧五字节
+    if(data[FRAME_IDX_LEN] == DATA_MIN_LEN)//一帧五字节
     {
-        USART_RxCommand_e cmd = frame->ESP_Data[FRAME_IDX_CMD];
+        USART_RxCommand_e cmd = data[FRAME_IDX_CMD];
         switch (cmd)
         {
         case CMD_ESPCAM_OFF_LDE:
@@ -103,11 +120,11 @@ void cmd_camera_flash_set(Frame_t *frame)
         }
 
     }
-    else if(frame->Data_Len == DATA_MAX_LEN)//一帧八字节
+    else if(data[FRAME_IDX_LEN] == DATA_MAX_LEN)//一帧八字节
     {
-        USART_RxCommand_e cmd = frame->ESP_Data[FRAME_IDX_CMD];
-        uint16_t ON = ((uint16_t)(frame->ESP_Data[3] << 8)) | frame->ESP_Data[4];
-        uint16_t OFF  = ((uint16_t)(frame->ESP_Data[5] << 8)) | frame->ESP_Data[6];
+        USART_RxCommand_e cmd = data[FRAME_IDX_CMD];
+        uint16_t ON = ((uint16_t)(data[3] << 8)) | data[4];
+        uint16_t OFF  = ((uint16_t)(data[5] << 8)) | data[6];
 
         switch (cmd)
         {
@@ -128,35 +145,34 @@ void cmd_camera_flash_set(Frame_t *frame)
 
 void execute_frame_task(void *pvParameters)
 {
-    Frame_t recv_frame;
-
     while (true)
     {
-        if (xQueueReceive(executeFrame_queue, &recv_frame, portMAX_DELAY))
+        uint8_t data[DATA_MAX_LEN];
+        if(xQueueReceive(cmd_execution_handle, data, portMAX_DELAY))
         {
-            USART_RxCommand_e cmd = recv_frame.ESP_Data[FRAME_IDX_CMD];
+            USART_RxCommand_e cmd = data[FRAME_IDX_CMD];//拿命令位
             for(uint8_t i=0; i<CMD_TABLE_SIZE; i++)
             {
                 if(cmd == cmd_table[i].cmd)
                 {
-                    cmd_table[i].handler(&recv_frame);
+                    cmd_table[i].handler(data);
                     break;
                 }
             }
         }
+        
     }
     
 }
-
 
 //初始化串口接收
 void USART_FrameHandler_Init(void)
 {
     stm32_link_init();
-    if (xTaskCreatePinnedToCore(execute_frame_task, "execute_frame", 3 * 1024, NULL, 14, NULL, 1) != pdPASS) 
+    if(xTaskCreatePinnedToCore(execute_frame_task, "execute_frame", 3 * 1024, NULL, 10, NULL, 1) != pdPASS)
     {
-        ESP_LOGE(TAG, "UART 任务创建失败");
-        return;
+        ESP_LOGE(TAG, "UART 执行框架任务创建失败");
     }
+    
     
 }

@@ -41,7 +41,9 @@
     "queue.h": "c",
     "stm32_link.h": "c",
     "rmt_encoder.h": "c",
-    "uart.h": "c"
+    "uart.h": "c",
+    "*.inc": "c",
+    "compare": "c"
   },
   "idf.portWin": "COM3",
   "idf.flashType": "UART"

@@ -16,9 +16,9 @@ void JOY_Control_Init(void)
 		state.last_ADC[i]    = PS2_AD[i];
 		state.current_ADC[i] = PS2_AD[i];
 	}
-	state.last_Angle.Base = 0;
+	state.last_Angle.Pan = 0;
 	state.last_Angle.Roll = 0;
-	state.last_Angle.Pitch = 0;
+	state.last_Angle.Tilt = 0;
 	state.last_Angle.FanSpeed = 0;
 }
 
@@ -101,20 +101,20 @@ static float ADC_MapAngle(uint16_t ADC, uint16_t Cnetre)
 //ADC映射后的角度死区过滤，当大于1°才对舵机进行变化
 static void Angle_Dead(JOY_State *state)
 {
-	
 	JOY_Angle *current = &(state->current_Angle);
 	JOY_Angle *Last = &(state->last_Angle);
 	
 	Read_ADC(state);
-	//要改摇杆对应舵机和电机在这里
-	current->Base	    	= JOY2_Y_DIR * ADC_MapAngle(state->current_ADC[JOY_BASE], JOY2_Y_CENTRE);
+
+	//摇杆 → 舵机对应关系
+	current->Pan	    	= JOY2_Y_DIR * ADC_MapAngle(state->current_ADC[JOY_PAN], JOY2_Y_CENTRE);
 	current->Roll 		  = JOY1_Y_DIR * ADC_MapAngle(state->current_ADC[JOY_ROLL], JOY1_Y_CENTRE);
-	current->Pitch		  = JOY2_X_DIR * ADC_MapAngle(state->current_ADC[JOY_PITCH], JOY2_X_CENTRE);
+	current->Tilt		  = JOY2_X_DIR * ADC_MapAngle(state->current_ADC[JOY_TILT], JOY2_X_CENTRE);
 	current->FanSpeed 	= JOY1_X_DIR * ADC_MapFan(state->current_ADC[JOY_FAN], JOY1_X_CENTRE);
 	
-	if(fabs(current->Base - Last->Base) > ANGLE_DEAD)
+	if(fabs(current->Pan - Last->Pan) > ANGLE_DEAD)
 	{
-		Last->Base = current->Base;
+		Last->Pan = current->Pan;
 	}
 	
 	if(fabs(current->Roll - Last->Roll) > ANGLE_DEAD)
@@ -122,16 +122,15 @@ static void Angle_Dead(JOY_State *state)
 		Last->Roll = current->Roll;
 	}
 	
-	if(fabs(current->Pitch - Last->Pitch) > ANGLE_DEAD)
+	if(fabs(current->Tilt - Last->Tilt) > ANGLE_DEAD)
 	{
-		Last->Pitch = current->Pitch;
+		Last->Tilt = current->Tilt;
 	}
 	
 	if(fabs(current->FanSpeed - Last->FanSpeed) > ANGLE_DEAD)
 	{
 		Last->FanSpeed = current->FanSpeed;
 	}
-	
 }
 
 //只读当前摇杆角度
@@ -145,5 +144,5 @@ void PS2_Uptada(void)
 {
 	Angle_Dead(&state);
 	
-	Arm_MoveTo(state.last_Angle.Base, state.last_Angle.Roll, state.last_Angle.Pitch, state.last_Angle.FanSpeed);
+	Arm_MoveTo(state.last_Angle.Pan, state.last_Angle.Roll, state.last_Angle.Tilt, state.last_Angle.FanSpeed);
 }
