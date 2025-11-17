@@ -1,9 +1,0 @@
-接线方式：
-
-    GND          地
-    VCC          3.3V或者5V
-    CLK（D0）   接A5
-    DIN（D1）   接A4
-    RES 	接高
-    D/C         接地
-    CS          接地
