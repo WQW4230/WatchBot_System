@@ -18,34 +18,36 @@ void USART_FrameHandler_Init(void)
 /*
 	串口控制偏航角 翻滚角
 */
-static void arm_update_pan_roll(uint8_t *status)
+static void arm_update_pan_roll_tilt(uint8_t *status)
 {
 	//获取当前舵机臂目标角度
 	const Arm_Angle_t *Angle = Arm_GetTarget_Angle();
 	
 	uint16_t pan_u16   = ((uint16_t)(status[3] << 8)) | status[4];
 	uint16_t roll_u16  = ((uint16_t)(status[5] << 8)) | status[6];
+	uint16_t tilt_u16  = ((uint16_t)(status[7] << 8)) | status[8];
 	
 	float angle_pan  = (float)(pan_u16 / 100.0f - 90);
 	float angle_roll = (float)(roll_u16 / 100.0f - 90);
-	Arm_MoveTo(angle_pan, angle_roll, Angle->Tilt_Angle, Angle->Fan_Speed);
+	float angle_tilt = (float)(tilt_u16 / 100.0f - 90);
+	Arm_MoveTo(angle_pan, angle_roll, angle_tilt, Angle->Fan_Speed);
 }
 /*
 	串口控制俯仰角 电机转速
 */
-static void arm_update_tilt_fan(uint8_t *status)
-{
-	//获取当前舵机臂目标角度
-	const Arm_Angle_t *Angle = Arm_GetTarget_Angle();
-	
-	uint16_t tilt_u16 = ((uint16_t)(status[3] << 8)) | status[4];
-	uint16_t fan_u16  = ((uint16_t)(status[5] << 8)) | status[6];
-	
-	float angle_tilt  = (float)(tilt_u16 / 100.0f - 90);
-	float angle_fan   = (float)(fan_u16 / 100.0f - 90);
-	Arm_MoveTo(Angle->Pan_Angle, Angle->Roll_Angle, angle_tilt, angle_fan);
+//static void arm_update_tilt_fan(uint8_t *status)
+//{
+//	//获取当前舵机臂目标角度
+//	const Arm_Angle_t *Angle = Arm_GetTarget_Angle();
+//	
+//	uint16_t tilt_u16 = ((uint16_t)(status[3] << 8)) | status[4];
+//	uint16_t fan_u16  = ((uint16_t)(status[5] << 8)) | status[6];
+//	
+//	float angle_tilt  = (float)(tilt_u16 / 100.0f - 90);
+//	float angle_fan   = (float)(fan_u16 / 100.0f - 90);
+//	Arm_MoveTo(Angle->Pan_Angle, Angle->Roll_Angle, angle_tilt, angle_fan);
 
-}
+//}
 
 //蜂鸣器关闭
 static void Cmd_BuzzerOFF(uint8_t *status)
@@ -65,7 +67,7 @@ static void Cmd_BuzzerControl(uint8_t *status)
 //串口控制硬件 自动模式下启用 
 void USART_FrameHandler_Task(void)
 {
-	uint8_t Frame_buf[DATA_MAX_LEN];
+	uint8_t Frame_buf[DATA_ARM_LEN];
 	if(USART_ReadFrame(Frame_buf) != 1) return;
 	
 	uint8_t cmd = Frame_buf[FRAME_IDX_CMD];//命令位
@@ -73,11 +75,11 @@ void USART_FrameHandler_Task(void)
 	switch(cmd)
 	{
 		case CMD_ARM_PAN_ROLL://控制机械臂
-			arm_update_pan_roll(Frame_buf);
+			arm_update_pan_roll_tilt(Frame_buf);
 			break;
 		
-		case CMD_ARM_TILT_FAN:
-			arm_update_tilt_fan(Frame_buf);
+		case CMD_ARM_TILT_FAN://留空
+			
 			break;
 		
 		case CMD_BUZZER_CTRL: //控制蜂鸣器

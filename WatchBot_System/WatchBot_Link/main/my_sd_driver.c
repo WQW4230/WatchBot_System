@@ -7,12 +7,12 @@
 #include "esp_vfs_fat.h"
 #include "sdmmc_cmd.h"
 #include "driver/sdmmc_host.h"
-
 #include "camera_driver.h"   
-#include <esp_camera.h>
 #include <esp_psram.h>
 
 static const char *TAG = "My_SD_Driver";
+extern void off_camera_ai_lcd(void); //停止摄像头采集任务
+extern void on_camera_ai_lcd(void);  //开始摄像头采集任务
 
 // 写文件内容 path是路径 data是内容
 static esp_err_t s_example_write_file(const char *path, char *data)
@@ -110,6 +110,9 @@ void My_SD_Init(void)
     // ESP_LOGI(TAG, "Card unmounted");
 }
 
+/*
+    jpeg格式1600*1200相机初始化
+*/
 void bap_camera_capture_init(void)
 {
      // 检测 PSRAM 存在性和大小
@@ -180,63 +183,21 @@ void bap_camera_capture_init(void)
         s->set_hmirror(s, 1);  //摄像头镜像 写1镜像 写0不镜像
     }
 
-    //摄像头参数设置
-    // sensor_t *SB = esp_camera_sensor_get();
-    // if (SB) 
-    // {
-    //     SB->set_brightness(SB, 2);     // 亮度      -2 to 2
-    //     SB->set_contrast(SB, 0);       // 对比度    -2 to 2
-    //     SB->set_saturation(SB, 1);     // 饱和度-2 to 2
-    //     SB->set_special_effect(SB, 0); // 特效  0 to 6 (0 - No Effect, 1 - Negative, 2 - Grayscale, 3 - Red Tint, 4 - Green Tint, 5 - Blue Tint, 6 - Sepia)
-    //     SB->set_whitebal(SB, 1);       // 白平衡 0 = disable , 1 = enable
-    //     SB->set_awb_gain(SB, 1);       // 白平衡增益 0 = disable , 1 = enable
-    //     SB->set_wb_mode(SB, 4);        // 白平衡模式 0 to 4 - if awb_gain enabled (0 - Auto, 1 - Sunny, 2 - Cloudy, 3 - Office, 4 - Home)
-    //     SB->set_exposure_ctrl(SB, 1);  // 自动曝光  0 = disable , 1 = enable
-    //     SB->set_aec2(SB, 1);           // 自动曝光2 0 = disable , 1 = enable
-    //     SB->set_ae_level(SB, 2);       // 曝光补偿  -2 to 2
-    //     SB->set_aec_value(SB, 300);    // 固定曝光值 0 to 1200
-    //     SB->set_gain_ctrl(SB, 1);      // 自动增益 0 = disable , 1 = enable
-    //     SB->set_agc_gain(SB, 0);       // 手动增益0 to 30
-    //     SB->set_gainceiling(SB, (gainceiling_t)0); //增益上限  // 0 to 6
-    //     SB->set_bpc(SB, 1);            // 黑点矫正 0 = disable , 1 = enable
-    //     SB->set_wpc(SB, 1);            // 百点矫正 0 = disable , 1 = enable
-    //     SB->set_raw_gma(SB, 1);        // 伽马矫正 0 = disable , 1 = enable
-    //     SB->set_lenc(SB, 1);           // 镜头矫正 0 = disable , 1 = enable
-    //     SB->set_hmirror(SB, 0);        // 镜像水平 0 = disable , 1 = enable
-    //     SB->set_vflip(SB, 0);          // 镜像垂直 0 = disable , 1 = enable
-    //     SB->set_dcw(SB, 1);            // 降优化采样0 = disable , 1 = enable
-    //     SB->set_colorbar(SB, 0);       // 彩条测试 0 = disable , 1 = enable
-    // }
+    
 
     //camera_capture();
 }
 
-// void camera_capture_to_sd(void)
-// {
-//     const char *file_path = MOUNT_POINT"/heleflo.txt";
-//     FILE *f = fopen(file_path, "w");
-//     if (f == NULL) {
-//         ESP_LOGE(TAG, "Failed to open file for writing");
-//         return;
-//     }
-//     fprintf(f, "hello498644995\n");
-//     fclose(f);
-//     ESP_LOGI(TAG, "Wrote 'hello' to %s", file_path);
-
-//     // 打开txt文件，并读出文件中的内容
-//     esp_err_t ret = s_example_read_file(file_path);
-//     if (ret != ESP_OK) {
-//         return;
-//     }
-// }
-
-
-//拍一帧存到sd卡 
-//需要使用 bap_camera_capture_init将摄像头初始化成最大分辨率及其jpeg格式
-void camera_capture_to_sd(void)
+//拍一帧图片存到sd卡 
+//将摄像头设置成最大分辨率及其jpeg格式
+//参数fb 获取图片的句柄
+//写入失败会释放图片帧
+void camera_capture_to_sd(camera_fb_t *fb)
 {
-    // 拍照
-    camera_fb_t *fb = esp_camera_fb_get();
+    // sensor_t *s = esp_camera_sensor_get();
+    // s->set_pixformat(s, PIXFORMAT_JPEG); //JPEG
+    // s->set_framesize(s, FRAMESIZE_UXGA); //1600x1200
+
     if (!fb) {
         ESP_LOGE(TAG, "Camera capture failed");
         return;
@@ -272,4 +233,7 @@ void camera_capture_to_sd(void)
     }
 
     esp_camera_fb_return(fb);
+    //拍完照回复成lcd显示的格式
+    // s->set_pixformat(s, PIXFORMAT_RGB565); //RGB565
+    // s->set_framesize(s, FRAMESIZE_VGA);    //640x480
 }

@@ -48,6 +48,7 @@ void camera_flash_task(void *Param)
         rgb_color_t black = color_table[COLOR_BLACK];  //黑/关闭
         rgb_color_t Red = color_table[COLOR_RED];    //红
         rgb_color_t Blue  = color_table[COLOR_BLUE];  //蓝
+        rgb_color_t White  = color_table[COLOR_WHITE];  //白
         rgb_color_t colro = color_table[cfg->led_color]; //当前选择的颜色
         switch (cfg->led_mode)
         {
@@ -69,10 +70,42 @@ void camera_flash_task(void *Param)
                 }
                 break;
             case LED_MODE_ALARM://红蓝白报警色
+                
+                // 短闪
                 ws2812_write(ws2812_handle, index, Red.r, Red.g, Red.b);
-                vTaskDelay(pdMS_TO_TICKS(300));
+                vTaskDelay(pdMS_TO_TICKS(100));
+                ws2812_write(ws2812_handle, index, black.r, black.g, black.b);
+                vTaskDelay(pdMS_TO_TICKS(50));
+
                 ws2812_write(ws2812_handle, index, Blue.r, Blue.g, Blue.b);
-                vTaskDelay(pdMS_TO_TICKS(300));
+                vTaskDelay(pdMS_TO_TICKS(100));
+                ws2812_write(ws2812_handle, index, black.r, black.g, black.b);
+                vTaskDelay(pdMS_TO_TICKS(50));
+
+                ws2812_write(ws2812_handle, index, White.r, White.g, White.b);
+                vTaskDelay(pdMS_TO_TICKS(100));
+                ws2812_write(ws2812_handle, index, black.r, black.g, black.b);
+                vTaskDelay(pdMS_TO_TICKS(200));
+
+                // 中闪
+                ws2812_write(ws2812_handle, index, Red.r, Red.g, Red.b);
+                vTaskDelay(pdMS_TO_TICKS(150));
+                ws2812_write(ws2812_handle, index, black.r, black.g, black.b);
+                vTaskDelay(pdMS_TO_TICKS(100));
+
+                ws2812_write(ws2812_handle, index, Blue.r, Blue.g, Blue.b);
+                vTaskDelay(pdMS_TO_TICKS(150));
+                ws2812_write(ws2812_handle, index, black.r, black.g, black.b);
+                vTaskDelay(pdMS_TO_TICKS(100));
+
+                ws2812_write(ws2812_handle, index, White.r, White.g, White.b);
+                vTaskDelay(pdMS_TO_TICKS(150));
+                ws2812_write(ws2812_handle, index, black.r, black.g, black.b);
+                vTaskDelay(pdMS_TO_TICKS(250));
+
+                // 长停
+                ws2812_write(ws2812_handle, index, black.r, black.g, black.b);
+                vTaskDelay(pdMS_TO_TICKS(500));
                 break;
             case LED_MODE_BLINK://闪烁
                 ws2812_write(ws2812_handle, index, colro.r, colro.g, colro.b);
@@ -128,8 +161,8 @@ void app_led_init(void)
     Led_Blink_Init();
     ws2812_init(WS2812_GPIO_NUM,WS2812_LED_NUM,&ws2812_handle);
     //板载led控制句柄初始化
-    esp32_led.led_on = 1000;
-    esp32_led.led_off = 1000;
+    esp32_led.led_on = 300;
+    esp32_led.led_off = 300;
     esp32_led.blink_count = 0;
     esp32_led.led_mode = LED_MODE_BLINK;
     esp32_led.led_color = COLOR_BLACK;
@@ -137,7 +170,7 @@ void app_led_init(void)
     camera_flash.led_on = 500;
     camera_flash.led_off = 0;
     camera_flash.blink_count = 1;
-    camera_flash.led_mode = LED_MODE_LIMITED;
+    camera_flash.led_mode = LED_MODE_ALARM;
     camera_flash.led_color = COLOR_WHITE;
     
     xTaskCreatePinnedToCore(camera_flash_task, "CameraFlash", 2048, &camera_flash, 0, NULL, 0);

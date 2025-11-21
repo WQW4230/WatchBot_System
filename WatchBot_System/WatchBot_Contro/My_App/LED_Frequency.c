@@ -328,11 +328,11 @@ static void LedSet_Proc_Cam(void) //LED设置二级菜单 第二行ESP32CAM_LED�
 				case RED:		//红色
 					USART_SenFrame(CMD_ESP32CAM_RED_LED, LED_Set.esp_LedBrigh_time, LED_Set.esp_LedDark_time);
 					break;
-				case ALARM:
-					USART_SenFrame(CMD_ESP32CAM_ALARM_LED, LED_Set.esp_LedBrigh_time, LED_Set.esp_LedDark_time);
+				case ALARM: //红蓝爆闪
+					UART_SenCmd(CMD_ESP32CAM_ALARM_LED);
 					break;
-				case OFF:
-					USART_SenFrame(CMD_ESPCAM_OFF_LDE, LED_Set.esp_LedBrigh_time, LED_Set.esp_LedDark_time);
+				case OFF:		//关闭
+					UART_SenCmd(CMD_ESPCAM_OFF_LDE);
 					break;
 			}
 			

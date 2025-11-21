@@ -124,7 +124,6 @@ esp_err_t stm32_read_frame(uint8_t *data)
 static void uart_event_task(void *pvParameters)
 {
     uart_event_t event;
-    size_t buffered_size;
     while (1)
     {
         //Waiting for UART event.
@@ -140,7 +139,7 @@ static void uart_event_task(void *pvParameters)
 					USART_ProcessByte(&USART_Frame, uart_buffer[i]);
 				}
                 ESP_LOGI(TAG, "[DATA EVT]:");
-                uart_write_bytes(USER_UART_NUM, uart_buffer, event.size); //调试用
+                // uart_write_bytes(USER_UART_NUM, uart_buffer, event.size); //调试用
                 break;
             //Event of HW FIFO overflow detected
             case UART_FIFO_OVF:

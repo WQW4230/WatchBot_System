@@ -27,7 +27,7 @@ void ArmMenu_Init(void)
 	
 	//Arm_deom();//测试用
 	
-	Scheduler_AddTask(ArmMode_Task, 10, 4, 1000);
+	Scheduler_AddTask(ArmMode_Task, 10, 4, 1000); //10ms轮询一次
 
 	Arm_MoveTo(-90, -60, -90, 0);
 	

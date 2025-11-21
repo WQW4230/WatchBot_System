@@ -21,18 +21,18 @@ extern "C" {
 
 /***********************************************************/
 /****************    LCD显示屏 ↓   *************************/
-#define BSP_LCD_PIXEL_CLOCK_HZ     (20 * 1000 * 1000)
+#define BSP_LCD_PIXEL_CLOCK_HZ     (18 * 1000 * 1000)
 #define BSP_LCD_SPI_NUM            (SPI2_HOST)
 #define LCD_CMD_BITS               (8)
 #define LCD_PARAM_BITS             (8)
 #define BSP_LCD_BITS_PER_PIXEL     (16)
-#define LCD_LEDC_CH          LEDC_CHANNEL_0
+#define LCD_LEDC_CH                LEDC_CHANNEL_0
 
 #define BSP_LCD_H_RES              (320)
 #define BSP_LCD_V_RES              (240)
 
 #define BSP_LCD_BACKLIGHT     //(GPIO_NUM_41) //背光控制可有可无已上拉 不需要
-#define BSP_LCD_SPI_CLK       (GPIO_NUM_39)
+#define BSP_LCD_SPI_CLK       (GPIO_NUM_39) //44号引脚可用需关闭jtag调试UART0
 #define BSP_LCD_SPI_MOSI      (GPIO_NUM_38)
 #define BSP_LCD_DC            (GPIO_NUM_47)
 #define BSP_LCD_RST           (GPIO_NUM_14)

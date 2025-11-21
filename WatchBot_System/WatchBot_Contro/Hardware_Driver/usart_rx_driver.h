@@ -7,6 +7,7 @@
 #define FRAME_END    0x66 //帧尾
 #define DATA_MIN_LEN 5		 //一帧最少几字节
 #define DATA_MAX_LEN 8    //最多8个
+#define DATA_ARM_LEN 10   //控制机械臂的一帧为10字节
 
 #define FRAME_IDX_HEADER   0   								// 帧头在第0位
 #define FRAME_IDX_CMD      1  							  // 命令在第1位
@@ -14,6 +15,7 @@
 #define FRAME_IDX_DATA     3   								// 数据从第3位开始
 #define FRAME_IDX_END_MIN	 DATA_MIN_LEN	- 1		// 一帧8字节时帧尾位置
 #define FRAME_IDX_END_MAX  DATA_MAX_LEN	- 1		// 一帧5字节时帧尾位置
+#define FRAME_IDX_END_ARM  DATA_ARM_LEN - 1   // 一帧10字节时候帧尾的位置
 
 /*
 一帧的数据结构如下
@@ -39,7 +41,7 @@ typedef enum
 typedef struct Frame_t
 {
 	USATR_State State;
-	uint8_t ESP_Data[DATA_MAX_LEN]; // 数据帧
+	uint8_t ESP_Data[DATA_ARM_LEN]; // 数据帧
 	uint8_t Data_index;       //数据帧当前长度
 	uint8_t Data_Len;        //当前完整数据的长度
 	uint8_t ESP32_Tx_Flag;  //当前标志位挂起时表示从esp32接收到了一帧完整的数据
@@ -50,7 +52,7 @@ void usart_slave_Init(void);   //初始化USART串口 以及发送队列
 
 void USART_ProcessByte(Frame_t *USART_Frame, uint8_t byte); //中断函数内调用处理处理数据帧--非中断测试用
 
-uint8_t USART_ReadFrame(uint8_t *ESP_Data); //读一针数据
+uint8_t USART_ReadFrame(uint8_t *ESP_Data); //读一帧数据
 	
 void USART3_SendString(const uint8_t *data); //发送
 

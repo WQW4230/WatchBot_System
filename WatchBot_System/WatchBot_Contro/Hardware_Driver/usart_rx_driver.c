@@ -114,6 +114,23 @@ void USART_ProcessByte(Frame_t *USART_Frame, uint8_t byte)
 					}
 				}	
 				break;
+				//数据帧长度为10时 校验数据位长度并校验帧尾是否正确
+				case DATA_ARM_LEN:
+				{
+					//接收成功
+					if(USART_Frame->ESP_Data[FRAME_IDX_LEN] == DATA_ARM_LEN && USART_Frame->ESP_Data[FRAME_IDX_END_ARM] == FRAME_END)
+					{
+						USART_Frame->ESP32_Tx_Flag = 1;
+						USART_Frame->Data_Len = USART_Frame->Data_index;
+						USART_Frame->State = STATE_WAIT_EADER;
+					}
+					else if(USART_Frame->ESP_Data[FRAME_IDX_LEN] == DATA_ARM_LEN&& USART_Frame->Data_index == DATA_ARM_LEN) 
+					{
+						//如果是8字节的并且索引已经超过8字节则是乱码
+						USART_Frame->State = STATE_WAIT_EADER;
+					}
+				}	
+				break;
 				
 			}	
 		}

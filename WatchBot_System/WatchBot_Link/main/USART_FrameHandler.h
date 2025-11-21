@@ -18,7 +18,7 @@ extern "C" {
 
 typedef enum
 {
-	CMD_ARM_PAN_ROLL = 	 	 0x00,   //控制偏航角和翻滚角
+	CMD_ARM_PAN_ROLL = 	 	 0x00,   //控制偏航角、翻滚角、俯仰角
 	CMD_ARM_TILT_FAN =       0x01,   //控制俯仰角和风扇
 	CMD_BUZZER_CTRL =   	 0x02,	 //控制STM板载蜂鸣器
 	CMD_BUZZER_OFF  =        0x03,   //关闭STM板载蜂鸣器

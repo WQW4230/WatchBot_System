@@ -39,12 +39,12 @@ void bsp_camera_init(void)
         .pin_href = CAM_PIN_HREF,
         .pin_pclk = CAM_PIN_PCLK,
 
-        .xclk_freq_hz = 15000000,       // XCLK = 10MHz
+        .xclk_freq_hz = 16000000,       // XCLK = 20MHz
         .ledc_timer = LEDC_TIMER_1,
         .ledc_channel = LEDC_CHANNEL_1,
         .pixel_format = PIXFORMAT_RGB565, // RGB565 输出与lcd屏保持一致
-        .frame_size = FRAMESIZE_QVGA,   // 320x240
-        .jpeg_quality = 10,             // 0-63 越小质量越好
+        .frame_size = FRAMESIZE_VGA,      //   640x480
+        .jpeg_quality = 10,               // 0-63 越小质量越好
         .fb_count = 2,
         .fb_location = CAMERA_FB_IN_PSRAM,
         .grab_mode = CAMERA_GRAB_WHEN_EMPTY,
@@ -56,7 +56,7 @@ void bsp_camera_init(void)
 
     // 修改配置
     cam_config.pixel_format = PIXFORMAT_RGB565;
-    cam_config.frame_size = FRAMESIZE_QVGA;
+    cam_config.frame_size = FRAMESIZE_VGA;
 
     // 再初始化
     esp_err_t err = esp_camera_init(&cam_config);
@@ -75,9 +75,7 @@ void bsp_camera_init(void)
         s->set_hmirror(s, 1);  // 这里控制摄像头镜像 写1镜像 写0不镜像
     }
 
-
-
-     //摄像头参数设置
+    //摄像头参数设置
     sensor_t *SB = esp_camera_sensor_get();
     if (SB) 
     {
@@ -99,12 +97,38 @@ void bsp_camera_init(void)
         SB->set_wpc(SB, 1);            // 0 = disable , 1 = enable
         SB->set_raw_gma(SB, 1);        // 0 = disable , 1 = enable
         SB->set_lenc(SB, 1);           // 0 = disable , 1 = enable
-        SB->set_hmirror(SB, 0);        // 0 = disable , 1 = enable
-        SB->set_vflip(SB, 0);          // 0 = disable , 1 = enable
+        SB->set_hmirror(SB, 1);        // 0 = disable , 1 = enable
+        SB->set_vflip(SB, 1);          // 0 = disable , 1 = enable
         SB->set_dcw(SB, 1);            // 0 = disable , 1 = enable
         SB->set_colorbar(SB, 0);       // 0 = disable , 1 = enable
     }
-        
+    //摄像头参数设置
+    // sensor_t *SB = esp_camera_sensor_get();
+    // if (SB) 
+    // {
+    //     SB->set_brightness(SB, 2);     // 亮度      -2 to 2
+    //     SB->set_contrast(SB, 0);       // 对比度    -2 to 2
+    //     SB->set_saturation(SB, 1);     // 饱和度-2 to 2
+    //     SB->set_special_effect(SB, 0); // 特效  0 to 6 (0 - No Effect, 1 - Negative, 2 - Grayscale, 3 - Red Tint, 4 - Green Tint, 5 - Blue Tint, 6 - Sepia)
+    //     SB->set_whitebal(SB, 1);       // 白平衡 0 = disable , 1 = enable
+    //     SB->set_awb_gain(SB, 1);       // 白平衡增益 0 = disable , 1 = enable
+    //     SB->set_wb_mode(SB, 4);        // 白平衡模式 0 to 4 - if awb_gain enabled (0 - Auto, 1 - Sunny, 2 - Cloudy, 3 - Office, 4 - Home)
+    //     SB->set_exposure_ctrl(SB, 1);  // 自动曝光  0 = disable , 1 = enable
+    //     SB->set_aec2(SB, 1);           // 自动曝光2 0 = disable , 1 = enable
+    //     SB->set_ae_level(SB, 2);       // 曝光补偿  -2 to 2
+    //     SB->set_aec_value(SB, 300);    // 固定曝光值 0 to 1200
+    //     SB->set_gain_ctrl(SB, 1);      // 自动增益 0 = disable , 1 = enable
+    //     SB->set_agc_gain(SB, 0);       // 手动增益0 to 30
+    //     SB->set_gainceiling(SB, (gainceiling_t)0); //增益上限  // 0 to 6
+    //     SB->set_bpc(SB, 1);            // 黑点矫正 0 = disable , 1 = enable
+    //     SB->set_wpc(SB, 1);            // 百点矫正 0 = disable , 1 = enable
+    //     SB->set_raw_gma(SB, 1);        // 伽马矫正 0 = disable , 1 = enable
+    //     SB->set_lenc(SB, 1);           // 镜头矫正 0 = disable , 1 = enable
+    //     SB->set_hmirror(SB, 0);        // 镜像水平 0 = disable , 1 = enable
+    //     SB->set_vflip(SB, 0);          // 镜像垂直 0 = disable , 1 = enable
+    //     SB->set_dcw(SB, 1);            // 降优化采样0 = disable , 1 = enable
+    //     SB->set_colorbar(SB, 0);       // 彩条测试 0 = disable , 1 = enable
+    // }
     camera_capture();
 }
 
