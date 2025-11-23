@@ -10,7 +10,7 @@ float calc_pan(face_info_t *info)
     int frame_centre_x = (info->x1 + info->x2) / 2;
 
     //水平距离中心像素距离
-    int excursion_x = frame_centre_x - CAMERA_WIDTH;   // 正：偏右，负：偏左
+    int excursion_x = frame_centre_x - CAMERA_CENTRE_X;   // 正：偏右，负：偏左
 
     // 水平1°角度对应多少像素
     float level = CAMERA_WIDTH / FOV_X_DEG;
@@ -21,7 +21,7 @@ float calc_pan(face_info_t *info)
     //死区判定
     if (pan_angle > FACE_PAN_DEADZONE_ANGLE || pan_angle < -FACE_PAN_DEADZONE_ANGLE)//偏航角死区
     {
-        return pan_angle;
+        return ARM_PAN_INVERT * pan_angle * ARM_PAN_GAIN;
     }
     else
     {
@@ -47,7 +47,11 @@ float calc_tilt(face_info_t *info)
 
     if (tilt_angle > FACE_TILT_DEADZONE_ANGLE || tilt_angle < -FACE_TILT_DEADZONE_ANGLE)//俯仰角死区
     {
-        offset_tilt_angle(tilt_angle);
+        return ARM_TILT_INVERT * tilt_angle * ARM_TILT_GAIN;
+    }
+    else
+    {
+        return 0;
     }
 }
 
@@ -62,17 +66,19 @@ float calc_eye_mouth_roll(face_info_t *info)
     float mouth_vector_x = info->right_mouth_x - info->left_mouth_x;
     float mouth_vector_y = info->right_mouth_y - info->left_mouth_y;
 
-    //计算x轴之前的角度值
+    //计算x轴之前的弧度值
     float eye_tilt_angle   = atan2f(eye_vector_y, eye_vector_x);
     float mouth_tilt_angle = atan2f(mouth_vector_y, mouth_vector_x);
 
     //权重
     float eye_mouth_roll_angle = (eye_tilt_angle * KEYPOINT_EYES_WEIGHT) + (mouth_tilt_angle * KEYPOINT_MOUTH_WEIGHT);
     
+    float eye_mouth_roll_angle_deg = eye_mouth_roll_angle * 180.0f / M_PI;
+
     //死区校验
-    if(eye_mouth_roll_angle > FACE_ROLL_DEADZONE_ANGLE || eye_mouth_roll_angle < -FACE_ROLL_DEADZONE_ANGLE)
+    if(eye_mouth_roll_angle_deg > FACE_ROLL_DEADZONE_ANGLE || eye_mouth_roll_angle_deg < -FACE_ROLL_DEADZONE_ANGLE)
     {
-        return eye_mouth_roll_angle;
+        return ARM_ROLL_INVERT * eye_mouth_roll_angle_deg * ARM_ROLL_GAIN;
     }
     else
     {

@@ -2,8 +2,9 @@
 #include "arm_control.h"
 #include "USART_FrameHandler.h"
 
+static const char *TAG = "arm_control";
 
-arm_control_t arm_control = {0, 0, 0, 0};
+static arm_control_t arm_control = {0, 0, 0, 0};
 
 // 设置偏航角（Pan）
 void set_pan_angle(float angle)
@@ -133,22 +134,58 @@ void offset_arm_angle(float pan_angle, float roll_angle, float tilt_angle, float
     offset_tilt_angle(tilt_angle);
     offset_fan_speed(speed);
 }
+
 /*
     获得当前舵机偏航角
-    参数：angle 将当前偏航角值给angle
 */
-void arm_get_pan_angle(float angle)
+float arm_get_pan_angle(void)
 {
-
+    return arm_control.pan_angle;
 }
-void arm_get_roll_angle(float angle);
-void arm_get_tilt_angle(float angle);
-void arm_get_fan_speed(float angle);
+
+/*
+    获得当前舵机偏航角
+    参数：angle 将当前翻滚角值给angle
+*/
+float arm_get_roll_angle(void)
+{
+    return arm_control.roll_angle;
+}
+
+/*
+    获得当前舵机偏航角
+    参数：angle 将当前俯仰角值给angle
+*/
+float arm_get_tilt_angle(void)
+{
+    return arm_control.tilt_angle;
+}
+
+/*
+    获得当前舵机偏航角
+    参数：angle 将当前风扇转速给angle
+*/
+float arm_get_fan_speed(void)
+{
+    return arm_control.fan_speed;
+}
+
 /*
     获得当前舵机所有角度
     参数：parameter一个float类型的数组，最少4个元素
 */
 void arm_get_angle(float *parameter)
 {
-    parameter[0]
+    parameter[0] = arm_get_pan_angle();
+    parameter[1] = arm_get_roll_angle();
+    parameter[2] = arm_get_tilt_angle();
+    parameter[3] = arm_get_fan_speed();
+}
+
+/*
+    将当前角度发送至舵机臂
+*/
+void arm_update(void)
+{
+    tx_arm_control(arm_control.pan_angle, arm_control.roll_angle, arm_control.tilt_angle, arm_control.fan_speed);
 }

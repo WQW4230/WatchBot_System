@@ -97,7 +97,7 @@ void bsp_camera_init(void)
         SB->set_wpc(SB, 1);            // 0 = disable , 1 = enable
         SB->set_raw_gma(SB, 1);        // 0 = disable , 1 = enable
         SB->set_lenc(SB, 1);           // 0 = disable , 1 = enable
-        SB->set_hmirror(SB, 1);        // 0 = disable , 1 = enable
+        SB->set_hmirror(SB, 0);        // 0 = disable , 1 = enable
         SB->set_vflip(SB, 1);          // 0 = disable , 1 = enable
         SB->set_dcw(SB, 1);            // 0 = disable , 1 = enable
         SB->set_colorbar(SB, 0);       // 0 = disable , 1 = enable

@@ -17,7 +17,7 @@
 */
 void app_camera_lcd_init(void)
 {
-    // My_SD_Init();
+    My_SD_Init();
     bsp_camera_init();
     bsp_lcd_init();
 }

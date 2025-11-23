@@ -116,7 +116,9 @@
     "cinttypes": "cpp",
     "typeindex": "cpp",
     "typeinfo": "cpp",
-    "usart_framehandler.h": "c"
+    "usart_framehandler.h": "c",
+    "arm_control.h": "c",
+    "face_calculation.h": "c"
   },
   "idf.portWin": "COM4",
   "idf.flashType": "UART"

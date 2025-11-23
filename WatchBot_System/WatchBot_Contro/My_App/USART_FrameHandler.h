@@ -16,6 +16,7 @@ typedef enum
 
 typedef enum
 {	
+	CMD_ESP32_CONTROL_ARM =  0x02,   //向esp32 发送接管控制指令
 	CMD_ESP32_LED   = 			 0x03,   //ESP板载LED
 	CMD_ESPCAM_OFF_LDE =     0x04,   //关闭ESP闪光灯
 	CMD_ESP32CAM_WHITE_LED = 0x05,   //闪光灯白色

@@ -47,7 +47,7 @@ void Buzzer_off(void)
     tilt:俯仰角
     fan:风扇转速
 */
-void arm_control(float pan, float roll, float tilt, float fan)
+void tx_arm_control(float pan, float roll, float tilt, float fan)
 {
     //传输一字节八位，不能表示负数和浮点数，+90 *100转换成无符号16位 拿高低位传输
     //传输到了再转成浮点数并且-90转换负数 公式 angle = (x / 100.0f) - 90
@@ -98,23 +98,23 @@ extern void app_capture(void);
 
 static void cmd_esp32_led_set(void *parameter);
 static void cmd_camera_flash_set(void *parameter);
-static void cmd_app_capture(void *parameter);
+void cmd_app_capture(void *parameter);
 extern QueueHandle_t xQueueCaptureNotify;
 
 CmdMap_t cmd_table[] = 
 {
-    {CMD_ESP32_LED, cmd_esp32_led_set},  //ESP板载LED
-	{CMD_ESPCAM_OFF_LDE, cmd_camera_flash_set},   //关闭ESP闪光灯
-	{CMD_ESP32CAM_WHITE_LED, cmd_camera_flash_set},   //闪光灯白色
+    {CMD_ESP32_LED, cmd_esp32_led_set},              //ESP板载LED
+	{CMD_ESPCAM_OFF_LDE, cmd_camera_flash_set},      //关闭ESP闪光灯
+	{CMD_ESP32CAM_WHITE_LED, cmd_camera_flash_set},  //闪光灯白色
 	{CMD_ESP32CAM_BLUE_LED, cmd_camera_flash_set} ,	 //闪关灯蓝色
 	{CMD_ESP32CAM_RED_LED, cmd_camera_flash_set},	 //闪光灯红色
-	{CMD_ESP32CAM_ALARM_LED, cmd_camera_flash_set},   //闪光灯红蓝爆闪
-	{CMD_ESP32_PICTURE, cmd_app_capture},           //拍照
+	{CMD_ESP32CAM_ALARM_LED, cmd_camera_flash_set},  //闪光灯红蓝爆闪
+	{CMD_ESP32_PICTURE, cmd_app_capture},            //拍照
 
 };
 
 //接收拍照指令
-static void cmd_app_capture(void *parameter)
+void cmd_app_capture(void *parameter)
 {
     uint8_t notify = 1;
     xQueueSend(xQueueCaptureNotify, &notify, 0);

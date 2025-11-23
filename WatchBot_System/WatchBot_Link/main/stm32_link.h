@@ -9,10 +9,10 @@ extern "C" {
 #include "esp_err.h"
 
 #define USER_UART_NUM UART_NUM_1
-// #define UART_TX_IO 19
-// #define UART_RX_IO 20
-#define UART_TX_IO 47
-#define UART_RX_IO 14
+#define UART_TX_IO 19
+#define UART_RX_IO 20
+// #define UART_TX_IO 47
+// #define UART_RX_IO 14
 #define UART_BUFFER_SIZE        1024
 
 #define FRAME_HEADER 0x88 //帧头

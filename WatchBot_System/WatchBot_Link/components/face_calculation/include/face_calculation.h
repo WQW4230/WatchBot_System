@@ -16,17 +16,25 @@ extern "C" {
 #define FOV_Y_DEG     48.0f  //垂直视场
 
 //鼻子眼睛的权重比
-#define KEYPOINT_EYES_WEIGHT     0.85f
+#define KEYPOINT_EYES_WEIGHT       0.85f
 #define KEYPOINT_MOUTH_WEIGHT     (1.0f - KEYPOINT_EYES_WEIGHT)
 
-#define FACE_PAN_DEADZONE_ANGLE        5     // 偏航角死区 单位°度
-#define FACE_ROLL_DEADZONE_ANGLE       8     // 翻滚角死区
-#define FACE_TILT_DEADZONE_ANGLE       5     // 俯仰角死区
+#define FACE_PAN_DEADZONE_ANGLE        4     // 偏航角死区 单位°度
+#define FACE_ROLL_DEADZONE_ANGLE       4     // 翻滚角死区
+#define FACE_TILT_DEADZONE_ANGLE       4     // 俯仰角死区
 
-#define CAMERA_CENTRE_X (CAMERA_WIFTH  / 2)  //中心坐标
+//角度增益 当前角 * 系数
+#define ARM_PAN_GAIN                  0.4f
+#define ARM_ROLL_GAIN                 0.4f
+#define ARM_TILT_GAIN                 0.4f
+
+//角度是否翻转
+#define ARM_PAN_INVERT                -1    
+#define ARM_ROLL_INVERT               -1    
+#define ARM_TILT_INVERT                1
+
+#define CAMERA_CENTRE_X (CAMERA_WIDTH  / 2)  //中心坐标
 #define CAMERA_CENTRE_Y (CAMERA_HEIGHT / 2)
-
-
 
 typedef struct 
 {
@@ -36,12 +44,11 @@ typedef struct
     int nose_x, nose_y;               //鼻子坐标
     int left_mouth_x, left_mouth_y;   //嘴巴左侧坐标
     int right_mouth_x, right_mouth_y; //嘴巴右侧坐标
-
-    int valid;
 }face_info_t;
 
-face_info_t face_info;
-
+float calc_pan(face_info_t *info);
+float calc_tilt(face_info_t *info);
+float calc_eye_mouth_roll(face_info_t *info);
 
 #ifdef __cplusplus
 }

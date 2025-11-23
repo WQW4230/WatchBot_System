@@ -51,7 +51,6 @@ typedef struct
 	float Fan_Speed;    //风扇转速
 }Arm_Angle_t;
 
-
 void Arm_Init(void);
 void Servo_SetAngle(float Pan, float Roll, float Tilt, float speed);
 void Arm_MoveTo(float Pan, float Roll, float Tilt, float Speed);

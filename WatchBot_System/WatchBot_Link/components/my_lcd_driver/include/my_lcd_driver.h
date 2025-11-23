@@ -32,8 +32,9 @@ extern "C" {
 #define BSP_LCD_V_RES              (240)
 
 #define BSP_LCD_BACKLIGHT     //(GPIO_NUM_41) //背光控制可有可无已上拉 不需要
-#define BSP_LCD_SPI_CLK       (GPIO_NUM_39) //44号引脚可用需关闭jtag调试UART0
-#define BSP_LCD_SPI_MOSI      (GPIO_NUM_38)
+// #define BSP_LCD_SPI_CLK       (GPIO_NUM_41)
+#define BSP_LCD_SPI_CLK       (GPIO_NUM_44) //44号引脚可用需关闭jtag调试UART0
+#define BSP_LCD_SPI_MOSI      (GPIO_NUM_41)
 #define BSP_LCD_DC            (GPIO_NUM_47)
 #define BSP_LCD_RST           (GPIO_NUM_14)
 #define BSP_LCD_SPI_CS        //(GPIO_NUM_14) //资源紧张默认下拉

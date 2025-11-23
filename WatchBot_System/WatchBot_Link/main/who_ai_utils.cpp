@@ -110,3 +110,4 @@ void *app_camera_decode(camera_fb_t *fb)
     }
     return NULL;
 }
+

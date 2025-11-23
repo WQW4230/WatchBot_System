@@ -26,6 +26,7 @@ typedef enum
 
 typedef enum
 {	
+	CMD_ESP32_CONTROL_ARM =  0x02,   //收到接管控制指令
 	CMD_ESP32_LED   = 	     0x03,   //ESP板载LED
 	CMD_ESPCAM_OFF_LDE =     0x04,   //关闭ESP闪光灯
 	CMD_ESP32CAM_WHITE_LED = 0x05,   //闪光灯白色
@@ -36,10 +37,10 @@ typedef enum
 }USART_RxCommand_e;
 
 void USART_FrameHandler_Init(void);
-void arm_control(float pan, float roll, float tilt, float fan);
+void tx_arm_control(float pan, float roll, float tilt, float fan);
 void BuzzerControl(uint16_t ON, uint16_t OFF);
 void Buzzer_off(void);
-
+extern void cmd_app_capture(void *parameter);
 /////////////////////////
 //测试用
 //void cmd_camera_flash_set(uint8_t *data);

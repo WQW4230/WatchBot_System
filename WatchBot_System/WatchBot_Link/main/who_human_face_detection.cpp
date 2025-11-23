@@ -10,6 +10,7 @@
 #include "my_sd_driver.h"
 #include "camera_driver.h" 
 #include "app_led_control.h"
+#include "face_calculation.h"
 
 static const char *TAG = "human_face_detection";
 
@@ -17,6 +18,7 @@ SemaphoreHandle_t cmaera_sem;
 
 static QueueHandle_t xQueueLCDFrame = NULL; 
 static QueueHandle_t xQueueAIFrame = NULL;
+extern QueueHandle_t xQueueFaceInfo; //通知人脸姿态解算
 
 QueueHandle_t xQueueCaptureNotify = NULL;// 拍照通知队列，只存储一个简单信号
 
@@ -52,6 +54,39 @@ static void wait_queue_empty(QueueHandle_t q)
     }
 }
 
+void send_first_face_info(std::list<dl::detect::result_t> &results)
+{
+    if (results.empty()) return;
+
+    face_info_t face_info;
+
+    auto &first_face = results.front();
+
+    face_info.x1 = first_face.box[0];
+    face_info.y1 = first_face.box[1];
+    face_info.x2 = first_face.box[2];
+    face_info.y2 = first_face.box[3];
+
+    if (first_face.keypoint.size() == 10)
+    {
+        face_info.left_eye_x  = first_face.keypoint[0];
+        face_info.left_eye_y  = first_face.keypoint[1];
+        face_info.left_mouth_x  = first_face.keypoint[2];
+        face_info.left_mouth_y  = first_face.keypoint[3];
+        face_info.nose_x      = first_face.keypoint[4];
+        face_info.nose_y      = first_face.keypoint[5];
+        face_info.right_eye_x = first_face.keypoint[6];
+        face_info.right_eye_y = first_face.keypoint[7];
+        face_info.right_mouth_x = first_face.keypoint[8];
+        face_info.right_mouth_y = first_face.keypoint[9];
+    }
+
+    if(xQueueFaceInfo)
+    {
+        xQueueSend(xQueueFaceInfo, &face_info, portMAX_DELAY);
+    }
+}
+
 // AI处理任务
 static void task_process_ai(void *arg)
 {
@@ -72,6 +107,7 @@ static void task_process_ai(void *arg)
                 {
                     draw_detection_result((uint16_t *)frame->buf, frame->height, frame->width, detect_results);
                     print_detection_result(detect_results);
+                    send_first_face_info(detect_results);
                 }
             }
 

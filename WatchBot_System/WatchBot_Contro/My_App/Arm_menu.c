@@ -396,6 +396,15 @@ void ArmMenu_Home(ArmMenu_Status_t *statu)
 			vTask_Delete(ArmMenu_Proc);
 		break;
 	}
+	
+	
+	//切换到
+	//////////////////////////////////////////////
+	if((arm_menu.mode == ARM_MODE_AUTO) && (key == Key_W || key == Key_S))
+	{
+		//UART_SenCmd(CMD_ARM_TILT_FAN);
+		Arm_MoveTo(0, 0, 0, 0);
+	}
 }
 
 
