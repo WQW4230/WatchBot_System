@@ -10,22 +10,23 @@
 #include "stm32_link.h"
 #include "USART_FrameHandler.h"
 #include "detection_action_handler.h"
-
-#include "arm_control.h"
+#include "patrolling.h"
 
 extern "C" void app_main(void)
 {
     app_camera_lcd_init();
     app_led_init();
     USART_FrameHandler_Init();
-    lcd_draw_pictrue(0, 0, 320, 240, gImage_yingwu); // 显示3只鹦鹉图片
-    vTaskDelay(pdMS_TO_TICKS(3000));  // 延时3000毫秒
+    lcd_draw_pictrue(0, 0, 320, 240, gImage_yingwu); 
+    vTaskDelay(pdMS_TO_TICKS(3000));  
     app_camera_ai_lcd();
-    vTaskDelay(pdMS_TO_TICKS(3000));  // 延时3000毫秒
+    vTaskDelay(pdMS_TO_TICKS(3000)); 
     face_to_arm_init();
-    set_arm_angle(0, 0, 0, 0);
-    arm_update();
+    patrolling_init();
 
+    BuzzerControl(500, 500);//开启蜂鸣器
+    vTaskDelay(pdMS_TO_TICKS(3000)); 
+    Buzzer_off();//关闭蜂鸣器
 }
 
 

@@ -74,21 +74,15 @@ void USART_FrameHandler_Task(void)
 	
 	switch(cmd)
 	{
-		case CMD_ARM_PAN_ROLL://控制机械臂
+		case CMD_ARM_CONTROL://控制机械臂
 			arm_update_pan_roll_tilt(Frame_buf);
-			break;
-		
-		case CMD_ARM_TILT_FAN://留空
-			
-			break;
-		
+		break;	
 		case CMD_BUZZER_CTRL: //控制蜂鸣器
 			Cmd_BuzzerControl(Frame_buf);
-			break;
-		
+		break;
 		case CMD_BUZZER_OFF:  //关闭蜂鸣器
 			Cmd_BuzzerOFF(Frame_buf);
-			break;
+		break;
 	}
 }
 
@@ -96,7 +90,7 @@ void USART_FrameHandler_Task(void)
 	发送不带参数指令集
 	CMD： 命令
 */
-void UART_SenCmd(USART_TxCommand_e Cmd)
+void UART_SenCmd(UART_TxCommand_e Cmd)
 {
 	uint8_t arr[5] = {FRAME_HEADER, Cmd, 0x05, NO_PARAM_8, FRAME_END};
 	
@@ -109,7 +103,7 @@ void UART_SenCmd(USART_TxCommand_e Cmd)
 	ON ： 开启时间
 	OFF： 关闭时间
 */
-void USART_SenFrame(USART_TxCommand_e Cmd, uint16_t ON, uint16_t OFF)
+void USART_SenFrame(UART_TxCommand_e Cmd, uint16_t ON, uint16_t OFF)
 {
 	uint8_t On_High, On_Low, Off_High, Off_Low;
   On_High = (uint8_t)(ON >> 8); // 右移 8 位，获取高字节

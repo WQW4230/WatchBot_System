@@ -8,11 +8,10 @@
 
 typedef enum
 {
-	CMD_ARM_PAN_ROLL = 	 	 0x00,   //控制偏航角、翻滚角和俯仰角
-	CMD_ARM_TILT_FAN =     0x01,   //控制俯仰角和风扇
-	CMD_BUZZER_CTRL =   	 0x02,	 //控制STM板载蜂鸣器
-	CMD_BUZZER_OFF  =      0x03,   //关闭STM板载蜂鸣器
-}USART_RxCommand_e;
+	CMD_ARM_CONTROL = 	 	 0x10,   //控制偏航角、翻滚角和俯仰角
+	CMD_BUZZER_CTRL =   	 0x12,	 //控制STM板载蜂鸣器
+	CMD_BUZZER_OFF  =      0x13,   //关闭STM板载蜂鸣器
+}UART_RxCommand_e;
 
 typedef enum
 {	
@@ -24,11 +23,11 @@ typedef enum
 	CMD_ESP32CAM_RED_LED  =  0x07,	 //闪光灯红色
 	CMD_ESP32CAM_ALARM_LED = 0x08,   //闪光灯红蓝爆闪
 	CMD_ESP32_PICTURE      = 0x09,   //拍照
-}USART_TxCommand_e;
+}UART_TxCommand_e;
 
 void USART_FrameHandler_Init(void);
-void UART_SenCmd(USART_TxCommand_e Cmd);//只发指令
-void USART_SenFrame(USART_TxCommand_e Cmd, uint16_t ON, uint16_t OFF);//带参数
+void UART_SenCmd(UART_TxCommand_e Cmd);//只发指令
+void USART_SenFrame(UART_TxCommand_e Cmd, uint16_t ON, uint16_t OFF);//带参数
 void USART_FrameHandler_Task(void);//接收ESP32传来的舵机臂参数
 
 #endif

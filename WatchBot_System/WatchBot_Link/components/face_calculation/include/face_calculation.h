@@ -19,16 +19,16 @@ extern "C" {
 #define KEYPOINT_EYES_WEIGHT       0.85f
 #define KEYPOINT_MOUTH_WEIGHT     (1.0f - KEYPOINT_EYES_WEIGHT)
 
-#define FACE_PAN_DEADZONE_ANGLE        4     // 偏航角死区 单位°度
-#define FACE_ROLL_DEADZONE_ANGLE       4     // 翻滚角死区
-#define FACE_TILT_DEADZONE_ANGLE       4     // 俯仰角死区
+#define FACE_PAN_DEADZONE_ANGLE        3.5f     // 偏航角死区 单位°度
+#define FACE_ROLL_DEADZONE_ANGLE       3.5f     // 翻滚角死区
+#define FACE_TILT_DEADZONE_ANGLE       3.5f     // 俯仰角死区
 
 //角度增益 当前角 * 系数
 #define ARM_PAN_GAIN                  0.4f
 #define ARM_ROLL_GAIN                 0.4f
 #define ARM_TILT_GAIN                 0.4f
 
-//角度是否翻转
+//角度翻转
 #define ARM_PAN_INVERT                -1    
 #define ARM_ROLL_INVERT               -1    
 #define ARM_TILT_INVERT                1

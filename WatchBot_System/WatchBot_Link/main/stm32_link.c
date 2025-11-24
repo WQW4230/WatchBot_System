@@ -177,7 +177,7 @@ static void uart_event_task(void *pvParameters)
 }
 
 /*
-		
+	读uart数据到缓冲区任务进程
 */
 void stm32_receive_task(void *pvParameters)
 {

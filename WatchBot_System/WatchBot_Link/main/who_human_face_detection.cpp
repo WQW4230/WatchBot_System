@@ -19,6 +19,7 @@ SemaphoreHandle_t cmaera_sem;
 static QueueHandle_t xQueueLCDFrame = NULL; 
 static QueueHandle_t xQueueAIFrame = NULL;
 extern QueueHandle_t xQueueFaceInfo; //通知人脸姿态解算
+QueueHandle_t xQueuePatrllin = NULL; //无人脸信息10s去巡逻
 
 QueueHandle_t xQueueCaptureNotify = NULL;// 拍照通知队列，只存储一个简单信号
 
@@ -54,6 +55,9 @@ static void wait_queue_empty(QueueHandle_t q)
     }
 }
 
+/*
+    将当前人脸坐标发送至队列
+*/
 void send_first_face_info(std::list<dl::detect::result_t> &results)
 {
     if (results.empty()) return;
@@ -98,17 +102,22 @@ static void task_process_ai(void *arg)
     {
         if (gEvent)
         {
-            if (xQueueReceive(xQueueAIFrame, &frame, portMAX_DELAY))
+            if (xQueueReceive(xQueueAIFrame, &frame, portMAX_DELAY))//等待10,000ms
             {
                 std::list<dl::detect::result_t> &detect_candidates = detector.infer((uint16_t *)frame->buf, {(int)frame->height, (int)frame->width, 3});
                 std::list<dl::detect::result_t> &detect_results = detector2.infer((uint16_t *)frame->buf, {(int)frame->height, (int)frame->width, 3}, detect_candidates);
 
+                //检测到人脸时
                 if (detect_results.size() > 0)
                 {
                     draw_detection_result((uint16_t *)frame->buf, frame->height, frame->width, detect_results);
                     print_detection_result(detect_results);
                     send_first_face_info(detect_results);
+
+                    uint8_t temp;
+                    xQueueOverwrite(xQueuePatrllin, &temp);
                 }
+
             }
 
             if (xQueueLCDFrame)
@@ -232,6 +241,7 @@ void app_camera_ai_lcd(void)
     xQueueLCDFrame = xQueueCreate(2, sizeof(camera_fb_t *));
     xQueueAIFrame = xQueueCreate(2, sizeof(camera_fb_t *));
     xQueueCaptureNotify = xQueueCreate(1, sizeof(uint8_t));
+    xQueuePatrllin = xQueueCreate(1, sizeof(uint8_t));
 
     if (!xQueueCaptureNotify) ESP_LOGE(TAG, "Capture queue creation failed!");
     cmaera_sem = xSemaphoreCreateMutex();

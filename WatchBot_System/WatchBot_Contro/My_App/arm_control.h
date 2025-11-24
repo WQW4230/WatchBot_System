@@ -55,7 +55,6 @@ void Arm_Init(void);
 void Servo_SetAngle(float Pan, float Roll, float Tilt, float speed);
 void Arm_MoveTo(float Pan, float Roll, float Tilt, float Speed);
 void Arm_Update(void);
-void Arm_deom(void);
 
 //读当前机械臂角度参数
 const Arm_Angle_t *Arm_GetCurrent_Angle(void);

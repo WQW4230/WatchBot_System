@@ -5,6 +5,7 @@
 #include "arm_control.h"
 #include "PS2_Control_arm.h"
 #include "Arm_Action_Data.h"
+#include "USART_FrameHandler.h"
 
 extern void Menu_Proc(void);
 extern void USART_FrameHandler_Task(void);//串口控制舵机臂
@@ -398,11 +399,12 @@ void ArmMenu_Home(ArmMenu_Status_t *statu)
 	}
 	
 	
-	//切换到
+	//切换到从机控制机械臂
+	//按WS键切换到的时候触发
 	//////////////////////////////////////////////
 	if((arm_menu.mode == ARM_MODE_AUTO) && (key == Key_W || key == Key_S))
 	{
-		//UART_SenCmd(CMD_ARM_TILT_FAN);
+		UART_SenCmd(CMD_ESP32_CONTROL_ARM); //发送从机控制机械臂指令
 		Arm_MoveTo(0, 0, 0, 0);
 	}
 }

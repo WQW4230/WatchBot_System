@@ -8,6 +8,9 @@
 QueueHandle_t xQueueFaceInfo = NULL; 
 static QueueHandle_t xQueueArmControl = NULL;
 
+/*
+    获取人脸解算后的姿态
+*/
 static void face_calc_task(void *parameter)
 {
     face_info_t info;
@@ -28,6 +31,9 @@ static void face_calc_task(void *parameter)
     
 }
 
+/*
+    人脸姿态解算队列通知控制机械臂
+*/
 static void arm_control_task(void *parameter)
 {
     arm_control_t arm_angle;
@@ -44,6 +50,9 @@ static void arm_control_task(void *parameter)
     
 }
 
+/*
+    人脸姿态解算队列通知控制机械臂初始化
+*/
 void face_to_arm_init(void)
 {
     xQueueFaceInfo   = xQueueCreate(3, sizeof(face_info_t));
