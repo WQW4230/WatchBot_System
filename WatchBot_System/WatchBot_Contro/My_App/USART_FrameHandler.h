@@ -24,6 +24,7 @@ typedef enum
 	CMD_ESP32CAM_RED_LED  =  0x07,	 //闪光灯红色
 	CMD_ESP32CAM_ALARM_LED = 0x08,   //闪光灯红蓝爆闪
 	CMD_ESP32_PICTURE      = 0x09,   //拍照
+	CMD_ESP32_PATROL       = 0x0A,   //闪光灯红蓝交替
 }UART_TxCommand_e;
 
 void USART_FrameHandler_Init(void);

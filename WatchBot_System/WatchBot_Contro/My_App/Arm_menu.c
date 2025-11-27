@@ -26,8 +26,6 @@ void ArmMenu_Init(void)
 	Arm_Init();
 	JOY_Control_Init();
 	
-	//Arm_deom();//测试用
-	
 	Scheduler_AddTask(ArmMode_Task, 10, 4, 1000); //10ms轮询一次
 
 	Arm_MoveTo(-90, -60, -90, 0);
@@ -214,6 +212,16 @@ static void ActionRum(void)
 	arm_menu.Action_Status = ARM_STATUS_RUN; //正在表演
 	
 	uint16_t index = arm_menu.Action_Index;//动作索引
+	
+	//动作1快速机动的时候拍照
+	if(index == 2)
+	{
+		UART_SenCmd(CMD_ESP32_PICTURE);//拍照
+	}
+	if(index == 12)
+	{
+		UART_SenCmd(CMD_ESP32_PICTURE);//拍照
+	}
 	
 	//表演结束
 	if(index == p1->Actions_ChangesNum)

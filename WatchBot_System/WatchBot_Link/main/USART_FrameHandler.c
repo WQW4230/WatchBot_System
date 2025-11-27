@@ -134,7 +134,8 @@ CmdMap_t cmd_table[] =
 	{CMD_ESP32CAM_WHITE_LED, cmd_camera_flash_set},  //闪光灯白色
 	{CMD_ESP32CAM_BLUE_LED, cmd_camera_flash_set} ,	 //闪关灯蓝色
 	{CMD_ESP32CAM_RED_LED, cmd_camera_flash_set},	 //闪光灯红色
-	{CMD_ESP32CAM_ALARM_LED, cmd_camera_flash_set},  //闪光灯红蓝爆闪
+	{CMD_ESP32CAM_ALARM_LED, cmd_camera_flash_set},  //闪光灯红蓝爆闪 报警模式
+    {CMD_ESP32_PATROL, cmd_camera_flash_set},        //闪光灯红蓝爆闪 报警模式
 	{CMD_ESP32_PICTURE, cmd_app_capture},            //拍照
     {CMD_ESP32_CONTROL_ARM, cmd_arm_control},        //开启自动巡逻模式
     {CMD_ESP32_ON_CONTROL, cmd_arm_on_control}       //关闭自动巡逻模式
@@ -202,6 +203,9 @@ static void cmd_camera_flash_set(void *parameter)
             break;
         case CMD_ESP32CAM_ALARM_LED:
             camera_flash_set(LED_MODE_ALARM, COLOR_WHITE, 0, 0, 0);
+            break;
+        case CMD_ESP32_PATROL:
+            camera_flash_set(LED_MODE_PATROL, COLOR_WHITE, 0, 0, 0);
             break;
         default:
             break;

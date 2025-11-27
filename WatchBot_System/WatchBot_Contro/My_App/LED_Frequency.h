@@ -7,10 +7,11 @@ typedef enum
 {
 	//RGB灯颜色
 	WHITE = 0, //白色
-	BLUE,	 //蓝色
-	RED,	 //红色
-	ALARM,  //报警色
-	OFF,    //关闭
+	BLUE,	     //蓝色
+	RED,	     //红色
+	ALARM,     //警报
+  PATROL,    //巡逻
+	OFF,       //关闭
 }LedColour_e;
 
 typedef struct

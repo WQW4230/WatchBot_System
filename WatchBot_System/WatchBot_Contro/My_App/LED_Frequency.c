@@ -248,6 +248,9 @@ static void LedSet_Proc_Cam(void) //LED设置二级菜单 第二行ESP32CAM_LED�
 			case ALARM:
 				OLED_Printf(0, 48, OLED_8X16, "Colour:Alarm");
 				break;
+			case PATROL:
+				OLED_Printf(0, 48, OLED_8X16, "Colour:Patrol");
+				break;
 			case OFF:
 				OLED_Printf(0, 48, OLED_8X16, "Colour:Off");
 				break;
@@ -293,7 +296,7 @@ static void LedSet_Proc_Cam(void) //LED设置二级菜单 第二行ESP32CAM_LED�
 		case Key_D:
 			if(Led_Cam_index != 2) break; //光标不在颜色位置直接退出
 		
-			Cam_Colour = (Cam_Colour + 1) % 5;//五种模式
+			Cam_Colour = (Cam_Colour + 1) % 6;//六种模式
 			switch(Cam_Colour)
 			{
 				case WHITE:
@@ -309,6 +312,9 @@ static void LedSet_Proc_Cam(void) //LED设置二级菜单 第二行ESP32CAM_LED�
 					break;
 				case ALARM:
 					LED_Set.cam_LedColour = ALARM;
+					break;
+				case PATROL:
+					LED_Set.cam_LedColour = PATROL;
 					break;
 				case OFF:
 					LED_Set.cam_LedColour = OFF;
@@ -328,8 +334,11 @@ static void LedSet_Proc_Cam(void) //LED设置二级菜单 第二行ESP32CAM_LED�
 				case RED:		//红色
 					USART_SenFrame(CMD_ESP32CAM_RED_LED, LED_Set.esp_LedBrigh_time, LED_Set.esp_LedDark_time);
 					break;
-				case ALARM: //红蓝爆闪
+				case ALARM: //警报
 					UART_SenCmd(CMD_ESP32CAM_ALARM_LED);
+					break;
+				case PATROL://巡逻
+					UART_SenCmd(CMD_ESP32_PATROL);
 					break;
 				case OFF:		//关闭
 					UART_SenCmd(CMD_ESPCAM_OFF_LDE);
@@ -371,6 +380,9 @@ static void LedSet_Proc_Cam(void) //LED设置二级菜单 第二行ESP32CAM_LED�
 			break;
 		case ALARM:
 			OLED_Printf(0, 48, OLED_8X16, "Colour:Alarm");
+			break;
+		case PATROL:
+			OLED_Printf(0, 48, OLED_8X16, "Colour:Patrol");
 			break;
 		case OFF:
 			OLED_Printf(0, 48, OLED_8X16, "Colour:Off");

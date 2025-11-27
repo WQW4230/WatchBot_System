@@ -71,7 +71,7 @@ void camera_flash_task(void *Param)
                     cfg->led_mode = LED_MODE_BLACK;
                 }
                 break;
-            case LED_MODE_ALARM://红蓝白报警色
+            case LED_MODE_PATROL://红蓝白巡逻色
                 
                 // 短闪
                 ws2812_write(ws2812_handle, index, Red.r, Red.g, Red.b);
@@ -110,7 +110,7 @@ void camera_flash_task(void *Param)
                 vTaskDelay(pdMS_TO_TICKS(500));
                 break;
 
-            case LED_MODE_PATROL: //巡逻模式，红蓝交替
+            case LED_MODE_ALARM: //巡逻模式，红蓝交替
                 // 短闪
                 ws2812_write(ws2812_handle, index, Red.r, Red.g, Red.b);
                 vTaskDelay(pdMS_TO_TICKS(150));
@@ -247,7 +247,7 @@ void app_led_init(void)
     camera_flash.led_on = 500;
     camera_flash.led_off = 0;
     camera_flash.blink_count = 1;
-    camera_flash.led_mode = LED_MODE_ALARM;
+    camera_flash.led_mode = LED_MODE_PATROL;
     camera_flash.led_color = COLOR_WHITE;
     
     xTaskCreatePinnedToCore(camera_flash_task, "CameraFlash", 2048, &camera_flash, 0, NULL, 0);
