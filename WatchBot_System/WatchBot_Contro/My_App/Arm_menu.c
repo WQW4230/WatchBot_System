@@ -109,7 +109,7 @@ static void ArmMenu_Show(ArmMenu_Status_t *statu)
 }
 
 //红外输入判断设定角度是整数还是负数
-float Arm_IR_InputJudgment(float Angle, float num)
+static float Arm_IR_InputJudgment(float Angle, float num)
 {
 	if(Angle >= 0) 
 		return num;
@@ -335,6 +335,40 @@ void ArmAction_Show(ArmMenu_Status_t *status, const Arm_ActionaGroup *Actiona_Ta
 	}
 }
 
+/*
+	主菜单模式选择判断
+	如果为自动控制模式会向esp32发送接管指令
+	如果为其他模式会向esp32发送取消接管指令
+	参数mode：当前的模式
+	参数key： 当前的案件值
+*/
+static void ArmMenu_HandleModeChange(ArmControl_Mode_e mode, uint8_t key)
+{
+	if(key != Key_W && key != Key_S) return; //如果案件不是上下键切换
+	switch(mode)
+	{
+		//其他模式向esp32发送取消接管指令
+		case ARM_MODE_ACTION:
+		case ARM_MODE_JOYSTICK:
+		case ARM_MODE_REMOTE:
+		{
+			UART_SenCmd(CMD_ESP32_ON_CONTROL);
+		}
+			
+			break;
+		case ARM_MODE_AUTO://自动控制模式向esp32发送接管指令		
+		{
+			UART_SenCmd(CMD_ESP32_CONTROL_ARM); //发送从机控制机械臂指令
+			Arm_MoveTo(0, 0, 0, 0); //必须与esp32对应角度
+		}
+			break;
+		
+		default:
+			break;
+	}
+}
+
+
 //主菜单任务进程
 void ArmMenu_Home(ArmMenu_Status_t *statu)
 {
@@ -397,21 +431,12 @@ void ArmMenu_Home(ArmMenu_Status_t *statu)
 			vTask_Delete(ArmMenu_Proc);
 		break;
 	}
-	
-	
-	//切换到从机控制机械臂
-	//按WS键切换到的时候触发
-	//////////////////////////////////////////////
-	if((arm_menu.mode == ARM_MODE_AUTO) && (key == Key_W || key == Key_S))
-	{
-		UART_SenCmd(CMD_ESP32_CONTROL_ARM); //发送从机控制机械臂指令
-		Arm_MoveTo(0, 0, 0, 0);
-	}
+	ArmMenu_HandleModeChange(arm_menu.mode, key);
 }
 
 
 //显示选择
-void ArmMode_Details(ArmMenu_Status_t *statu)
+static void ArmMode_Details(ArmMenu_Status_t *statu)
 {
 	switch(statu->show)
 	{

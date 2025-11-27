@@ -16,12 +16,14 @@ static const char *TAG = "human_face_detection";
 
 SemaphoreHandle_t cmaera_sem;
 
+static TaskHandle_t task_process_camera_handle = NULL; //摄像头任务句柄
+
 static QueueHandle_t xQueueLCDFrame = NULL; 
 static QueueHandle_t xQueueAIFrame = NULL;
 extern QueueHandle_t xQueueFaceInfo; //通知人脸姿态解算
 QueueHandle_t xQueuePatrllin = NULL; //无人脸信息10s去巡逻
-
 QueueHandle_t xQueueCaptureNotify = NULL;// 拍照通知队列，只存储一个简单信号
+extern uint8_t face_calc_task_flag; //人脸姿态解算任务标志位
 
 
 static bool gEvent = true;
@@ -56,7 +58,7 @@ static void wait_queue_empty(QueueHandle_t q)
 }
 
 /*
-    将当前人脸坐标发送至队列
+    将当前人脸坐标发送至队列通知
 */
 void send_first_face_info(std::list<dl::detect::result_t> &results)
 {
@@ -85,7 +87,7 @@ void send_first_face_info(std::list<dl::detect::result_t> &results)
         face_info.right_mouth_y = first_face.keypoint[9];
     }
 
-    if(xQueueFaceInfo)
+    if(xQueueFaceInfo && face_calc_task_flag)
     {
         xQueueSend(xQueueFaceInfo, &face_info, portMAX_DELAY);
     }
@@ -205,27 +207,32 @@ static void task_process_picture(void *arg)
             ESP_LOGI(TAG, "111111111111111111111.");
             if(pdTRUE == xSemaphoreTake(cmaera_sem, portMAX_DELAY))//上锁
             {   
+                vTaskSuspend(task_process_camera_handle);
                 ESP_LOGI(TAG, "Waiting for capture notification22222222222...");
                 //等待帧/队列释放清空
                 wait_queue_empty(xQueueAIFrame);
                 wait_queue_empty(xQueueLCDFrame);
 
-                camera_flash_set(LED_MODE_LIMITED, COLOR_WHITE, 1, 1000, 300);
+                led_param last_camera_flash = camera_flash;//记录拍照前的led状态，拍照需要闪关灯
+                camera_flash_set(LED_MODE_LIMITED, COLOR_WHITE, 1, 1000, 400);
 
                 bap_camera_capture_init();//切换jepg
-                vTaskDelay(pdMS_TO_TICKS(200));  // 延时100毫秒
+                vTaskDelay(pdMS_TO_TICKS(300));  // 延时300毫秒等待切回1600*1200 JPEG格式
                 camera_fb_t *frame = esp_camera_fb_get();
                 camera_capture_to_sd(frame);
+                esp_camera_fb_return(frame);     //归还psram ram
+                vTaskDelay(pdMS_TO_TICKS(700));  // 延时700毫秒
                 bsp_camera_init();//切回 RGB565
 
-                camera_flash_set(LED_MODE_LIMITED, COLOR_WHITE, 1, 100, 1);
-                vTaskDelay(pdMS_TO_TICKS(500));  // 延时1000毫秒
-                
-                if (frame)
-                {
-                    xQueueSend(xQueueAIFrame, &frame, portMAX_DELAY);
-                }
+                camera_flash_set(LED_MODE_LIMITED, COLOR_WHITE, 1, 200, 1);
+                vTaskDelay(pdMS_TO_TICKS(300));  // 延时300毫秒等待切回640*480 RGB565格式
+                camera_flash = last_camera_flash;//切换回拍照前led的状态
+                // if (frame)
+                // {
+                //     xQueueSend(xQueueAIFrame, &frame, portMAX_DELAY);
+                // }
                 xSemaphoreGive(cmaera_sem);
+                vTaskResume(task_process_camera_handle);
             }
         }
         
@@ -240,14 +247,14 @@ void app_camera_ai_lcd(void)
 
     xQueueLCDFrame = xQueueCreate(2, sizeof(camera_fb_t *));
     xQueueAIFrame = xQueueCreate(2, sizeof(camera_fb_t *));
-    xQueueCaptureNotify = xQueueCreate(1, sizeof(uint8_t));
+    xQueueCaptureNotify = xQueueCreate(10, sizeof(uint8_t));
     xQueuePatrllin = xQueueCreate(1, sizeof(uint8_t));
 
     if (!xQueueCaptureNotify) ESP_LOGE(TAG, "Capture queue creation failed!");
     cmaera_sem = xSemaphoreCreateMutex();
 
-    xTaskCreatePinnedToCore(task_process_camera, "task_process_camera", 3 * 1024, NULL, 5, NULL, 1);
-    xTaskCreatePinnedToCore(task_process_lcd, "task_process_lcd", 4 * 1024, NULL, 5, NULL, 0);
-    xTaskCreatePinnedToCore(task_process_ai, "task_process_ai", 4 * 1024, NULL, 5, NULL, 0);
-    xTaskCreatePinnedToCore(task_process_picture, "task_process_picture", 4 * 1024, NULL, 10, NULL, 0);
+    xTaskCreatePinnedToCore(task_process_camera, "task_process_camera", 5 * 1024, NULL, 5, &task_process_camera_handle, 1);
+    xTaskCreatePinnedToCore(task_process_lcd, "task_process_lcd", 5 * 1024, NULL, 5, NULL, 0);
+    xTaskCreatePinnedToCore(task_process_ai, "task_process_ai", 5 * 1024, NULL, 5, NULL, 0);
+    xTaskCreatePinnedToCore(task_process_picture, "task_process_picture", 10 * 1024, NULL, 10, NULL, 0);
 }

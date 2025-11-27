@@ -180,7 +180,8 @@ void bap_camera_capture_init(void)
      sensor_t *s = esp_camera_sensor_get(); // 获取摄像头型号
 
     if (s->id.PID == OV2640_PID) {
-        s->set_hmirror(s, 1);  //摄像头镜像 写1镜像 写0不镜像
+        s->set_hmirror(s, 1);        // 镜像水平 0 = disable , 1 = enable
+        s->set_vflip(s, 1);          // 镜像垂直 0 = disable , 1 = enable
     }
 
     

@@ -7,8 +7,9 @@
 extern "C" {
 #endif
 
-// extern QueueHandle_t xQueueFaceInfo;
 void face_to_arm_init(void);
+void face_to_arm_on(void);
+void face_to_arm_off(void);
 
 #ifdef __cplusplus
 }

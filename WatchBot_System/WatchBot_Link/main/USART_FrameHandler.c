@@ -114,11 +114,16 @@ typedef struct
 } CmdMap_t;
 
 extern void app_capture(void);
+extern void patrolling_off_all(void);
+extern void patrolling_on_all(void);
+extern void face_to_arm_on(void);
+extern void face_to_arm_off(void);
 
 static void cmd_esp32_led_set(void *parameter);
 static void cmd_camera_flash_set(void *parameter);
-static void cmd_app_capture(void *parameter);
+void cmd_app_capture(void *parameter);
 static void cmd_arm_control(void *parameter);
+static void cmd_arm_on_control(void *parameter);
 
 extern QueueHandle_t xQueueCaptureNotify;
 
@@ -131,21 +136,32 @@ CmdMap_t cmd_table[] =
 	{CMD_ESP32CAM_RED_LED, cmd_camera_flash_set},	 //闪光灯红色
 	{CMD_ESP32CAM_ALARM_LED, cmd_camera_flash_set},  //闪光灯红蓝爆闪
 	{CMD_ESP32_PICTURE, cmd_app_capture},            //拍照
-    {CMD_ESP32_CONTROL_ARM, cmd_arm_control},        //切换自动模式
+    {CMD_ESP32_CONTROL_ARM, cmd_arm_control},        //开启自动巡逻模式
+    {CMD_ESP32_ON_CONTROL, cmd_arm_on_control}       //关闭自动巡逻模式
 };
 
 /*
-    接收到控制机械臂指令
+    接收到关闭自动巡逻模式指令
+*/
+static void cmd_arm_on_control(void *parameter)
+{
+    patrolling_off_all();
+    face_to_arm_off();
+}
+/*
+    接收到开启自动巡逻模式指令
 */
 static void cmd_arm_control(void *parameter)
 {
-    //矫正机械臂角度记录机械臂当前值
-    set_arm_angle(0, 0, 0, 0);
+
+    patrolling_on_all();
+    set_arm_angle(0, 0, 0, 0);//矫正机械臂角度记录机械臂当前值
     arm_update();
+    face_to_arm_on();
 }
 
 //接收拍照指令
-static void cmd_app_capture(void *parameter)
+void cmd_app_capture(void *parameter)
 {
     static TickType_t last_time = 0;                                // 上次拍照时间
     TickType_t now_time = xTaskGetTickCount();                      // 当前时刻

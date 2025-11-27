@@ -29,11 +29,12 @@ typedef enum {
 
 typedef enum
 {
-    LED_MODE_BLACK,  //不亮
-    LED_MODE_LIMITEF,//常亮
+    LED_MODE_BLACK,   //不亮
+    LED_MODE_LIMITEF, //常亮
     LED_MODE_LIMITED, //有限
     LED_MODE_ALARM,   //报警
-    LED_MODE_BLINK //闪烁
+    LED_MODE_PATROL,  //巡逻
+    LED_MODE_BLINK    //闪烁
 }ws2821_mode_e;
 
 extern const rgb_color_t color_table[COLOR_NUM];
@@ -46,6 +47,8 @@ typedef struct
     ws2821_mode_e led_mode; //模式
     uint32_t blink_count;  //如果有限亮几次?
 }led_param;
+
+extern led_param camera_flash;
 
 void app_led_init(void);
 void camera_flash_set(ws2821_mode_e led_mode, color_name_e colour, uint32_t blink_count, uint32_t bright_time, uint32_t darkness_time);

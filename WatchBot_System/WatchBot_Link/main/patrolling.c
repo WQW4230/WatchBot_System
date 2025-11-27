@@ -7,8 +7,51 @@
 #include "freertos/task.h"
 #include "freertos/queue.h"
 
-extern QueueHandle_t xQueuePatrllin;
-static TaskHandle_t patrolling_task_handle = NULL;
+extern QueueHandle_t xQueuePatrllin; //检测到人脸时候会通知该队列
+
+static TaskHandle_t patrolling_task_handle = NULL; //巡逻步进角度任务句柄
+static TaskHandle_t buzzer_task_handle = NULL;            //蜂鸣器发送指令任务句柄
+static TaskHandle_t yes_face_watchdog_handle = NULL;      //看门狗巡逻任务句柄 由xQueuePatrllin唤醒、超时唤醒
+QueueHandle_t xQueueBuzzer; //蜂鸣器队列
+extern void cmd_app_capture(void *parameter); //拍照指令
+
+//蜂鸣器任务进程
+static void buzzer_task(void *param)
+{
+    uint8_t now_status;
+    static uint8_t last_status = 0;
+    while(1)
+    {
+        if(xQueueReceive(xQueueBuzzer, &now_status, portMAX_DELAY))
+        {
+            if(now_status)
+            { //发现人脸开启蜂鸣器
+                patrolling_off();                     //关闭并且挂起一段时间等待蜂鸣器指令发送
+                vTaskDelay(pdMS_TO_TICKS(250)); 
+                if(last_status == 0)
+                {
+                    BuzzerControl(500, 500);//蜂鸣
+                    last_status = now_status;
+                }
+                vTaskDelay(pdMS_TO_TICKS(250)); 
+            }          
+            else
+            {
+                //无人脸关闭蜂鸣器 进入巡逻状态
+                patrolling_off();
+                vTaskDelay(pdMS_TO_TICKS(250));     //关闭并且挂起一段时间等待蜂鸣器指令发送
+                if(last_status == 1)
+                {
+                    Buzzer_off();//关闭蜂鸣
+                    last_status = now_status;
+                }
+                vTaskDelay(pdMS_TO_TICKS(250)); 
+            }
+                
+        }
+    }
+}
+
 
 /*
     有人脸时队列通知唤醒 巡逻角度控制任务进程
@@ -23,24 +66,24 @@ static void yes_face_watchdog(void *parameter)
         
         if (xQueueReceive(xQueuePatrllin, &yes_face_flag, pdMS_TO_TICKS(3000)))
         {
-            patrolling_off();//关闭巡航
             if(Buzzer_status == 0)
             {
-                BuzzerControl(500, 500);//开启蜂鸣器
+                void *parameter = NULL; //一个空值填充参数
+                cmd_app_capture(parameter); //拍照，拍照间隔在 USART_FrameHandler.h中设置
                 Buzzer_status = 1;
+                xQueueSend(xQueueBuzzer, &Buzzer_status, portMAX_DELAY);
             }
-
+            patrolling_off();//关闭巡航
         }
         else
         {
-            patrolling_on();//开启巡航
             if(Buzzer_status == 1)
             {
-                Buzzer_off();//关闭蜂鸣器
                 Buzzer_status = 0;
+                xQueueSend(xQueueBuzzer, &Buzzer_status, portMAX_DELAY);
             }
+            patrolling_on();//开启巡航
         }
-
     }
     
 } 
@@ -50,7 +93,10 @@ static void yes_face_watchdog(void *parameter)
 */
 void patrolling_on(void)
 {
-    vTaskResume(patrolling_task_handle);
+    if(patrolling_task_handle)
+    {
+        vTaskResume(patrolling_task_handle);
+    }
 }
 
 /*
@@ -58,7 +104,11 @@ void patrolling_on(void)
 */
 void patrolling_off(void)
 {
-    vTaskSuspend(patrolling_task_handle);
+    if(patrolling_task_handle)
+    {
+        vTaskSuspend(patrolling_task_handle);
+    }
+    
 }
 
 /*
@@ -117,12 +167,48 @@ static void arm_patrolling_task(void *parameter)
     }
 }
 
+/*
+    挂起所有巡逻任务进程
+*/
+void patrolling_off_all(void)
+{
+    if(yes_face_watchdog_handle)
+    {
+        vTaskSuspend(yes_face_watchdog_handle);
+    }
+    if(buzzer_task_handle)
+    {
+        vTaskSuspend(buzzer_task_handle);
+    }
+    patrolling_off();
+}
+
+/*
+    开启所有巡逻任务进程
+*/
+void patrolling_on_all(void)
+{
+    if(yes_face_watchdog_handle)
+    {
+        vTaskResume(yes_face_watchdog_handle);
+    }
+    if(buzzer_task_handle)
+    {
+        vTaskResume(buzzer_task_handle);
+    }
+    
+    patrolling_on();
+
+}
 
 /*
     巡逻模式初始化
 */
 void patrolling_init(void)
 {
-    xTaskCreatePinnedToCore(arm_patrolling_task, "arm_patrolling_task", 1024, NULL, 3, &patrolling_task_handle, 1);
-    xTaskCreatePinnedToCore(yes_face_watchdog, "no_face_watchdog", 1024, NULL, 3, NULL, 1);
+    xQueueBuzzer = xQueueCreate(5, sizeof(uint8_t));
+    xTaskCreatePinnedToCore(buzzer_task, "buzzer_task", 1 * 1024, NULL, 5, &buzzer_task_handle, 1);
+    xTaskCreatePinnedToCore(arm_patrolling_task, "arm_patrolling_task", 3 * 1024, NULL, 3, &patrolling_task_handle, 1);
+    xTaskCreatePinnedToCore(yes_face_watchdog, "yes_face_watchdog", 3 * 1024, NULL, 3, &yes_face_watchdog_handle, 1);
+    patrolling_off_all();//默认上电关闭
 }

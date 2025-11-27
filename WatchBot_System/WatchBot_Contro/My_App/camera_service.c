@@ -17,7 +17,17 @@ void camera_service_proc(void)
 	switch(key)
 	{
 		case Key_OK:
-			UART_SenCmd(CMD_ESP32_PICTURE);//OK键拍照
+		{
+			uint64_t now_time = App_Timer_GetTick();
+			static uint64_t last_time;
+			if((now_time - last_time) >= CAPTURE_TIME_INTERVAL)
+			{
+				UART_SenCmd(CMD_ESP32_PICTURE);//OK键拍照
+				last_time = App_Timer_GetTick();
+			}
+			
+		}
+			
 			break;
 		
 		//星号退出

@@ -19,7 +19,10 @@ extern "C" {
 #define PATROL_STEP_ROLL   1.0f
 #define PATROL_STEP_TILT   1.0f
 //下次动作的时间
-#define PATROL_STEP_TIME 100
+#define PATROL_STEP_TIME 75 //不能低于75ms stm32缓冲区小无法接收
+
+//模式切换时间ms 检测到无人脸后几秒切换为巡逻模式
+#define MODE_SWITCHING_TIME 3000
 
 typedef enum
 {
@@ -36,10 +39,11 @@ typedef struct
 	uint16_t Duration;  //动作持续时间
 }Arm_ActionAngle_t;
 
-void patrolling_init(void);
+void patrolling_off_all(void);
+void patrolling_on_all(void);
 void patrolling_off(void);
 void patrolling_on(void);
-
+void patrolling_init(void);
 
 #ifdef __cplusplus
 }

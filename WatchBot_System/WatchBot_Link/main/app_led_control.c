@@ -17,7 +17,9 @@ const rgb_color_t color_table[COLOR_NUM] = {
     [COLOR_WHITE]   = { 255, 255, 255 },
 };
 
-
+/*
+    led驱动初始化
+*/
 void Led_Blink_Init(void)
 {
     gpio_config_t gpio_configStruct;
@@ -107,6 +109,14 @@ void camera_flash_task(void *Param)
                 ws2812_write(ws2812_handle, index, black.r, black.g, black.b);
                 vTaskDelay(pdMS_TO_TICKS(500));
                 break;
+
+            case LED_MODE_PATROL: //巡逻模式，红蓝交替
+                // 短闪
+                ws2812_write(ws2812_handle, index, Red.r, Red.g, Red.b);
+                vTaskDelay(pdMS_TO_TICKS(150));
+                ws2812_write(ws2812_handle, index, Blue.r, Blue.g, Blue.b);
+                vTaskDelay(pdMS_TO_TICKS(150));
+                break;
             case LED_MODE_BLINK://闪烁
                 ws2812_write(ws2812_handle, index, colro.r, colro.g, colro.b);
                 vTaskDelay(pdMS_TO_TICKS(cfg->led_on));
@@ -156,27 +166,6 @@ void esp32_led_task(void *Param)
     
 }
 
-void app_led_init(void)
-{
-    Led_Blink_Init();
-    ws2812_init(WS2812_GPIO_NUM,WS2812_LED_NUM,&ws2812_handle);
-    //板载led控制句柄初始化
-    esp32_led.led_on = 300;
-    esp32_led.led_off = 300;
-    esp32_led.blink_count = 0;
-    esp32_led.led_mode = LED_MODE_BLINK;
-    esp32_led.led_color = COLOR_BLACK;
-    //ws2812控制句柄初始化
-    camera_flash.led_on = 500;
-    camera_flash.led_off = 0;
-    camera_flash.blink_count = 1;
-    camera_flash.led_mode = LED_MODE_ALARM;
-    camera_flash.led_color = COLOR_WHITE;
-    
-    xTaskCreatePinnedToCore(camera_flash_task, "CameraFlash", 2048, &camera_flash, 0, NULL, 0);
-    xTaskCreatePinnedToCore(esp32_led_task, "Esp32Led", 2048, &esp32_led, 0, NULL, 0);
-}
-
 void camera_flash_set(ws2821_mode_e led_mode, color_name_e colour, uint32_t blink_count, uint32_t bright_time, uint32_t darkness_time)
 {
     switch (led_mode)
@@ -197,6 +186,9 @@ void camera_flash_set(ws2821_mode_e led_mode, color_name_e colour, uint32_t blin
         break;
     case LED_MODE_ALARM:
         camera_flash.led_mode = LED_MODE_ALARM;
+        break;
+    case LED_MODE_PATROL:
+        camera_flash.led_mode = LED_MODE_PATROL;
         break;
     case LED_MODE_LIMITED:
         camera_flash.led_on = bright_time;
@@ -236,4 +228,28 @@ void esp32_led_set(ws2821_mode_e led_mode,  uint32_t blink_count, uint32_t brigh
     default:
         break;
     }
+}
+
+/*
+    led灯珠控制初始化
+*/
+void app_led_init(void)
+{
+    Led_Blink_Init();
+    ws2812_init(WS2812_GPIO_NUM,WS2812_LED_NUM,&ws2812_handle);
+    //板载led控制句柄初始化
+    esp32_led.led_on = 300;
+    esp32_led.led_off = 300;
+    esp32_led.blink_count = 0;
+    esp32_led.led_mode = LED_MODE_BLINK;
+    esp32_led.led_color = COLOR_BLACK;
+    //ws2812控制句柄初始化
+    camera_flash.led_on = 500;
+    camera_flash.led_off = 0;
+    camera_flash.blink_count = 1;
+    camera_flash.led_mode = LED_MODE_ALARM;
+    camera_flash.led_color = COLOR_WHITE;
+    
+    xTaskCreatePinnedToCore(camera_flash_task, "CameraFlash", 2048, &camera_flash, 0, NULL, 0);
+    xTaskCreatePinnedToCore(esp32_led_task, "Esp32Led", 2048, &esp32_led, 0, NULL, 0);
 }
