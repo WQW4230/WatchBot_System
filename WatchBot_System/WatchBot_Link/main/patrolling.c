@@ -2,6 +2,7 @@
 #include "USART_FrameHandler.h"
 #include "arm_control.h"
 #include "USART_FrameHandler.h"
+#include "app_led_control.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -68,6 +69,7 @@ static void yes_face_watchdog(void *parameter)
         {
             if(Buzzer_status == 0)
             {
+                camera_flash_set(LED_MODE_ALARM, COLOR_WHITE, 0, 0, 0);//报警灯
                 void *parameter = NULL; //一个空值填充参数
                 cmd_app_capture(parameter); //拍照，拍照间隔在 USART_FrameHandler.h中设置
                 Buzzer_status = 1;
@@ -79,6 +81,7 @@ static void yes_face_watchdog(void *parameter)
         {
             if(Buzzer_status == 1)
             {
+                camera_flash_set(LED_MODE_PATROL, COLOR_WHITE, 0, 0, 0);//巡逻灯颜色
                 Buzzer_status = 0;
                 xQueueSend(xQueueBuzzer, &Buzzer_status, portMAX_DELAY);
             }

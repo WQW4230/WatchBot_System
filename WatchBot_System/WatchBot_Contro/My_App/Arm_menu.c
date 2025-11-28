@@ -218,7 +218,7 @@ static void ActionRum(void)
 	{
 		UART_SenCmd(CMD_ESP32_PICTURE);//拍照
 	}
-	if(index == 12)
+	if(index == 13)
 	{
 		UART_SenCmd(CMD_ESP32_PICTURE);//拍照
 	}

@@ -32,22 +32,7 @@ static void arm_update_pan_roll_tilt(uint8_t *status)
 	float angle_tilt = (float)(tilt_u16 / 100.0f - 90);
 	Arm_MoveTo(angle_pan, angle_roll, angle_tilt, Angle->Fan_Speed);
 }
-/*
-	串口控制俯仰角 电机转速
-*/
-//static void arm_update_tilt_fan(uint8_t *status)
-//{
-//	//获取当前舵机臂目标角度
-//	const Arm_Angle_t *Angle = Arm_GetTarget_Angle();
-//	
-//	uint16_t tilt_u16 = ((uint16_t)(status[3] << 8)) | status[4];
-//	uint16_t fan_u16  = ((uint16_t)(status[5] << 8)) | status[6];
-//	
-//	float angle_tilt  = (float)(tilt_u16 / 100.0f - 90);
-//	float angle_fan   = (float)(fan_u16 / 100.0f - 90);
-//	Arm_MoveTo(Angle->Pan_Angle, Angle->Roll_Angle, angle_tilt, angle_fan);
 
-//}
 
 //蜂鸣器关闭
 static void Cmd_BuzzerOFF(uint8_t *status)
